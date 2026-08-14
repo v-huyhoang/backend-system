@@ -33,6 +33,7 @@ class UserService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'is_active' => $data['is_active'],
         ], $data['roles'] ?? []);
     }
 
@@ -41,6 +42,7 @@ class UserService
         return $this->users->update($user, [
             'name' => $data['name'],
             'email' => $data['email'],
+            'is_active' => $data['is_active'],
         ], $data['roles'] ?? []);
     }
 

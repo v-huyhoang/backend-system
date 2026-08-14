@@ -15,7 +15,7 @@ class EloquentUserRepository implements UserRepository
     {
         return User::query()
             ->search($filters['q'] ?? null)
-            ->filter(['status' => $filters['status'] ?? null])
+            ->filter(['is_active' => $filters['is_active'] ?? null])
             ->with('roles:id,name')
             ->latest()
             ->paginate($perPage)
@@ -24,6 +24,7 @@ class EloquentUserRepository implements UserRepository
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'is_active' => $user->is_active->value,
                 'roles' => $user->roles->pluck('name'),
                 'created_at' => $user->created_at?->format('d-m-Y'),
                 'updated_at' => $user->updated_at?->format('d-m-Y'),

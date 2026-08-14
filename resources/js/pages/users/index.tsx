@@ -27,13 +27,14 @@ import {
 	TableRow,
 } from '@/components/ui/table';
 import { SystemPermission } from '@/enums/access-control';
+import { ActiveStatus } from '@/enums/customer';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import type { PageProps } from '@/types/page';
 import { User } from '@/types/user';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -58,6 +59,10 @@ export default function Users({ users }: { users: User }) {
 	const { can } = usePermissions();
 
 	const [search, setSearch] = useState(filters.q ?? '');
+	const [activeFilter, setActiveFilter] = useState(
+		filters.is_active ?? 'all',
+	);
+	const isFirstRender = useRef(true);
 
 	useEffect(() => {
 		if (flash.message) {
@@ -66,19 +71,31 @@ export default function Users({ users }: { users: User }) {
 	}, [flash.message]);
 
 	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+
 		const timeout = setTimeout(() => {
-			router.get(
-				'/users',
-				{ q: search },
-				{
-					preserveState: true,
-					replace: true,
-				},
-			);
+			const query: { q?: string; is_active?: string } = {};
+			const normalizedSearch = search.trim();
+
+			if (normalizedSearch) {
+				query.q = normalizedSearch;
+			}
+
+			if (activeFilter !== 'all') {
+				query.is_active = activeFilter;
+			}
+
+			router.get('/users', query, {
+				preserveState: true,
+				replace: true,
+			});
 		}, 400);
 
 		return () => clearTimeout(timeout);
-	}, [search]);
+	}, [search, activeFilter]);
 
 	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
@@ -118,16 +135,30 @@ export default function Users({ users }: { users: User }) {
 											/>
 										</TableCell>
 										<TableCell>
-											<Select>
+											<Select
+												value={activeFilter}
+												onValueChange={setActiveFilter}
+											>
 												<SelectTrigger className="w-[180px]">
 													<SelectValue placeholder="Select a status" />
 												</SelectTrigger>
 												<SelectContent>
 													<SelectGroup>
-														<SelectItem value="active">
+														<SelectItem value="all">
+															All statuses
+														</SelectItem>
+														<SelectItem
+															value={String(
+																ActiveStatus.Active,
+															)}
+														>
 															Active
 														</SelectItem>
-														<SelectItem value="inactive">
+														<SelectItem
+															value={String(
+																ActiveStatus.Inactive,
+															)}
+														>
 															Inactive
 														</SelectItem>
 													</SelectGroup>
@@ -152,6 +183,9 @@ export default function Users({ users }: { users: User }) {
 									</TableHead>
 									<TableHead className="font-bold text-white">
 										Roles
+									</TableHead>
+									<TableHead className="font-bold text-white">
+										Status
 									</TableHead>
 									<TableHead className="font-bold text-white">
 										Created At
@@ -180,6 +214,21 @@ export default function Users({ users }: { users: User }) {
 													{role}
 												</Badge>
 											))}
+										</TableCell>
+										<TableCell>
+											<Badge
+												variant={
+													user.is_active ===
+													ActiveStatus.Active
+														? 'default'
+														: 'secondary'
+												}
+											>
+												{user.is_active ===
+												ActiveStatus.Active
+													? 'Active'
+													: 'Inactive'}
+											</Badge>
 										</TableCell>
 										<TableCell>{user.created_at}</TableCell>
 										<TableCell>

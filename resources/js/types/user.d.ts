@@ -1,9 +1,10 @@
-import { Pagination } from "./pagination";
+import { Pagination } from './pagination';
 
 export interface SingleUser {
 	id: number;
 	name: string;
 	email: string;
+	is_active: number;
 	roles: string[];
 	created_at: string;
 	updated_at: string;

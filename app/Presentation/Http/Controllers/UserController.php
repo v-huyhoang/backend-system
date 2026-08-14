@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function index(Request $request): Response
     {
-        $filters = $request->only(['q', 'status']);
+        $filters = $request->only(['q', 'is_active']);
 
         return Inertia::render('users/index', [
             'users' => $this->users->paginate($filters),

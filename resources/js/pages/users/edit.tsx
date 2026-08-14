@@ -10,6 +10,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ActiveStatus } from '@/enums/customer';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { UserRole } from '@/types/user';
@@ -34,6 +35,7 @@ export default function EditUsers({
 	const { data, setData, put, processing, errors } = useForm({
 		name: user.name,
 		email: user.email,
+		is_active: user.is_active,
 		roles: roleList || [],
 	});
 
@@ -89,6 +91,24 @@ export default function EditUsers({
 									message={errors.email}
 									className="mt-2"
 								/>
+							</div>
+							<div className="mb-4 flex items-center gap-3">
+								<Checkbox
+									id="is_active"
+									checked={
+										data.is_active === ActiveStatus.Active
+									}
+									onCheckedChange={(checked) =>
+										setData(
+											'is_active',
+											checked
+												? ActiveStatus.Active
+												: ActiveStatus.Inactive,
+										)
+									}
+								/>
+								<Label htmlFor="is_active">Active user</Label>
+								<InputError message={errors.is_active} />
 							</div>
 							<Label htmlFor="roles">Select Roles</Label>
 							<div className="my-4">

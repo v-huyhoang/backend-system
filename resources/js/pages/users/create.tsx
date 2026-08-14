@@ -10,6 +10,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ActiveStatus } from '@/enums/customer';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -26,6 +27,7 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 		name: '',
 		email: '',
 		password: '',
+		is_active: ActiveStatus.Active,
 		roles: [] as string[],
 	});
 
@@ -98,6 +100,24 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 									className="mt-2"
 								/>
 							</div>
+							<div className="mb-4 flex items-center gap-3">
+								<Checkbox
+									id="is_active"
+									checked={
+										data.is_active === ActiveStatus.Active
+									}
+									onCheckedChange={(checked) =>
+										setData(
+											'is_active',
+											checked
+												? ActiveStatus.Active
+												: ActiveStatus.Inactive,
+										)
+									}
+								/>
+								<Label htmlFor="is_active">Active user</Label>
+								<InputError message={errors.is_active} />
+							</div>
 							<Label htmlFor="roles">Select Roles</Label>
 							<div className="my-4">
 								<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
@@ -119,16 +139,13 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 															'roles',
 															data.roles.filter(
 																(p) =>
-																	p !==
-																	role,
+																	p !== role,
 															),
 														);
 													}
 												}}
 											/>
-											<Label htmlFor={role}>
-												{role}
-											</Label>
+											<Label htmlFor={role}>{role}</Label>
 										</div>
 									))}
 								</div>
