@@ -9,6 +9,14 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/components/ui/dialog';
+import {
 	Table,
 	TableBody,
 	TableCell,
@@ -16,6 +24,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -23,6 +32,76 @@ import { Role } from '@/types/role_permissions';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+
+const visiblePermissionCount = 5;
+
+function RolePermissions({ role }: { role: Role['data'][number] }) {
+	const visiblePermissions = role.permissions.slice(
+		0,
+		visiblePermissionCount,
+	);
+	const hiddenPermissionCount =
+		role.permissions.length - visiblePermissions.length;
+
+	if (role.permissions.length === 0) {
+		return <span className="text-muted-foreground">—</span>;
+	}
+
+	return (
+		<div className="flex max-w-72 items-center gap-1.5">
+			{visiblePermissions.map((permission) => (
+				<Badge
+					key={permission.id}
+					variant="outline"
+					className="max-w-32 truncate"
+					title={permission.name}
+				>
+					{permission.name}
+				</Badge>
+			))}
+
+			{hiddenPermissionCount > 0 && (
+				<Dialog>
+					<DialogTrigger asChild>
+						<Button
+							variant="ghost"
+							size="sm"
+							className="h-6 shrink-0 px-2 text-xs"
+						>
+							+{hiddenPermissionCount} more
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Permissions</DialogTitle>
+							<DialogDescription>
+								{role.permissions.length} permissions assigned
+								to this role.
+							</DialogDescription>
+						</DialogHeader>
+						<div className="grid max-h-80 grid-cols-1 gap-2 overflow-y-auto pr-1 sm:grid-cols-2">
+							{role.permissions.map((permission) => (
+								<div
+									key={permission.id}
+									className="rounded-md border px-3 py-2"
+								>
+									<p className="text-sm font-medium">
+										{permission.name}
+									</p>
+									{permission.description && (
+										<p className="mt-1 text-xs text-muted-foreground">
+											{permission.description}
+										</p>
+									)}
+								</div>
+							))}
+						</div>
+					</DialogContent>
+				</Dialog>
+			)}
+		</div>
+	);
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
 	{
@@ -57,7 +136,7 @@ export default function Roles({ roles }: { roles: Role }) {
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Roles Managements</CardTitle>
 						<CardAction>
-							{can('create_roles') && (
+							{can(SystemPermission.CreateRoles) && (
 								<Link href={'/roles/create'}>
 									<Button variant={'default'}>Add New</Button>
 								</Link>
@@ -97,21 +176,13 @@ export default function Roles({ roles }: { roles: Role }) {
 										<TableCell>
 											{role.description}
 										</TableCell>
-										<TableCell className="flex flex-wrap items-center gap-2">
-											{role.permissions.map(
-												(permission, idx) => (
-													<Badge
-														key={idx}
-														variant={'outline'}
-														className="me-1"
-													>
-														{permission.name}
-													</Badge>
-												),
-											)}
-										</TableCell>
 										<TableCell>
-											{can('edit_roles') && (
+											<RolePermissions role={role} />
+										</TableCell>
+										<TableCell className="whitespace-nowrap">
+											{can(
+												SystemPermission.EditRoles,
+											) && (
 												<Link
 													href={`/roles/${role.id}/edit`}
 												>
@@ -123,7 +194,9 @@ export default function Roles({ roles }: { roles: Role }) {
 													</Button>
 												</Link>
 											)}
-											{can('delete_roles') && (
+											{can(
+												SystemPermission.DeleteRoles,
+											) && (
 												<Button
 													className="ms-2"
 													variant={'destructive'}

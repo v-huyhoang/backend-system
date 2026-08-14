@@ -26,6 +26,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -119,7 +120,7 @@ export default function Permissions({
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Permissions Managements</CardTitle>
 						<CardAction>
-							{can('create_permissions') && (
+							{can(SystemPermission.CreatePermissions) && (
 								<Button
 									variant="default"
 									onClick={() =>
@@ -174,7 +175,9 @@ export default function Permissions({
 											{permission.updated_at}
 										</TableCell>
 										<TableCell>
-											{can('edit_permissions') && (
+											{can(
+												SystemPermission.EditPermissions,
+											) && (
 												<Button
 													variant={'outline'}
 													size={'sm'}
@@ -185,7 +188,9 @@ export default function Permissions({
 													Edit
 												</Button>
 											)}
-											{can('delete_permissions') && (
+											{can(
+												SystemPermission.DeletePermissions,
+											) && (
 												<Button
 													className="ms-2"
 													variant={'destructive'}

@@ -26,6 +26,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -87,7 +88,7 @@ export default function Users({ users }: { users: User }) {
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Users Managements</CardTitle>
 						<CardAction>
-							{can('create_users') && (
+							{can(SystemPermission.CreateUsers) && (
 								<Link href={'/users/create'}>
 									<Button variant={'default'}>Add New</Button>
 								</Link>
@@ -182,7 +183,9 @@ export default function Users({ users }: { users: User }) {
 										</TableCell>
 										<TableCell>{user.created_at}</TableCell>
 										<TableCell>
-											{can('edit_users') && (
+											{can(
+												SystemPermission.EditUsers,
+											) && (
 												<Link
 													href={`/users/${user.id}/edit`}
 												>
@@ -194,7 +197,9 @@ export default function Users({ users }: { users: User }) {
 													</Button>
 												</Link>
 											)}
-											{can('delete_users') && (
+											{can(
+												SystemPermission.DeleteUsers,
+											) && (
 												<Button
 													className="ms-2"
 													variant={'destructive'}

@@ -10,6 +10,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { SystemPermission } from '@/enums/access-control';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -21,26 +22,26 @@ const mainNavItems: NavItem[] = [
 		title: 'Dashboard',
 		href: dashboard(),
 		icon: LayoutGrid,
-		permission: 'view_dashboard',
+		permission: SystemPermission.ViewDashboard,
 	},
 	{
 		title: 'Permissions',
 		href: '/permissions',
 		icon: Key,
-		permission: 'view_permissions',
+		permission: SystemPermission.ViewPermissions,
 	},
 	{
 		title: 'Roles',
 		href: '/roles',
 		icon: LockKeyholeIcon,
-		permission: 'view_roles',
+		permission: SystemPermission.ViewRoles,
 	},
 	{
 		title: 'Users',
 		href: '/users',
 		icon: User,
-		permission: 'view_users',
-	}
+		permission: SystemPermission.ViewUsers,
+	},
 ];
 
 const footerNavItems: NavItem[] = [
