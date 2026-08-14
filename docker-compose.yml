@@ -90,6 +90,7 @@ services:
       - "5173:5173"
     working_dir: /var/www/html
     entrypoint: [ 'npm' ]
+    command: [ 'run', 'dev', '--', '--host', '0.0.0.0' ]
     networks:
       - laravel
 

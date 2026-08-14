@@ -6,6 +6,7 @@ use App\Application\UserManagement\UserService;
 use App\Domain\UserManagement\Models\User;
 use App\Presentation\Http\Requests\Users\StoreUserRequest;
 use App\Presentation\Http\Requests\Users\UpdateUserRequest;
+use App\Presentation\Http\Resources\Users\UserCollection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,10 +18,11 @@ class UserController extends Controller
 
     public function index(Request $request): Response
     {
-        $filters = $request->only(['q', 'is_active']);
+        $filters = $request->only(['q', 'role_id', 'is_active']);
 
         return Inertia::render('users/index', [
-            'users' => $this->users->paginate($filters),
+            'users' => new UserCollection($this->users->paginate($filters)),
+            'roles' => $this->users->roleFilterOptions(),
             'filters' => $filters,
         ]);
     }

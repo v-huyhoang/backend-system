@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Presentation\Http\Resources\{{ plural }};
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class {{ entity }}Resource extends JsonResource
+{
+    /** @return array<string, mixed> */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            // Add fields exposed to the presentation layer here.
+        ];
+    }
+}

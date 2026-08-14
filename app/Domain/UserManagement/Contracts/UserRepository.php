@@ -12,6 +12,8 @@ interface UserRepository
 
     public function roleOptions(): Collection;
 
+    public function roleFilterOptions(): Collection;
+
     public function userDetails(User $user): User;
 
     public function create(array $attributes, array $roles): User;

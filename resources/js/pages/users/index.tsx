@@ -30,9 +30,10 @@ import { SystemPermission } from '@/enums/access-control';
 import { ActiveStatus } from '@/enums/customer';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
+import * as userRoutes from '@/routes/users';
 import { type BreadcrumbItem } from '@/types';
 import type { PageProps } from '@/types/page';
-import { User } from '@/types/user';
+import { RoleOption, User } from '@/types/user';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -40,25 +41,30 @@ import { toast } from 'sonner';
 const breadcrumbs: BreadcrumbItem[] = [
 	{
 		title: 'Users',
-		href: '/users',
+		href: userRoutes.index.url(),
 	},
 ];
 
 function deleteUser(id: number) {
 	if (confirm('Are you sure you want to delete this user?')) {
-		router.delete(`/users/${id}`);
+		router.delete(userRoutes.destroy.url(id));
 	}
 }
 
-export default function Users({ users }: { users: User }) {
+interface UsersPageProps {
+	users: User;
+	roles: RoleOption[];
+	filters: PageProps['filters'];
+}
+
+export default function Users({ users, roles, filters }: UsersPageProps) {
 	const { flash } = usePage<{ flash: { message?: string; error: string } }>()
 		.props;
-
-	const { filters } = usePage<PageProps>().props;
 
 	const { can } = usePermissions();
 
 	const [search, setSearch] = useState(filters.q ?? '');
+	const [roleFilter, setRoleFilter] = useState(filters.role_id ?? 'all');
 	const [activeFilter, setActiveFilter] = useState(
 		filters.is_active ?? 'all',
 	);
@@ -77,7 +83,11 @@ export default function Users({ users }: { users: User }) {
 		}
 
 		const timeout = setTimeout(() => {
-			const query: { q?: string; is_active?: string } = {};
+			const query: {
+				q?: string;
+				role_id?: string;
+				is_active?: string;
+			} = {};
 			const normalizedSearch = search.trim();
 
 			if (normalizedSearch) {
@@ -88,14 +98,18 @@ export default function Users({ users }: { users: User }) {
 				query.is_active = activeFilter;
 			}
 
-			router.get('/users', query, {
+			if (roleFilter !== 'all') {
+				query.role_id = roleFilter;
+			}
+
+			router.get(userRoutes.index.url(), query, {
 				preserveState: true,
 				replace: true,
 			});
 		}, 400);
 
 		return () => clearTimeout(timeout);
-	}, [search, activeFilter]);
+	}, [search, roleFilter, activeFilter]);
 
 	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
@@ -106,7 +120,7 @@ export default function Users({ users }: { users: User }) {
 						<CardTitle>Users Managements</CardTitle>
 						<CardAction>
 							{can(SystemPermission.CreateUsers) && (
-								<Link href={'/users/create'}>
+								<Link href={userRoutes.create()}>
 									<Button variant={'default'}>Add New</Button>
 								</Link>
 							)}
@@ -119,6 +133,7 @@ export default function Users({ users }: { users: User }) {
 								<TableHeader>
 									<TableRow className="border-none hover:bg-transparent">
 										<TableHead>Search</TableHead>
+										<TableHead>Role</TableHead>
 										<TableHead>Status</TableHead>
 									</TableRow>
 								</TableHeader>
@@ -133,6 +148,33 @@ export default function Users({ users }: { users: User }) {
 													setSearch(e.target.value)
 												}
 											/>
+										</TableCell>
+										<TableCell>
+											<Select
+												value={roleFilter}
+												onValueChange={setRoleFilter}
+											>
+												<SelectTrigger>
+													<SelectValue placeholder="Select a role" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														<SelectItem value="all">
+															All Roles
+														</SelectItem>
+														{roles.map((role) => (
+															<SelectItem
+																key={role.id}
+																value={String(
+																	role.id,
+																)}
+															>
+																{role.name}
+															</SelectItem>
+														))}
+													</SelectGroup>
+												</SelectContent>
+											</Select>
 										</TableCell>
 										<TableCell>
 											<Select
@@ -236,7 +278,9 @@ export default function Users({ users }: { users: User }) {
 												SystemPermission.EditUsers,
 											) && (
 												<Link
-													href={`/users/${user.id}/edit`}
+													href={userRoutes.edit(
+														user.id,
+													)}
 												>
 													<Button
 														variant={'outline'}

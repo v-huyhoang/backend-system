@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Domain\{{ module }}\Contracts;
+
+use App\Domain\{{ module }}\Models\{{ entity }};
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+interface {{ entity }}Repository
+{
+    public function paginate(array $filters = [], int $perPage = 10): LengthAwarePaginator;
+
+    public function create(array $attributes): {{ entity }};
+
+    public function update({{ entity }} ${{ variable }}, array $attributes): {{ entity }};
+
+    public function delete({{ entity }} ${{ variable }}): void;
+}

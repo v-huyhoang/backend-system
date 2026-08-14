@@ -16,24 +16,28 @@ class EloquentUserRepository implements UserRepository
         return User::query()
             ->search($filters['q'] ?? null)
             ->filter(['is_active' => $filters['is_active'] ?? null])
+            ->when($filters['role_id'] ?? null, function ($userQuery, int|string $roleId) {
+                $userQuery->whereHas('roles', function ($roleQuery) use ($roleId) {
+                    $roleQuery->where('roles.id', $roleId);
+                });
+            })
             ->with('roles:id,name')
             ->latest()
             ->paginate($perPage)
-            ->withQueryString()
-            ->through(fn (User $user) => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'is_active' => $user->is_active->value,
-                'roles' => $user->roles->pluck('name'),
-                'created_at' => $user->created_at?->format('d-m-Y'),
-                'updated_at' => $user->updated_at?->format('d-m-Y'),
-            ]);
+            ->withQueryString();
     }
 
     public function roleOptions(): Collection
     {
         return Role::query()->orderBy('name')->pluck('name');
+    }
+
+    public function roleFilterOptions(): Collection
+    {
+        return Role::query()
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get();
     }
 
     public function userDetails(User $user): User

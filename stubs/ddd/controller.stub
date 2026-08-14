@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Presentation\Http\Controllers;
+
+use App\Application\{{ module }}\{{ entity }}Service;
+use App\Domain\{{ module }}\Models\{{ entity }};
+use App\Presentation\Http\Requests\{{ plural }}\Store{{ entity }}Request;
+use App\Presentation\Http\Requests\{{ plural }}\Update{{ entity }}Request;
+use App\Presentation\Http\Resources\{{ plural }}\{{ entity }}Collection;
+use App\Presentation\Http\Resources\{{ plural }}\{{ entity }}Resource;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class {{ entity }}Controller extends Controller
+{
+    public function __construct(private readonly {{ entity }}Service ${{ variables }}) {}
+
+    public function index(): Response
+    {
+        return Inertia::render('{{ page }}/index', [
+            '{{ variables }}' => new {{ entity }}Collection($this->{{ variables }}->paginate()),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('{{ page }}/create');
+    }
+
+    public function store(Store{{ entity }}Request $request): RedirectResponse
+    {
+        $this->{{ variables }}->create($request->validated());
+
+        return to_route('{{ page }}.index')->with('message', '{{ entity }} created successfully.');
+    }
+
+    public function edit({{ entity }} ${{ variable }}): Response
+    {
+        return Inertia::render('{{ page }}/edit', [
+            '{{ variable }}' => new {{ entity }}Resource(${{ variable }}),
+        ]);
+    }
+
+    public function update(Update{{ entity }}Request $request, {{ entity }} ${{ variable }}): RedirectResponse
+    {
+        $this->{{ variables }}->update(${{ variable }}, $request->validated());
+
+        return to_route('{{ page }}.index')->with('message', '{{ entity }} updated successfully.');
+    }
+
+    public function destroy({{ entity }} ${{ variable }}): RedirectResponse
+    {
+        $this->{{ variables }}->delete(${{ variable }});
+
+        return to_route('{{ page }}.index')->with('message', '{{ entity }} deleted successfully.');
+    }
+}

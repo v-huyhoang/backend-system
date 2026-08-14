@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Presentation\Http\Requests\{{ plural }};
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class Store{{ entity }}Request extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            // Add store validation rules here.
+        ];
+    }
+}

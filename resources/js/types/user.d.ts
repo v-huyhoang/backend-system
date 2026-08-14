@@ -14,6 +14,11 @@ export interface User extends Pagination {
 	data: SingleUser[];
 }
 
+export interface RoleOption {
+	id: number;
+	name: string;
+}
+
 export interface UserRole extends SingleUser {
 	roles: SingleRole[];
 }

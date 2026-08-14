@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Infrastructure\Persistence\{{ module }};
+
+use App\Domain\{{ module }}\Contracts\{{ entity }}Repository;
+use App\Domain\{{ module }}\Models\{{ entity }};
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+class Eloquent{{ entity }}Repository implements {{ entity }}Repository
+{
+    public function paginate(array $filters = [], int $perPage = 10): LengthAwarePaginator
+    {
+        return {{ entity }}::query()
+            ->latest()
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
+    public function create(array $attributes): {{ entity }}
+    {
+        return {{ entity }}::create($attributes);
+    }
+
+    public function update({{ entity }} ${{ variable }}, array $attributes): {{ entity }}
+    {
+        ${{ variable }}->update($attributes);
+
+        return ${{ variable }}->refresh();
+    }
+
+    public function delete({{ entity }} ${{ variable }}): void
+    {
+        ${{ variable }}->delete();
+    }
+}

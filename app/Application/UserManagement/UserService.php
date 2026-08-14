@@ -22,6 +22,11 @@ class UserService
         return $this->users->roleOptions();
     }
 
+    public function roleFilterOptions(): Collection
+    {
+        return $this->users->roleFilterOptions();
+    }
+
     public function details(User $user): User
     {
         return $this->users->userDetails($user);
