@@ -1,6 +1,7 @@
 <?php
 
 use App\Domain\AccessControl\Enums\SystemPermission;
+use App\Presentation\Http\Controllers\CategoryController;
 use App\Presentation\Http\Controllers\PermissionController;
 use App\Presentation\Http\Controllers\RoleController;
 use App\Presentation\Http\Controllers\UserController;
@@ -43,6 +44,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->can(SystemPermission::EditUsers->value);
         Route::put('/{user}', [UserController::class, 'update'])->name('users.update')->can(SystemPermission::EditUsers->value);
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy')->can(SystemPermission::DeleteUsers->value);
+        // Add your settings routes here
+    });
+
+	Route::prefix('categories')->group(function () {
+        // Add your users routes here
+        Route::get('/', [CategoryController::class, 'index'])->name('categories.index')->can(SystemPermission::ViewCategories->value);
+        Route::post('/', [CategoryController::class, 'store'])->name('categories.store')->can(SystemPermission::CreateCategories->value);
+        Route::get('/create', [CategoryController::class, 'create'])->name('categories.create')->can(SystemPermission::CreateCategories->value);
+        Route::get('/{category}', [CategoryController::class, 'show'])->name('categories.show')->can(SystemPermission::ViewCategories->value);
+        Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit')->can(SystemPermission::EditCategories->value);
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('categories.update')->can(SystemPermission::EditCategories->value);
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy')->can(SystemPermission::DeleteCategories->value);
         // Add your settings routes here
     });
 });

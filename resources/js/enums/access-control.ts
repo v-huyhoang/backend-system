@@ -16,4 +16,8 @@ export enum SystemPermission {
 	CreateUsers = 'create_users',
 	EditUsers = 'edit_users',
 	DeleteUsers = 'delete_users',
+	ViewCategories = 'view_categories',
+	CreateCategories = 'create_categories',
+	EditCategories = 'edit_categories',
+	DeleteCategories = 'delete_categories',
 }

@@ -14,7 +14,7 @@ import { SystemPermission } from '@/enums/access-control';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Key, LayoutGrid, LockKeyholeIcon, User } from 'lucide-react';
+import { BoxIcon, Key, LayoutGrid, LockKeyholeIcon, User } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -41,6 +41,12 @@ const mainNavItems: NavItem[] = [
 		href: '/users',
 		icon: User,
 		permission: SystemPermission.ViewUsers,
+	},
+	{
+		title: 'Categories',
+		href: '/categories',
+		icon: BoxIcon,
+		permission: SystemPermission.ViewCategories,
 	},
 ];
 
