@@ -2,6 +2,7 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\AccessControl\DTOs\PermissionData;
 use App\Application\AccessControl\PermissionService;
 use App\Presentation\Http\Requests\Permissions\StorePermissionRequest;
 use App\Presentation\Http\Requests\Permissions\UpdatePermissionRequest;
@@ -21,14 +22,14 @@ class PermissionController extends Controller
 
     public function store(StorePermissionRequest $request): RedirectResponse
     {
-        $this->permissions->create($request->validated());
+        $this->permissions->create(PermissionData::fromArray($request->validated()));
 
         return to_route('permissions.index')->with('message', 'Permission created successfully.');
     }
 
     public function update(UpdatePermissionRequest $request, Permission $permission): RedirectResponse
     {
-        $this->permissions->update($permission, $request->validated());
+        $this->permissions->update($permission, PermissionData::fromArray($request->validated()));
 
         return to_route('permissions.index')->with('message', 'Permission updated successfully.');
     }

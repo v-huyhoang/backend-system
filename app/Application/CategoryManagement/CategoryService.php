@@ -2,6 +2,7 @@
 
 namespace App\Application\CategoryManagement;
 
+use App\Application\CategoryManagement\DTOs\CategoryData;
 use App\Domain\CategoryManagement\Contracts\CategoryRepository;
 use App\Domain\CategoryManagement\Models\Category;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -21,14 +22,14 @@ class CategoryService
         return $this->categories->parentOptions($excluding);
     }
 
-    public function create(array $attributes): Category
+    public function create(CategoryData $data): Category
     {
-        return $this->categories->create($attributes);
+        return $this->categories->create($data->toArray());
     }
 
-    public function update(Category $category, array $attributes): Category
+    public function update(Category $category, CategoryData $data): Category
     {
-        return $this->categories->update($category, $attributes);
+        return $this->categories->update($category, $data->toArray());
     }
 
     public function delete(Category $category): void

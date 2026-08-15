@@ -3,7 +3,10 @@
 namespace App\Providers;
 
 use App\Domain\{{ module }}\Contracts\{{ entity }}Repository;
+use App\Domain\{{ module }}\Models\{{ entity }};
 use App\Infrastructure\Persistence\{{ module }}\Eloquent{{ entity }}Repository;
+use App\Policies\{{ entity }}Policy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class {{ entity }}ServiceProvider extends ServiceProvider
@@ -11,5 +14,10 @@ class {{ entity }}ServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind({{ entity }}Repository::class, Eloquent{{ entity }}Repository::class);
+    }
+
+    public function boot(): void
+    {
+        Gate::policy({{ entity }}::class, {{ entity }}Policy::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Presentation\Http\Controllers;
 
 use App\Application\CategoryManagement\CategoryService;
+use App\Application\CategoryManagement\DTOs\CategoryData;
 use App\Domain\CategoryManagement\Models\Category;
 use App\Presentation\Http\Requests\Categories\StoreCategoryRequest;
 use App\Presentation\Http\Requests\Categories\UpdateCategoryRequest;
@@ -38,7 +39,7 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $this->categories->create($request->validated());
+        $this->categories->create(CategoryData::fromArray($request->validated()));
 
         return to_route('categories.index')->with('message', 'Category created successfully.');
     }
@@ -58,7 +59,7 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        $this->categories->update($category, $request->validated());
+        $this->categories->update($category, CategoryData::fromArray($request->validated()));
 
         return to_route('categories.index')->with('message', 'Category updated successfully.');
     }

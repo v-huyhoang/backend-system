@@ -94,6 +94,7 @@ app/
 ├── Application/            # Application services/use cases
 ├── Infrastructure/         # Eloquent repository và tích hợp kỹ thuật
 ├── Presentation/Http/      # Controller, Request, Middleware và Resource
+├── Policies/               # Object-level authorization cho model/resource
 └── Providers/              # Dependency bindings
 ```
 
@@ -102,6 +103,7 @@ Luồng xử lý thông thường:
 ```text
 HTTP Request
   → Presentation Controller/FormRequest
+  → Application DTO
   → Application Service
   → Domain Repository Contract
   → Infrastructure Eloquent Repository
@@ -155,7 +157,11 @@ app/
 ├── Domain/Catalog/
 │   ├── Models/Product.php
 │   └── Contracts/ProductRepository.php
-├── Application/Catalog/ProductService.php
+├── Application/Catalog/
+│   ├── DTOs/
+│   │   ├── StoreProductData.php
+│   │   └── UpdateProductData.php
+│   └── ProductService.php
 ├── Infrastructure/Persistence/Catalog/
 │   └── EloquentProductRepository.php
 ├── Presentation/Http/
@@ -166,6 +172,7 @@ app/
 │   └── Resources/Products/
 │       ├── ProductResource.php
 │       └── ProductCollection.php
+├── Policies/ProductPolicy.php
 └── Providers/ProductServiceProvider.php
 ```
 

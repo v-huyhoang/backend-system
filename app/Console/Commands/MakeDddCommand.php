@@ -35,6 +35,7 @@ class MakeDddCommand extends Command
         $page = Str::plural(Str::kebab($entity));
         $variable = Str::camel($entity);
         $variables = Str::plural($variable);
+        $permissions = Str::plural(Str::snake($entity));
 
         $replacements = [
             '{{ entity }}' => $entity,
@@ -43,11 +44,14 @@ class MakeDddCommand extends Command
             '{{ page }}' => $page,
             '{{ variable }}' => $variable,
             '{{ variables }}' => $variables,
+            '{{ permissions }}' => $permissions,
         ];
 
         $targets = [
             'model.stub' => app_path("Domain/{$module}/Models/{$entity}.php"),
             'repository.stub' => app_path("Domain/{$module}/Contracts/{$entity}Repository.php"),
+            'store-data.stub' => app_path("Application/{$module}/DTOs/Store{$entity}Data.php"),
+            'update-data.stub' => app_path("Application/{$module}/DTOs/Update{$entity}Data.php"),
             'service.stub' => app_path("Application/{$module}/{$entity}Service.php"),
             'eloquent-repository.stub' => app_path("Infrastructure/Persistence/{$module}/Eloquent{$entity}Repository.php"),
             'controller.stub' => app_path("Presentation/Http/Controllers/{$entity}Controller.php"),
@@ -55,6 +59,7 @@ class MakeDddCommand extends Command
             'update-request.stub' => app_path("Presentation/Http/Requests/{$plural}/Update{$entity}Request.php"),
             'resource.stub' => app_path("Presentation/Http/Resources/{$plural}/{$entity}Resource.php"),
             'collection.stub' => app_path("Presentation/Http/Resources/{$plural}/{$entity}Collection.php"),
+            'policy.stub' => app_path("Policies/{$entity}Policy.php"),
             'provider.stub' => app_path("Providers/{$entity}ServiceProvider.php"),
         ];
 

@@ -45,7 +45,7 @@ class EloquentCategoryRepository implements CategoryRepository
                 ])->concat($root->children->map(fn (Category $child) => [
                     'id' => $child->id,
                     'name' => $child->name,
-                    'label' => "{$root->name} / {$child->name}",
+                    'label' => $child->name,
                     'depth' => 2,
                 ]));
             })

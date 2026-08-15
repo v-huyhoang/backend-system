@@ -3,6 +3,7 @@ name: CI - Pull Request
 on:
   pull_request:
     branches:
+      - develop
       - staging
       - main
       - feat/new-ui-erp
@@ -15,9 +16,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -35,9 +33,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -56,20 +51,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
 
       - name: Install Node.js dependencies
         run: npm ci
 
       - name: Run ESLint
-        run: npm run lint:check
+        run: npx eslint .
 
   prettier:
     name: Frontend Prettier Check
@@ -77,18 +70,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+          cache: npm
 
       - name: Install Node.js dependencies
         run: npm ci
 
       - name: Run Prettier Check
         run: npm run format:check
-1

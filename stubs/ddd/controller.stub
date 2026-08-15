@@ -2,6 +2,8 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\{{ module }}\DTOs\Store{{ entity }}Data;
+use App\Application\{{ module }}\DTOs\Update{{ entity }}Data;
 use App\Application\{{ module }}\{{ entity }}Service;
 use App\Domain\{{ module }}\Models\{{ entity }};
 use App\Presentation\Http\Requests\{{ plural }}\Store{{ entity }}Request;
@@ -30,7 +32,7 @@ class {{ entity }}Controller extends Controller
 
     public function store(Store{{ entity }}Request $request): RedirectResponse
     {
-        $this->{{ variables }}->create($request->validated());
+        $this->{{ variables }}->create(Store{{ entity }}Data::fromArray($request->validated()));
 
         return to_route('{{ page }}.index')->with('message', '{{ entity }} created successfully.');
     }
@@ -44,7 +46,7 @@ class {{ entity }}Controller extends Controller
 
     public function update(Update{{ entity }}Request $request, {{ entity }} ${{ variable }}): RedirectResponse
     {
-        $this->{{ variables }}->update(${{ variable }}, $request->validated());
+        $this->{{ variables }}->update(${{ variable }}, Update{{ entity }}Data::fromArray($request->validated()));
 
         return to_route('{{ page }}.index')->with('message', '{{ entity }} updated successfully.');
     }

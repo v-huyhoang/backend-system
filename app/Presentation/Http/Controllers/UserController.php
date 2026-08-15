@@ -2,6 +2,8 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\UserManagement\DTOs\StoreUserData;
+use App\Application\UserManagement\DTOs\UpdateUserData;
 use App\Application\UserManagement\UserService;
 use App\Domain\UserManagement\Models\User;
 use App\Presentation\Http\Requests\Users\StoreUserRequest;
@@ -34,7 +36,7 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $this->users->create($request->validated());
+        $this->users->create(StoreUserData::fromArray($request->validated()));
 
         return to_route('users.index')->with('message', 'User created successfully.');
     }
@@ -54,7 +56,7 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $this->users->update($user, $request->validated());
+        $this->users->update($user, UpdateUserData::fromArray($request->validated()));
 
         return to_route('users.index')->with('message', 'User updated successfully.');
     }

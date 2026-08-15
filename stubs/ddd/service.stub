@@ -2,6 +2,8 @@
 
 namespace App\Application\{{ module }};
 
+use App\Application\{{ module }}\DTOs\Store{{ entity }}Data;
+use App\Application\{{ module }}\DTOs\Update{{ entity }}Data;
 use App\Domain\{{ module }}\Contracts\{{ entity }}Repository;
 use App\Domain\{{ module }}\Models\{{ entity }};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -15,14 +17,14 @@ class {{ entity }}Service
         return $this->{{ variables }}->paginate($filters);
     }
 
-    public function create(array $attributes): {{ entity }}
+    public function create(Store{{ entity }}Data $data): {{ entity }}
     {
-        return $this->{{ variables }}->create($attributes);
+        return $this->{{ variables }}->create($data->toArray());
     }
 
-    public function update({{ entity }} ${{ variable }}, array $attributes): {{ entity }}
+    public function update({{ entity }} ${{ variable }}, Update{{ entity }}Data $data): {{ entity }}
     {
-        return $this->{{ variables }}->update(${{ variable }}, $attributes);
+        return $this->{{ variables }}->update(${{ variable }}, $data->toArray());
     }
 
     public function delete({{ entity }} ${{ variable }}): void

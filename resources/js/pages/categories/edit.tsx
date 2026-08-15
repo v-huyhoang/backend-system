@@ -100,16 +100,17 @@ export default function EditCategory({
 									</SelectTrigger>
 									<SelectContent>
 										<SelectItem value="root">
-											— Root category (Level 1)
+											— Root category
 										</SelectItem>
 										{parentOptions.map((option) => (
 											<SelectItem
 												key={option.id}
 												value={String(option.id)}
+												style={{
+													paddingLeft: `${0.5 + (option.depth - 1) * 1.25}rem`,
+												}}
 											>
-												{'— '.repeat(option.depth - 1)}
-												{option.label} (Level{' '}
-												{option.depth})
+												{option.label}
 											</SelectItem>
 										))}
 									</SelectContent>

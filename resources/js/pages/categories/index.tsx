@@ -230,34 +230,36 @@ export default function Categories({
 									setSearch(event.target.value)
 								}
 							/>
-							<div className='w-[180px]'>
-							<Select
-								value={activeFilter}
-								onValueChange={setActiveFilter}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Select status" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectItem value="all">
-											All statuses
-										</SelectItem>
-										<SelectItem
-											value={String(ActiveStatus.Active)}
-										>
-											Active
-										</SelectItem>
-										<SelectItem
-											value={String(
-												ActiveStatus.Inactive,
-											)}
-										>
-											Inactive
-										</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-							</Select>
+							<div className="w-[180px]">
+								<Select
+									value={activeFilter}
+									onValueChange={setActiveFilter}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Select status" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectItem value="all">
+												All statuses
+											</SelectItem>
+											<SelectItem
+												value={String(
+													ActiveStatus.Active,
+												)}
+											>
+												Active
+											</SelectItem>
+											<SelectItem
+												value={String(
+													ActiveStatus.Inactive,
+												)}
+											>
+												Inactive
+											</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 						</div>
 						<Table>

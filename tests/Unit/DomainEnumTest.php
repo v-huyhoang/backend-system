@@ -22,7 +22,7 @@ class DomainEnumTest extends TestCase
         $this->assertSame('admin', SystemRole::Admin->value);
         $this->assertContains('view_roles', SystemPermission::values());
         $this->assertContains('delete_users', SystemPermission::values());
-        $this->assertCount(13, SystemPermission::cases());
+        $this->assertCount(17, SystemPermission::cases());
     }
 
     public function test_membership_rank_values_match_database_values(): void

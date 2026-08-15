@@ -2,6 +2,7 @@
 
 namespace App\Application\AccessControl;
 
+use App\Application\AccessControl\DTOs\RoleData;
 use App\Domain\AccessControl\Contracts\RoleRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -26,20 +27,20 @@ class RoleService
         return $this->roles->roleDetails($role);
     }
 
-    public function create(array $data): Role
+    public function create(RoleData $data): Role
     {
         return $this->roles->create(
-            ['name' => $data['name'], 'description' => $data['description'] ?? null],
-            $data['permissions'] ?? [],
+            ['name' => $data->name, 'description' => $data->description],
+            $data->permissions,
         );
     }
 
-    public function update(Role $role, array $data): Role
+    public function update(Role $role, RoleData $data): Role
     {
         return $this->roles->update(
             $role,
-            ['name' => $data['name'], 'description' => $data['description'] ?? null],
-            $data['permissions'] ?? [],
+            ['name' => $data->name, 'description' => $data->description],
+            $data->permissions,
         );
     }
 

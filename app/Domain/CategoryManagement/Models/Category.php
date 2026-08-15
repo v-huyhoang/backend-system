@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use Filterable, HasFactory;
-	use Sluggable;
+    use Sluggable;
 
     protected array $searchable = ['name', 'slug', 'description'];
 

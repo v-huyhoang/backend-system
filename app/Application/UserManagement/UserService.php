@@ -2,6 +2,8 @@
 
 namespace App\Application\UserManagement;
 
+use App\Application\UserManagement\DTOs\StoreUserData;
+use App\Application\UserManagement\DTOs\UpdateUserData;
 use App\Domain\UserManagement\Contracts\UserRepository;
 use App\Domain\UserManagement\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -32,23 +34,23 @@ class UserService
         return $this->users->userDetails($user);
     }
 
-    public function create(array $data): User
+    public function create(StoreUserData $data): User
     {
         return $this->users->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'is_active' => $data['is_active'],
-        ], $data['roles'] ?? []);
+            'name' => $data->name,
+            'email' => $data->email,
+            'password' => Hash::make($data->password),
+            'is_active' => $data->isActive,
+        ], $data->roles);
     }
 
-    public function update(User $user, array $data): User
+    public function update(User $user, UpdateUserData $data): User
     {
         return $this->users->update($user, [
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'is_active' => $data['is_active'],
-        ], $data['roles'] ?? []);
+            'name' => $data->name,
+            'email' => $data->email,
+            'is_active' => $data->isActive,
+        ], $data->roles);
     }
 
     public function delete(User $user): void

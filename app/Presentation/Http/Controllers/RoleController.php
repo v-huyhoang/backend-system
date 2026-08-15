@@ -2,6 +2,7 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\AccessControl\DTOs\RoleData;
 use App\Application\AccessControl\RoleService;
 use App\Presentation\Http\Requests\Roles\StoreRoleRequest;
 use App\Presentation\Http\Requests\Roles\UpdateRoleRequest;
@@ -26,7 +27,7 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request): RedirectResponse
     {
-        $this->roles->create($request->validated());
+        $this->roles->create(RoleData::fromArray($request->validated()));
 
         return to_route('roles.index')->with('message', 'Role created successfully.');
     }
@@ -46,7 +47,7 @@ class RoleController extends Controller
 
     public function update(UpdateRoleRequest $request, Role $role): RedirectResponse
     {
-        $this->roles->update($role, $request->validated());
+        $this->roles->update($role, RoleData::fromArray($request->validated()));
 
         return to_route('roles.index')->with('message', 'Role updated successfully.');
     }
