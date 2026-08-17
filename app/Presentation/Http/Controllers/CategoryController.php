@@ -22,7 +22,7 @@ class CategoryController extends Controller
     {
         $filters = $request->only(['q', 'is_active']);
 
-        return Inertia::render('categories/index', [
+        return Inertia::render('admin/categories/index', [
             'categories' => new CategoryCollection(
                 $this->categories->paginate($filters)
             ),
@@ -32,7 +32,7 @@ class CategoryController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('categories/create', [
+        return Inertia::render('admin/categories/create', [
             'parentOptions' => $this->categories->parentOptions(),
         ]);
     }
@@ -46,7 +46,7 @@ class CategoryController extends Controller
 
     public function edit(Request $request, Category $category): Response
     {
-        return Inertia::render('categories/edit', [
+        return Inertia::render('admin/categories/edit', [
             'category' => (new CategoryResource($category))->resolve($request),
             'parentOptions' => $this->categories->parentOptions($category),
         ]);

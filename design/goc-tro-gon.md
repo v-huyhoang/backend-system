@@ -1,4 +1,4 @@
-# Góc Trọ Gọn — UX handoff
+# Góc Trọ Thông Minh — UX handoff
 
 ## 1. User flow ưu tiên
 

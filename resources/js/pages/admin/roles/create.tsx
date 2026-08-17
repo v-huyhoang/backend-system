@@ -12,56 +12,30 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { RolePermission, SinglePermission } from '@/types/role_permissions';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
+import { SinglePermission } from '@/types/role_permissions';
+import { Head, Link, useForm } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
 	{
-		title: 'Edit Roles',
-		href: '/roles',
+		title: 'Create Roles',
+		href: '/admin/roles/create',
 	},
 ];
 
-export default function EditRoles({
+export default function CreateRoles({
 	permissions,
-	role,
 }: {
 	permissions: SinglePermission[];
-	role: RolePermission;
 }) {
-	const { flash } = usePage<{ flash: { message?: string; error?: string } }>()
-		.props;
-
-	const permissionList = role.permissions.map((perm) => perm.name);
-
-	const { data, setData, put, processing, errors } = useForm({
-		name: role.name,
-		description: role.description || '',
-		permissions: permissionList,
+	const { data, setData, post, processing, errors } = useForm({
+		name: '',
+		description: '',
+		permissions: [] as string[],
 	});
-
-	useEffect(() => {
-		if (flash.message) {
-			toast.success(flash.message);
-		}
-		if (flash.error) {
-			toast.error(flash.error);
-		}
-	}, [flash.message, flash.error]);
 
 	function submit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		put(`/roles/${role.id}`, {
-			onSuccess: () => {
-				toast.success('Role updated successfully');
-			},
-			onError: (errors) => {
-				console.error('Update errors:', errors);
-				toast.error('Failed to update role');
-			},
-		});
+		post('/admin/roles');
 	}
 
 	return (
@@ -70,9 +44,9 @@ export default function EditRoles({
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 				<Card>
 					<CardHeader className="flex items-center justify-between">
-						<CardTitle>Edit Role</CardTitle>
+						<CardTitle>Create Role</CardTitle>
 						<CardAction>
-							<Link href={'/roles'}>
+							<Link href={'/admin/roles'}>
 								<Button variant="default">Go back</Button>
 							</Link>
 						</CardAction>
@@ -125,9 +99,6 @@ export default function EditRoles({
 										>
 											<Checkbox
 												id={permission.name}
-												checked={data.permissions.includes(
-													permission.name,
-												)}
 												onCheckedChange={(checked) => {
 													if (checked) {
 														setData('permissions', [
@@ -159,7 +130,7 @@ export default function EditRoles({
 									type="submit"
 									disabled={processing}
 								>
-									Update
+									Create
 								</Button>
 							</div>
 						</form>

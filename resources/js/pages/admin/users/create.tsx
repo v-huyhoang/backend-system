@@ -18,7 +18,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 const breadcrumbs: BreadcrumbItem[] = [
 	{
 		title: 'Create Users',
-		href: '/users/create',
+		href: '/admin/users/create',
 	},
 ];
 
@@ -33,7 +33,7 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 
 	function submit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		post('/users');
+		post('/admin/users');
 	}
 
 	return (
@@ -44,7 +44,7 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Create User</CardTitle>
 						<CardAction>
-							<Link href={'/users'}>
+							<Link href={'/admin/users'}>
 								<Button variant="default">Go back</Button>
 							</Link>
 						</CardAction>

@@ -39,7 +39,7 @@ import { toast } from 'sonner';
 const breadcrumbs: BreadcrumbItem[] = [
 	{
 		title: 'Permissions',
-		href: '/permissions',
+		href: '/admin/permissions',
 	},
 ];
 
@@ -82,7 +82,7 @@ export default function Permissions({
 	});
 	function submit(e: React.FormEvent) {
 		e.preventDefault();
-		post('/permissions', {
+		post('/admin/permissions', {
 			onSuccess: () => {
 				reset('name');
 				reset('description');
@@ -100,7 +100,7 @@ export default function Permissions({
 
 	function update(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		put(`/permissions/${data.id}`, {
+		put(`/admin/permissions/${data.id}`, {
 			onSuccess: () => {
 				reset('name');
 				reset('description');
@@ -109,7 +109,7 @@ export default function Permissions({
 	}
 
 	function deletePermission(id: number) {
-		destroy(`/permissions/${id}`);
+		destroy(`/admin/permissions/${id}`);
 	}
 
 	return (

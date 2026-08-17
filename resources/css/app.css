@@ -141,3 +141,75 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@layer components {
+	html:has(.gtg-theme) {
+		scroll-behavior: smooth;
+	}
+
+	.gtg-theme {
+		--gtg-bg: #fff8e7;
+		--gtg-surface: #ffffff;
+		--gtg-text: #20241f;
+		--gtg-muted: #687066;
+		--gtg-primary: #3a7d44;
+		--gtg-primary-dark: #285b32;
+		--gtg-primary-soft: #e5f0e6;
+		--gtg-accent: #ff8a3d;
+		--gtg-accent-hover: #f47d31;
+		--gtg-border: #e7e4da;
+		--gtg-border-strong: #c8cec4;
+		--gtg-text-soft: #596157;
+		--gtg-warning: #8a4b12;
+		--gtg-warning-text: #6f5217;
+		--gtg-success: #348a48;
+		--gtg-warning-icon: #d97706;
+		--gtg-hover: #f0f6f0;
+		--gtg-selection: #cfe5d2;
+		--gtg-collection-study: #edf5ee;
+		--gtg-collection-move: #fff0e5;
+		--gtg-collection-kitchen: #f2efe6;
+		--gtg-collection-clean: #eaf3f1;
+		--gtg-collection-budget: #fff5db;
+		--gtg-success-surface: #f1f8f2;
+		--gtg-warning-surface: #fff6ed;
+		--gtg-shadow-sm: 0 8px 30px rgb(40 91 50 / 7%);
+		--gtg-shadow-md: 0 16px 50px rgb(40 91 50 / 12%);
+		font-family: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+		touch-action: manipulation;
+	}
+
+	.gtg-theme :where(a, button, input):focus-visible {
+		outline: 3px solid color-mix(in srgb, var(--gtg-primary) 75%, white);
+		outline-offset: 3px;
+	}
+
+	.gtg-theme :where(a, button) {
+		cursor: pointer;
+	}
+
+	.gtg-surface {
+		border: 1px solid var(--gtg-border);
+		background: var(--gtg-surface);
+		box-shadow: var(--gtg-shadow-sm);
+	}
+
+	.gtg-anchor {
+		scroll-margin-top: 5rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html:has(.gtg-theme) {
+		scroll-behavior: auto;
+	}
+
+	.gtg-theme *,
+	.gtg-theme *::before,
+	.gtg-theme *::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}

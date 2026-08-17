@@ -106,13 +106,13 @@ function RolePermissions({ role }: { role: Role['data'][number] }) {
 const breadcrumbs: BreadcrumbItem[] = [
 	{
 		title: 'Roles',
-		href: '/roles',
+		href: '/admin/roles',
 	},
 ];
 
 function deleteRole(id: number) {
 	if (confirm('Are you sure you want to delete this role?')) {
-		router.delete(`/roles/${id}`);
+		router.delete(`/admin/roles/${id}`);
 	}
 }
 
@@ -137,7 +137,7 @@ export default function Roles({ roles }: { roles: Role }) {
 						<CardTitle>Roles Managements</CardTitle>
 						<CardAction>
 							{can(SystemPermission.CreateRoles) && (
-								<Link href={'/roles/create'}>
+								<Link href={'/admin/roles/create'}>
 									<Button variant={'default'}>Add New</Button>
 								</Link>
 							)}
@@ -184,7 +184,7 @@ export default function Roles({ roles }: { roles: Role }) {
 												SystemPermission.EditRoles,
 											) && (
 												<Link
-													href={`/roles/${role.id}/edit`}
+													href={`/admin/roles/${role.id}/edit`}
 												>
 													<Button
 														variant={'outline'}

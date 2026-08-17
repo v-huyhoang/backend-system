@@ -20,4 +20,8 @@ export enum SystemPermission {
 	CreateCategories = 'create_categories',
 	EditCategories = 'edit_categories',
 	DeleteCategories = 'delete_categories',
+	ViewProducts = 'view_products',
+	CreateProducts = 'create_products',
+	EditProducts = 'edit_products',
+	DeleteProducts = 'delete_products',
 }

@@ -19,7 +19,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 const breadcrumbs: BreadcrumbItem[] = [
 	{
 		title: 'Edit Users',
-		href: '/users/edit',
+		href: '/admin/users/edit',
 	},
 ];
 
@@ -41,7 +41,7 @@ export default function EditUsers({
 
 	function submit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		put(`/users/${user.id}`);
+		put(`/admin/users/${user.id}`);
 	}
 
 	return (
@@ -52,7 +52,7 @@ export default function EditUsers({
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Edit User</CardTitle>
 						<CardAction>
-							<Link href={'/users'}>
+							<Link href={'/admin/users'}>
 								<Button variant="default">Go back</Button>
 							</Link>
 						</CardAction>

@@ -21,6 +21,10 @@ enum SystemPermission: string
     case CreateCategories = 'create_categories';
     case EditCategories = 'edit_categories';
     case DeleteCategories = 'delete_categories';
+	case ViewProducts = 'view_products';
+    case CreateProducts = 'create_products';
+    case EditProducts = 'edit_products';
+    case DeleteProducts = 'delete_products';
 
     public function description(): string
     {
@@ -42,6 +46,10 @@ enum SystemPermission: string
             self::CreateCategories => 'Create categories',
             self::EditCategories => 'Edit categories',
             self::DeleteCategories => 'Delete categories',
+			self::ViewProducts => 'View products',
+            self::CreateProducts => 'Create products',
+            self::EditProducts => 'Edit products',
+            self::DeleteProducts => 'Delete products',
         };
     }
 

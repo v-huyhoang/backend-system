@@ -17,12 +17,12 @@ class RoleController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('roles/index', ['roles' => $this->roles->paginate()]);
+        return Inertia::render('admin/roles/index', ['roles' => $this->roles->paginate()]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('roles/create', ['permissions' => $this->roles->permissionOptions()]);
+        return Inertia::render('admin/roles/create', ['permissions' => $this->roles->permissionOptions()]);
     }
 
     public function store(StoreRoleRequest $request): RedirectResponse
@@ -39,7 +39,7 @@ class RoleController extends Controller
 
     public function edit(Role $role): Response
     {
-        return Inertia::render('roles/edit', [
+        return Inertia::render('admin/roles/edit', [
             'role' => $this->roles->details($role),
             'permissions' => $this->roles->permissionOptions(),
         ]);

@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $filters = $request->only(['q', 'role_id', 'is_active']);
 
-        return Inertia::render('users/index', [
+        return Inertia::render('admin/users/index', [
             'users' => new UserCollection($this->users->paginate($filters)),
             'roles' => $this->users->roleFilterOptions(),
             'filters' => $filters,
@@ -31,7 +31,7 @@ class UserController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('users/create', ['roles' => $this->users->roleOptions()]);
+        return Inertia::render('admin/users/create', ['roles' => $this->users->roleOptions()]);
     }
 
     public function store(StoreUserRequest $request): RedirectResponse
@@ -48,7 +48,7 @@ class UserController extends Controller
 
     public function edit(User $user): Response
     {
-        return Inertia::render('users/edit', [
+        return Inertia::render('admin/users/edit', [
             'user' => $this->users->details($user),
             'roles' => $this->users->roleOptions(),
         ]);

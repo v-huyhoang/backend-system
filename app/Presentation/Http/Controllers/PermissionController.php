@@ -17,7 +17,7 @@ class PermissionController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('permissions/index', ['permissions' => $this->permissions->paginate()]);
+        return Inertia::render('admin/permissions/index', ['permissions' => $this->permissions->paginate()]);
     }
 
     public function store(StorePermissionRequest $request): RedirectResponse
