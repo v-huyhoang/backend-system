@@ -19,6 +19,7 @@ class Category extends Model
     protected $fillable = [
         'name',
         'parent_id',
+        'sort_order',
         'slug',
         'description',
         'is_active',
@@ -28,6 +29,7 @@ class Category extends Model
     {
         return [
             'is_active' => 'boolean',
+            'sort_order' => 'integer',
         ];
     }
 
@@ -46,7 +48,9 @@ class Category extends Model
 
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id')
+            ->orderBy('sort_order')
+            ->orderBy('id');
     }
 
     public function parent()
@@ -56,6 +60,6 @@ class Category extends Model
 
     public function childrenRecursive()
     {
-        return $this->children()->with('childrenRecursive')->orderBy('name');
+        return $this->children()->with('childrenRecursive');
     }
 }

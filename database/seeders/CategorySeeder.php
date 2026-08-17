@@ -25,26 +25,31 @@ class CategorySeeder extends Seeder
             ],
         ];
 
+        $rootOrder = 0;
+
         foreach ($tree as $rootName => $children) {
-            $root = $this->category($rootName);
+            $root = $this->category($rootName, null, ++$rootOrder);
+
+            $childOrder = 0;
 
             foreach ($children as $childName => $grandchildren) {
-                $child = $this->category($childName, $root);
+                $child = $this->category($childName, $root, ++$childOrder);
 
-                foreach ($grandchildren as $grandchildName) {
-                    $this->category($grandchildName, $child);
+                foreach ($grandchildren as $grandchildOrder => $grandchildName) {
+                    $this->category($grandchildName, $child, $grandchildOrder + 1);
                 }
             }
         }
     }
 
-    private function category(string $name, ?Category $parent = null): Category
+    private function category(string $name, ?Category $parent, int $sortOrder): Category
     {
         return Category::updateOrCreate(
             ['slug' => Str::slug($name)],
             [
                 'name' => $name,
                 'parent_id' => $parent?->id,
+                'sort_order' => $sortOrder,
                 'description' => "Danh mục {$name}",
                 'is_active' => true,
             ],

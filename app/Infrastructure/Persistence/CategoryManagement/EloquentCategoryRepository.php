@@ -6,6 +6,7 @@ use App\Domain\CategoryManagement\Contracts\CategoryRepository;
 use App\Domain\CategoryManagement\Models\Category;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class EloquentCategoryRepository implements CategoryRepository
 {
@@ -18,7 +19,8 @@ class EloquentCategoryRepository implements CategoryRepository
             ->filter([
                 'is_active' => $filters['is_active'] ?? null,
             ])
-            ->latest()
+            ->orderBy('sort_order')
+            ->orderBy('id')
             ->paginate($perPage)
             ->withQueryString();
     }
@@ -31,8 +33,9 @@ class EloquentCategoryRepository implements CategoryRepository
 
         return Category::query()
             ->whereNull('parent_id')
-            ->with(['children' => fn ($query) => $query->orderBy('name')])
-            ->orderBy('name')
+            ->with('children')
+            ->orderBy('sort_order')
+            ->orderBy('id')
             ->get()
             ->flatMap(function (Category $root) {
                 return collect([
@@ -64,18 +67,42 @@ class EloquentCategoryRepository implements CategoryRepository
 
     public function create(array $attributes): Category
     {
-        return Category::create($attributes);
+        return DB::transaction(function () use ($attributes): Category {
+            $attributes['sort_order'] = $this->nextSortOrder($attributes['parent_id'] ?? null);
+
+            return Category::create($attributes);
+        });
     }
 
     public function update(Category $category, array $attributes): Category
     {
-        $category->update($attributes);
+        return DB::transaction(function () use ($category, $attributes): Category {
+            $newParentId = $attributes['parent_id'] ?? null;
+            $parentChanged = (int) ($category->parent_id ?? 0) !== (int) ($newParentId ?? 0);
 
-        return $category->refresh();
+            if ($parentChanged) {
+                $attributes['sort_order'] = $this->nextSortOrder($newParentId);
+            }
+
+            $category->update($attributes);
+
+            return $category->refresh();
+        });
     }
 
     public function delete(Category $category): void
     {
         $category->delete();
+    }
+
+    private function nextSortOrder(?int $parentId): int
+    {
+        $lastSibling = Category::query()
+            ->where('parent_id', $parentId)
+            ->orderByDesc('sort_order')
+            ->lockForUpdate()
+            ->first(['sort_order']);
+
+        return ($lastSibling?->sort_order ?? 0) + 1;
     }
 }

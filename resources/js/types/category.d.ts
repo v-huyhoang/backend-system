@@ -7,6 +7,7 @@ export interface SingleCategory {
 	description: string | null;
 	is_active: boolean;
 	parent_id: number | null;
+	sort_order: number;
 	children?: SingleCategory[];
 	created_at: string;
 	updated_at: string;
