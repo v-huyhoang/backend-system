@@ -18,7 +18,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
-import * as categoryRoutes from '@/routes/categories';
+import * as categoryRoutes from '@/routes/admin/categories';
 import { type BreadcrumbItem } from '@/types';
 import type { CategoryParentOption, SingleCategory } from '@/types/category';
 import { Head, Link, useForm } from '@inertiajs/react';

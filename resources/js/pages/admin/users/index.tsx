@@ -26,15 +26,21 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { SystemPermission } from '@/enums/access-control';
 import { ActiveStatus } from '@/enums/customer';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
-import * as userRoutes from '@/routes/users';
+import * as userRoutes from '@/routes/admin/users';
 import { type BreadcrumbItem } from '@/types';
 import type { PageProps } from '@/types/page';
 import { RoleOption, User } from '@/types/user';
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -120,9 +126,21 @@ export default function Users({ users, roles, filters }: UsersPageProps) {
 						<CardTitle>Users Managements</CardTitle>
 						<CardAction>
 							{can(SystemPermission.CreateUsers) && (
-								<Link href={userRoutes.create()}>
-									<Button variant={'default'}>Add New</Button>
-								</Link>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button asChild size="icon">
+											<Link
+												href={userRoutes.create()}
+												aria-label="Add new user"
+											>
+												<Plus />
+											</Link>
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										Add new user
+									</TooltipContent>
+								</Tooltip>
 							)}
 						</CardAction>
 					</CardHeader>
@@ -232,7 +250,7 @@ export default function Users({ users, roles, filters }: UsersPageProps) {
 									<TableHead className="font-bold text-white">
 										Created At
 									</TableHead>
-									<TableHead className="font-bold text-white">
+									<TableHead className="w-24 font-bold text-white">
 										Actions
 									</TableHead>
 								</TableRow>
@@ -274,36 +292,58 @@ export default function Users({ users, roles, filters }: UsersPageProps) {
 										</TableCell>
 										<TableCell>{user.created_at}</TableCell>
 										<TableCell>
-											{can(
-												SystemPermission.EditUsers,
-											) && (
-												<Link
-													href={userRoutes.edit(
-														user.id,
-													)}
-												>
-													<Button
-														variant={'outline'}
-														size={'sm'}
-													>
-														Edit
-													</Button>
-												</Link>
-											)}
-											{can(
-												SystemPermission.DeleteUsers,
-											) && (
-												<Button
-													className="ms-2"
-													variant={'destructive'}
-													size={'sm'}
-													onClick={() =>
-														deleteUser(user.id)
-													}
-												>
-													Delete
-												</Button>
-											)}
+											<div className="flex items-center gap-2">
+												{can(
+													SystemPermission.EditUsers,
+												) && (
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<Button
+																asChild
+																variant="outline"
+																size="icon"
+																className="size-8"
+															>
+																<Link
+																	href={userRoutes.edit(
+																		user.id,
+																	)}
+																	aria-label={`Edit ${user.name}`}
+																>
+																	<Pencil />
+																</Link>
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Edit user
+														</TooltipContent>
+													</Tooltip>
+												)}
+												{can(
+													SystemPermission.DeleteUsers,
+												) && (
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<Button
+																variant="destructive"
+																size="icon"
+																className="size-8"
+																aria-label={`Delete ${user.name}`}
+																onClick={() =>
+																	deleteUser(
+																		user.id,
+																	)
+																}
+															>
+																<Trash2 />
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Delete user
+														</TooltipContent>
+													</Tooltip>
+												)}
+											</div>
 										</TableCell>
 									</TableRow>
 								))}

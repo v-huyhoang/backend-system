@@ -12,6 +12,8 @@ interface CategoryRepository
 
     public function parentOptions(?Category $excluding = null): Collection;
 
+	public function productFilterOptions(): array;
+
     public function create(array $attributes): Category;
 
     public function update(Category $category, array $attributes): Category;

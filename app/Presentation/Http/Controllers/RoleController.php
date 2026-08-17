@@ -29,12 +29,12 @@ class RoleController extends Controller
     {
         $this->roles->create(RoleData::fromArray($request->validated()));
 
-        return to_route('roles.index')->with('message', 'Role created successfully.');
+        return to_route('admin.roles.index')->with('message', 'Role created successfully.');
     }
 
     public function show(Role $role): RedirectResponse
     {
-        return to_route('roles.edit', $role);
+        return to_route('admin.roles.edit', $role);
     }
 
     public function edit(Role $role): Response
@@ -49,13 +49,13 @@ class RoleController extends Controller
     {
         $this->roles->update($role, RoleData::fromArray($request->validated()));
 
-        return to_route('roles.index')->with('message', 'Role updated successfully.');
+        return to_route('admin.roles.index')->with('message', 'Role updated successfully.');
     }
 
     public function destroy(Role $role): RedirectResponse
     {
         $this->roles->delete($role);
 
-        return to_route('roles.index')->with('message', 'Role deleted successfully.');
+        return to_route('admin.roles.index')->with('message', 'Role deleted successfully.');
     }
 }

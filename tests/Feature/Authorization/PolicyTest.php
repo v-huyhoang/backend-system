@@ -59,13 +59,13 @@ class PolicyTest extends TestCase
         $actor = User::factory()->create();
 
         $this->actingAs($actor)
-            ->get(route('users.index'))
+            ->get(route('admin.users.index'))
             ->assertForbidden();
 
         $actor->givePermissionTo(SystemPermission::ViewUsers->value);
 
         $this->actingAs($actor)
-            ->get(route('users.index'))
+            ->get(route('admin.users.index'))
             ->assertOk();
     }
 }

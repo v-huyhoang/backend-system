@@ -25,11 +25,16 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { SystemPermission } from '@/enums/access-control';
 import { ActiveStatus } from '@/enums/customer';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
-import * as categoryRoutes from '@/routes/categories';
+import * as categoryRoutes from '@/routes/admin/categories';
 import { type BreadcrumbItem } from '@/types';
 import type {
 	Category as CategoryPaginator,
@@ -37,7 +42,7 @@ import type {
 } from '@/types/category';
 import type { PageProps } from '@/types/page';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Pencil, Plus, Trash2 } from 'lucide-react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -59,7 +64,7 @@ function CategoryRows({
 }) {
 	const { can } = usePermissions();
 	const [expandedIds, setExpandedIds] = useState<Set<number>>(
-		() => new Set(categories.map((category) => category.id)),
+		() => new Set<number>(),
 	);
 
 	function toggle(id: number) {
@@ -141,24 +146,51 @@ function CategoryRows({
 							{category.is_active ? 'Active' : 'Inactive'}
 						</Badge>
 					</TableCell>
-					<TableCell className="whitespace-nowrap">
-						{can(SystemPermission.EditCategories) && (
-							<Link href={categoryRoutes.edit(category.id)}>
-								<Button variant="outline" size="sm">
-									Edit
-								</Button>
-							</Link>
-						)}
-						{can(SystemPermission.DeleteCategories) && (
-							<Button
-								className="ms-2"
-								variant="destructive"
-								size="sm"
-								onClick={() => remove(category)}
-							>
-								Delete
-							</Button>
-						)}
+					<TableCell>
+						<div className="flex items-center gap-2">
+							{can(SystemPermission.EditCategories) && (
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button
+											asChild
+											variant="outline"
+											size="icon"
+											className="size-8"
+										>
+											<Link
+												href={categoryRoutes.edit(
+													category.id,
+												)}
+												aria-label={`Edit ${category.name}`}
+											>
+												<Pencil />
+											</Link>
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										Edit category
+									</TooltipContent>
+								</Tooltip>
+							)}
+							{can(SystemPermission.DeleteCategories) && (
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button
+											variant="destructive"
+											size="icon"
+											className="size-8"
+											aria-label={`Delete ${category.name}`}
+											onClick={() => remove(category)}
+										>
+											<Trash2 />
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										Delete category
+									</TooltipContent>
+								</Tooltip>
+							)}
+						</div>
 					</TableCell>
 				</TableRow>
 				{hasChildren && isExpanded && (
@@ -216,52 +248,81 @@ export default function Categories({
 						<CardTitle>Categories Management</CardTitle>
 						<CardAction>
 							{can(SystemPermission.CreateCategories) && (
-								<Link href={categoryRoutes.create()}>
-									<Button>Add New</Button>
-								</Link>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button asChild size="icon">
+											<Link
+												href={categoryRoutes.create()}
+												aria-label="Add new category"
+											>
+												<Plus />
+											</Link>
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>
+										Add new category
+									</TooltipContent>
+								</Tooltip>
 							)}
 						</CardAction>
 					</CardHeader>
+					<hr />
 					<CardContent>
-						<div className="mb-4 grid gap-4 md:grid-cols-2">
-							<Input
-								placeholder="Search root categories..."
-								value={search}
-								onChange={(event) =>
-									setSearch(event.target.value)
-								}
-							/>
-							<div className="w-[180px]">
-								<Select
-									value={activeFilter}
-									onValueChange={setActiveFilter}
-								>
-									<SelectTrigger>
-										<SelectValue placeholder="Select status" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectItem value="all">
-												All statuses
-											</SelectItem>
-											<SelectItem
-												value={String(
-													ActiveStatus.Active,
-												)}
+						<div className="pb-4">
+							<Table>
+								<TableHeader>
+									<TableRow className="border-none hover:bg-transparent">
+										<TableHead>Search</TableHead>
+										<TableHead>Status</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									<TableRow className="hover:bg-transparent">
+										<TableCell>
+											<Input
+												placeholder="Search root categories..."
+												value={search}
+												onChange={(event) =>
+													setSearch(
+														event.target.value,
+													)
+												}
+											/>
+										</TableCell>
+										<TableCell>
+											<Select
+												value={activeFilter}
+												onValueChange={setActiveFilter}
 											>
-												Active
-											</SelectItem>
-											<SelectItem
-												value={String(
-													ActiveStatus.Inactive,
-												)}
-											>
-												Inactive
-											</SelectItem>
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</div>
+												<SelectTrigger>
+													<SelectValue placeholder="Select status" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														<SelectItem value="all">
+															All statuses
+														</SelectItem>
+														<SelectItem
+															value={String(
+																ActiveStatus.Active,
+															)}
+														>
+															Active
+														</SelectItem>
+														<SelectItem
+															value={String(
+																ActiveStatus.Inactive,
+															)}
+														>
+															Inactive
+														</SelectItem>
+													</SelectGroup>
+												</SelectContent>
+											</Select>
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
 						</div>
 						<Table>
 							<TableHeader className="bg-slate-500 dark:bg-slate-700">
@@ -277,7 +338,7 @@ export default function Categories({
 									].map((title) => (
 										<TableHead
 											key={title}
-											className="font-bold text-white"
+											className={`${title === 'Actions' ? 'w-24' : ''} font-bold text-white`}
 										>
 											{title}
 										</TableHead>

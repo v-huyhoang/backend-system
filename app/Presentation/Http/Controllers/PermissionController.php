@@ -24,20 +24,20 @@ class PermissionController extends Controller
     {
         $this->permissions->create(PermissionData::fromArray($request->validated()));
 
-        return to_route('permissions.index')->with('message', 'Permission created successfully.');
+        return to_route('admin.permissions.index')->with('message', 'Permission created successfully.');
     }
 
     public function update(UpdatePermissionRequest $request, Permission $permission): RedirectResponse
     {
         $this->permissions->update($permission, PermissionData::fromArray($request->validated()));
 
-        return to_route('permissions.index')->with('message', 'Permission updated successfully.');
+        return to_route('admin.permissions.index')->with('message', 'Permission updated successfully.');
     }
 
     public function destroy(Permission $permission): RedirectResponse
     {
         $this->permissions->delete($permission);
 
-        return to_route('permissions.index')->with('message', 'Permission deleted successfully.');
+        return to_route('admin.permissions.index')->with('message', 'Permission deleted successfully.');
     }
 }

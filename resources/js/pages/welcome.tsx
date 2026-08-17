@@ -234,7 +234,7 @@ export default function Welcome() {
 							/>
 							Đồ thật · Review thật · Nói cả điểm trừ
 						</p>
-						<h1 className="max-w-xl text-[40px] leading-[1.12] font-bold tracking-[-0.04em] text-[var(--gtg-primary-dark)] sm:text-5xl lg:text-6xl">
+						<h1 className="max-w-xl text-[40px] leading-[1.2] font-bold tracking-[-0.04em] text-[var(--gtg-primary-dark)] sm:text-5xl lg:text-6xl">
 							Phòng nhỏ vẫn có thể sống gọn.
 						</h1>
 						<p className="mt-5 max-w-xl text-lg leading-8 text-[var(--gtg-text-soft)]">

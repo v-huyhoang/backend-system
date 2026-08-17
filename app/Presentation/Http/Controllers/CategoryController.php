@@ -41,7 +41,7 @@ class CategoryController extends Controller
     {
         $this->categories->create(CategoryData::fromArray($request->validated()));
 
-        return to_route('categories.index')->with('message', 'Category created successfully.');
+        return to_route('admin.categories.index')->with('message', 'Category created successfully.');
     }
 
     public function edit(Request $request, Category $category): Response
@@ -54,20 +54,20 @@ class CategoryController extends Controller
 
     public function show(Category $category): RedirectResponse
     {
-        return to_route('categories.edit', $category);
+        return to_route('admin.categories.edit', $category);
     }
 
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         $this->categories->update($category, CategoryData::fromArray($request->validated()));
 
-        return to_route('categories.index')->with('message', 'Category updated successfully.');
+        return to_route('admin.categories.index')->with('message', 'Category updated successfully.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
         $this->categories->delete($category);
 
-        return to_route('categories.index')->with('message', 'Category deleted successfully.');
+        return to_route('admin.categories.index')->with('message', 'Category deleted successfully.');
     }
 }

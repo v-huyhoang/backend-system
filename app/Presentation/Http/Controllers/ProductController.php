@@ -2,44 +2,52 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\CategoryManagement\CategoryService;
 use App\Application\ProductManagement\DTOs\StoreProductData;
 use App\Application\ProductManagement\DTOs\UpdateProductData;
 use App\Application\ProductManagement\ProductService;
 use App\Domain\ProductManagement\Models\Product;
+use App\Presentation\Http\Requests\Products\IndexProductRequest;
 use App\Presentation\Http\Requests\Products\StoreProductRequest;
 use App\Presentation\Http\Requests\Products\UpdateProductRequest;
 use App\Presentation\Http\Resources\Products\ProductCollection;
 use App\Presentation\Http\Resources\Products\ProductResource;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProductController extends Controller
 {
-    public function __construct(private readonly ProductService $products) {}
+	const PREFIX_ADMIN_PRODUCT = 'admin/products/';
 
-    public function index(): Response
+    public function __construct(private readonly ProductService $productService, private readonly CategoryService $categoryService) {}
+
+    public function index(IndexProductRequest $request): Response
     {
-        return Inertia::render('products/index', [
-            'products' => new ProductCollection($this->products->paginate()),
+		$filters = $request->validated();
+        return Inertia::render(self::PREFIX_ADMIN_PRODUCT.'index', [
+            'products' => new ProductCollection($this->productService->paginate($filters)),
+			'categories' => $this->categoryService->productFilterOptions(),
+			'filters' => $filters,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('products/create');
+        return Inertia::render(self::PREFIX_ADMIN_PRODUCT.'create');
     }
 
     public function store(StoreProductRequest $request): RedirectResponse
     {
         $this->products->create(StoreProductData::fromArray($request->validated()));
 
-        return to_route('products.index')->with('message', 'Product created successfully.');
+        return to_route(self::PREFIX_ADMIN_PRODUCT.'index')->with('message', 'Product created successfully.');
     }
 
     public function edit(Product $product): Response
     {
-        return Inertia::render('products/edit', [
+        return Inertia::render(self::PREFIX_ADMIN_PRODUCT.'edit', [
             'product' => new ProductResource($product),
         ]);
     }
@@ -48,13 +56,13 @@ class ProductController extends Controller
     {
         $this->products->update($product, UpdateProductData::fromArray($request->validated()));
 
-        return to_route('products.index')->with('message', 'Product updated successfully.');
+        return to_route(self::PREFIX_ADMIN_PRODUCT.'index')->with('message', 'Product updated successfully.');
     }
 
     public function destroy(Product $product): RedirectResponse
     {
         $this->products->delete($product);
 
-        return to_route('products.index')->with('message', 'Product deleted successfully.');
+        return to_route(self::PREFIX_ADMIN_PRODUCT.'index')->with('message', 'Product deleted successfully.');
     }
 }

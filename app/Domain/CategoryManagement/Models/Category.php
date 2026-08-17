@@ -2,10 +2,12 @@
 
 namespace App\Domain\CategoryManagement\Models;
 
+use App\Domain\ProductManagement\Models\Product;
 use App\Traits\Filterable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -62,4 +64,9 @@ class Category extends Model
     {
         return $this->children()->with('childrenRecursive');
     }
+
+	public function products(): HasMany
+	{
+		return $this->hasMany(Product::class);
+	}
 }

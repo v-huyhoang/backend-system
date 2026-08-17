@@ -38,12 +38,12 @@ class UserController extends Controller
     {
         $this->users->create(StoreUserData::fromArray($request->validated()));
 
-        return to_route('users.index')->with('message', 'User created successfully.');
+        return to_route('admin.users.index')->with('message', 'User created successfully.');
     }
 
     public function show(User $user): RedirectResponse
     {
-        return to_route('users.edit', $user);
+        return to_route('admin.users.edit', $user);
     }
 
     public function edit(User $user): Response
@@ -58,13 +58,13 @@ class UserController extends Controller
     {
         $this->users->update($user, UpdateUserData::fromArray($request->validated()));
 
-        return to_route('users.index')->with('message', 'User updated successfully.');
+        return to_route('admin.users.index')->with('message', 'User updated successfully.');
     }
 
     public function destroy(User $user): RedirectResponse
     {
         $this->users->delete($user);
 
-        return to_route('users.index')->with('message', 'User deleted successfully.');
+        return to_route('admin.users.index')->with('message', 'User deleted successfully.');
     }
 }

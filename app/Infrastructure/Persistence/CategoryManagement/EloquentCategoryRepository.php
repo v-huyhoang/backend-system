@@ -166,4 +166,18 @@ class EloquentCategoryRepository implements CategoryRepository
     {
         return (int) $this->siblings($parentId)->max('sort_order');
     }
+
+	public function productFilterOptions(): array
+	{
+    	$category = Category::query()
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get(['id', 'name'])
+        ->map(fn (Category $category) => [
+            'id' => $category->id,
+            'name' => $category->name,
+        ])
+		->all();
+		return $category;
+	}
 }

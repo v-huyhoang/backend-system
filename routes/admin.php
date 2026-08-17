@@ -2,9 +2,11 @@
 
 use App\Domain\AccessControl\Enums\SystemPermission;
 use App\Domain\CategoryManagement\Models\Category;
+use App\Domain\ProductManagement\Models\Product;
 use App\Domain\UserManagement\Models\User;
 use App\Presentation\Http\Controllers\CategoryController;
 use App\Presentation\Http\Controllers\PermissionController;
+use App\Presentation\Http\Controllers\ProductController;
 use App\Presentation\Http\Controllers\RoleController;
 use App\Presentation\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -12,8 +14,8 @@ use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', fn () => to_route('dashboard'))->name('admin.index');
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', fn () => to_route('admin.dashboard'))->name('index');
 
     Route::get('/dashboard', function () {
         return Inertia::render('admin/dashboard');
@@ -54,5 +56,15 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
         Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit')->can('update', 'category');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update')->can('update', 'category');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy')->can('delete', 'category');
+    });
+
+	Route::prefix('products')->name('products.')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('index')->can('viewAny', Product::class);
+        Route::post('/', [ProductController::class, 'store'])->name('store')->can('create', Product::class);
+        Route::get('/create', [ProductController::class, 'create'])->name('create')->can('create', Product::class);
+        Route::get('/{product}', [ProductController::class, 'show'])->name('show')->can('view', 'product');
+        Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit')->can('update', 'product');
+        Route::put('/{product}', [ProductController::class, 'update'])->name('update')->can('update', 'product');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy')->can('delete', 'product');
     });
 });

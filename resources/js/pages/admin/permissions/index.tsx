@@ -26,13 +26,18 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Permission, SinglePermission } from '@/types/role_permissions';
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -121,14 +126,20 @@ export default function Permissions({
 						<CardTitle>Permissions Managements</CardTitle>
 						<CardAction>
 							{can(SystemPermission.CreatePermissions) && (
-								<Button
-									variant="default"
-									onClick={() =>
-										setOpenAddNewPermissionDialog(true)
-									}
-								>
-									Add new
-								</Button>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<Button
+											size="icon"
+											aria-label="Add new permission"
+											onClick={() =>
+												setOpenAddNewPermissionDialog(true)
+											}
+										>
+											<Plus />
+										</Button>
+									</TooltipTrigger>
+									<TooltipContent>Add new permission</TooltipContent>
+								</Tooltip>
 							)}
 						</CardAction>
 					</CardHeader>
@@ -152,7 +163,7 @@ export default function Permissions({
 									<TableHead className="font-bold text-white">
 										Updated at
 									</TableHead>
-									<TableHead className="font-bold text-white">
+									<TableHead className="w-24 font-bold text-white">
 										Actions
 									</TableHead>
 								</TableRow>
@@ -175,35 +186,48 @@ export default function Permissions({
 											{permission.updated_at}
 										</TableCell>
 										<TableCell>
-											{can(
-												SystemPermission.EditPermissions,
-											) && (
-												<Button
-													variant={'outline'}
-													size={'sm'}
-													onClick={() =>
-														edit(permission)
-													}
-												>
-													Edit
-												</Button>
-											)}
-											{can(
-												SystemPermission.DeletePermissions,
-											) && (
-												<Button
-													className="ms-2"
-													variant={'destructive'}
-													size={'sm'}
-													onClick={() => {
-														deletePermission(
-															permission.id,
-														);
-													}}
-												>
-													Delete
-												</Button>
-											)}
+											<div className="flex items-center gap-2">
+												{can(
+													SystemPermission.EditPermissions,
+												) && (
+													<Tooltip>
+													<TooltipTrigger asChild>
+														<Button
+															variant="outline"
+															size="icon"
+															className="size-8"
+															aria-label={`Edit ${permission.name}`}
+															onClick={() => edit(permission)}
+														>
+															<Pencil />
+														</Button>
+													</TooltipTrigger>
+													<TooltipContent>Edit permission</TooltipContent>
+													</Tooltip>
+												)}
+												{can(
+													SystemPermission.DeletePermissions,
+												) && (
+													<Tooltip>
+													<TooltipTrigger asChild>
+														<Button
+															variant="destructive"
+															size="icon"
+															className="size-8"
+																aria-label={`Delete ${permission.name}`}
+																onClick={() => {
+																	deletePermission(
+																		permission.id,
+																	);
+																}}
+														>
+															<Trash2 />
+														</Button>
+													</TooltipTrigger>
+													<TooltipContent>Delete permission</TooltipContent>
+													</Tooltip>
+												)}
+											</div>
 										</TableCell>
 									</TableRow>
 								))}
