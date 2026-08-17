@@ -93,6 +93,7 @@ function CategoryRows({
 			<Fragment key={category.id}>
 				<TableRow className="odd:bg-slate-50 dark:odd:bg-slate-900/40">
 					<TableCell>{category.id}</TableCell>
+					<TableCell>{category.sort_order}</TableCell>
 					<TableCell>
 						<div
 							className="flex items-center gap-1"
@@ -267,6 +268,7 @@ export default function Categories({
 								<TableRow>
 									{[
 										'ID',
+										'Order',
 										'Name',
 										'Slug',
 										'Description',

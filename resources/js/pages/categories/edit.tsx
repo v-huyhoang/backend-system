@@ -40,6 +40,7 @@ export default function EditCategory({
 	const { data, setData, put, processing, errors } = useForm({
 		name: category.name,
 		parent_id: category.parent_id,
+		sort_order: category.sort_order,
 		slug: category.slug ?? '',
 		description: category.description ?? '',
 		is_active: category.is_active,
@@ -116,6 +117,28 @@ export default function EditCategory({
 									</SelectContent>
 								</Select>
 								<InputError message={errors.parent_id} />
+							</div>
+
+							<div className="space-y-2">
+								<Label htmlFor="sort_order">Sort order</Label>
+								<Input
+									id="sort_order"
+									type="number"
+									min={1}
+									value={data.sort_order}
+									onChange={(event) =>
+										setData(
+											'sort_order',
+											Number(event.target.value),
+										)
+									}
+									aria-invalid={!!errors.sort_order}
+								/>
+								<p className="text-xs text-muted-foreground">
+									Order is relative to categories with the
+									same parent.
+								</p>
+								<InputError message={errors.sort_order} />
 							</div>
 
 							<div className="space-y-2">

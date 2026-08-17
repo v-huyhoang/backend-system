@@ -7,6 +7,7 @@ final readonly class CategoryData
     public function __construct(
         public string $name,
         public ?int $parentId,
+        public ?int $sortOrder,
         public ?string $slug,
         public ?string $description,
         public bool $isActive,
@@ -18,6 +19,7 @@ final readonly class CategoryData
         return new self(
             name: $data['name'],
             parentId: isset($data['parent_id']) ? (int) $data['parent_id'] : null,
+            sortOrder: isset($data['sort_order']) ? (int) $data['sort_order'] : null,
             slug: $data['slug'] ?? null,
             description: $data['description'] ?? null,
             isActive: (bool) $data['is_active'],
@@ -30,6 +32,7 @@ final readonly class CategoryData
         return [
             'name' => $this->name,
             'parent_id' => $this->parentId,
+            'sort_order' => $this->sortOrder,
             'slug' => $this->slug,
             'description' => $this->description,
             'is_active' => $this->isActive,

@@ -24,6 +24,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'parent_id' => $this->parentIdRules($category),
+            'sort_order' => ['required', 'integer', 'min:1'],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('categories', 'slug')->ignore($category)],
             'description' => ['nullable', 'string'],
             'is_active' => ['required', 'boolean'],

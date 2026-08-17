@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\CategoryManagement;
 use App\Domain\CategoryManagement\Contracts\CategoryRepository;
 use App\Domain\CategoryManagement\Models\Category;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -68,7 +69,19 @@ class EloquentCategoryRepository implements CategoryRepository
     public function create(array $attributes): Category
     {
         return DB::transaction(function () use ($attributes): Category {
-            $attributes['sort_order'] = $this->nextSortOrder($attributes['parent_id'] ?? null);
+            $parentId = $attributes['parent_id'] ?? null;
+            $this->lockSiblings($parentId);
+
+            $lastPosition = $this->lastSortOrder($parentId);
+            $position = isset($attributes['sort_order'])
+                ? min((int) $attributes['sort_order'], $lastPosition + 1)
+                : $lastPosition + 1;
+
+            $this->siblings($parentId)
+                ->where('sort_order', '>=', $position)
+                ->increment('sort_order');
+
+            $attributes['sort_order'] = $position;
 
             return Category::create($attributes);
         });
@@ -79,9 +92,41 @@ class EloquentCategoryRepository implements CategoryRepository
         return DB::transaction(function () use ($category, $attributes): Category {
             $newParentId = $attributes['parent_id'] ?? null;
             $parentChanged = (int) ($category->parent_id ?? 0) !== (int) ($newParentId ?? 0);
+            $requestedPosition = (int) ($attributes['sort_order'] ?? $category->sort_order);
 
             if ($parentChanged) {
-                $attributes['sort_order'] = $this->nextSortOrder($newParentId);
+                $this->lockSiblings($category->parent_id);
+                $this->lockSiblings($newParentId);
+
+                $this->siblings($category->parent_id)
+                    ->where('sort_order', '>', $category->sort_order)
+                    ->decrement('sort_order');
+
+                $position = min($requestedPosition, $this->lastSortOrder($newParentId) + 1);
+
+                $this->siblings($newParentId)
+                    ->where('sort_order', '>=', $position)
+                    ->increment('sort_order');
+
+                $attributes['sort_order'] = $position;
+            } else {
+                $this->lockSiblings($newParentId);
+
+                $position = min($requestedPosition, max($this->lastSortOrder($newParentId), 1));
+
+                if ($position < $category->sort_order) {
+                    $this->siblings($newParentId)
+                        ->whereKeyNot($category->id)
+                        ->whereBetween('sort_order', [$position, $category->sort_order - 1])
+                        ->increment('sort_order');
+                } elseif ($position > $category->sort_order) {
+                    $this->siblings($newParentId)
+                        ->whereKeyNot($category->id)
+                        ->whereBetween('sort_order', [$category->sort_order + 1, $position])
+                        ->decrement('sort_order');
+                }
+
+                $attributes['sort_order'] = $position;
             }
 
             $category->update($attributes);
@@ -92,17 +137,33 @@ class EloquentCategoryRepository implements CategoryRepository
 
     public function delete(Category $category): void
     {
-        $category->delete();
+        DB::transaction(function () use ($category): void {
+            $parentId = $category->parent_id;
+            $sortOrder = $category->sort_order;
+
+            $this->lockSiblings($parentId);
+            $category->delete();
+
+            $this->siblings($parentId)
+                ->where('sort_order', '>', $sortOrder)
+                ->decrement('sort_order');
+        });
     }
 
-    private function nextSortOrder(?int $parentId): int
+    private function siblings(?int $parentId): Builder
     {
-        $lastSibling = Category::query()
-            ->where('parent_id', $parentId)
-            ->orderByDesc('sort_order')
-            ->lockForUpdate()
-            ->first(['sort_order']);
+        return Category::query()->where('parent_id', $parentId);
+    }
 
-        return ($lastSibling?->sort_order ?? 0) + 1;
+    private function lockSiblings(?int $parentId): void
+    {
+        $this->siblings($parentId)
+            ->lockForUpdate()
+            ->get(['id']);
+    }
+
+    private function lastSortOrder(?int $parentId): int
+    {
+        return (int) $this->siblings($parentId)->max('sort_order');
     }
 }

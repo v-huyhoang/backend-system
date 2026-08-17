@@ -36,6 +36,7 @@ export default function CreateCategory({
 	const { data, setData, post, processing, errors } = useForm({
 		name: '',
 		parent_id: null as number | null,
+		sort_order: '' as number | '',
 		slug: '',
 		description: '',
 		is_active: true,
@@ -116,6 +117,30 @@ export default function CreateCategory({
 									selected as parent.
 								</p>
 								<InputError message={errors.parent_id} />
+							</div>
+
+							<div className="space-y-2">
+								<Label htmlFor="sort_order">Sort order</Label>
+								<Input
+									id="sort_order"
+									type="number"
+									min={1}
+									value={data.sort_order}
+									onChange={(event) =>
+										setData(
+											'sort_order',
+											event.target.value === ''
+												? ''
+												: Number(event.target.value),
+										)
+									}
+									aria-invalid={!!errors.sort_order}
+								/>
+								<p className="text-xs text-muted-foreground">
+									Leave blank to place it last among
+									categories with the same parent.
+								</p>
+								<InputError message={errors.sort_order} />
 							</div>
 
 							<div className="space-y-2">
