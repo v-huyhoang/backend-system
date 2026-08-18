@@ -13,7 +13,7 @@ class IndexProductRequest extends FormRequest
         return true;
     }
 
-     public function rules(): array
+    public function rules(): array
     {
         return [
             'q' => ['nullable', 'string', 'max:255'],

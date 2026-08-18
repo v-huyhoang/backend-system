@@ -33,14 +33,14 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create(): Response
+public function create(): Response
     {
         return Inertia::render(self::PREFIX_ADMIN_PRODUCT.'create');
     }
 
     public function store(StoreProductRequest $request): RedirectResponse
     {
-        $this->products->create(StoreProductData::fromArray($request->validated()));
+        $this->productService->create(StoreProductData::fromArray($request->validated()));
 
         return to_route(self::PREFIX_ADMIN_PRODUCT.'index')->with('message', 'Product created successfully.');
     }
@@ -54,7 +54,7 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        $this->products->update($product, UpdateProductData::fromArray($request->validated()));
+        $this->productService->update($product, UpdateProductData::fromArray($request->validated()));
 
         return to_route(self::PREFIX_ADMIN_PRODUCT.'index')->with('message', 'Product updated successfully.');
     }
