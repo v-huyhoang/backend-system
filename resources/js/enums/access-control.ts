@@ -24,4 +24,12 @@ export enum SystemPermission {
 	CreateProducts = 'create_products',
 	EditProducts = 'edit_products',
 	DeleteProducts = 'delete_products',
+	ViewMerchants = 'view_merchants',
+	CreateMerchants = 'create_merchants',
+	EditMerchants = 'edit_merchants',
+	DeleteMerchants = 'delete_merchants',
+	ViewProductOffers = 'view_product_offers',
+	CreateProductOffers = 'create_product_offers',
+	EditProductOffers = 'edit_product_offers',
+	DeleteProductOffers = 'delete_product_offers',
 }

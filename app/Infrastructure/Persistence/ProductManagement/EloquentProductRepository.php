@@ -11,6 +11,22 @@ class EloquentProductRepository implements ProductRepository
     public function paginate(array $filters = [], int $perPage = 10): LengthAwarePaginator
     {
         return Product::query()
+            ->with('category:id,name')
+            ->when($filters['q'] ?? null, function ($query, string $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%");
+                });
+            })
+            ->when(
+                $filters['status'] ?? null,
+                fn ($query, string $status) => $query->where('status', $status),
+            )
+            ->when(
+                $filters['category_id'] ?? null,
+                fn ($query, int $categoryId) => $query->where('category_id', $categoryId),
+            )
             ->latest()
             ->paginate($perPage)
             ->withQueryString();

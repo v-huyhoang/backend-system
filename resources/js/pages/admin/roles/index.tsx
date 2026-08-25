@@ -208,7 +208,7 @@ export default function Roles({ roles, permissions, filters }: RolesPageProps) {
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Roles" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-				<Card className='gap-2'>
+				<Card className="gap-2">
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Roles Managements</CardTitle>
 						<CardAction>

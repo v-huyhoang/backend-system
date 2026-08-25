@@ -30,5 +30,18 @@ export interface SingleProduct {
 }
 
 export interface Product extends Pagination {
-	data: SingleProduct[];
+	data: ProductListItem[];
 }
+
+export type ProductListItem = Pick<
+	SingleProduct,
+	| 'id'
+	| 'category'
+	| 'code'
+	| 'name'
+	| 'slug'
+	| 'thumbnail_path'
+	| 'status'
+	| 'is_featured'
+	| 'sort_order'
+>;

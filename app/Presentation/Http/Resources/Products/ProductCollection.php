@@ -7,8 +7,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ProductCollection extends ResourceCollection
 {
-    /** @var class-string<ProductResource> */
-    public $collects = ProductResource::class;
+    /** @var class-string<ProductListResource> */
+    public $collects = ProductListResource::class;
 
     /**
      * @param  array<string, mixed>  $paginated

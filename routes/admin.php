@@ -7,6 +7,8 @@ use App\Domain\UserManagement\Models\User;
 use App\Presentation\Http\Controllers\CategoryController;
 use App\Presentation\Http\Controllers\PermissionController;
 use App\Presentation\Http\Controllers\ProductController;
+use App\Presentation\Http\Controllers\ProductOfferController;
+use App\Presentation\Http\Controllers\MerchantController;
 use App\Presentation\Http\Controllers\RoleController;
 use App\Presentation\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -58,7 +60,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy')->can('delete', 'category');
     });
 
-	Route::prefix('products')->name('products.')->group(function () {
+    Route::prefix('products')->name('products.')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('index')->can('viewAny', Product::class);
         Route::post('/', [ProductController::class, 'store'])->name('store')->can('create', Product::class);
         Route::get('/create', [ProductController::class, 'create'])->name('create')->can('create', Product::class);
@@ -66,5 +68,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit')->can('update', 'product');
         Route::put('/{product}', [ProductController::class, 'update'])->name('update')->can('update', 'product');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy')->can('delete', 'product');
+        Route::get('/{product}/offers', [ProductOfferController::class, 'index'])->name('offers.index')->can(SystemPermission::ViewProductOffers->value);
     });
+
+    Route::get('/merchants', [MerchantController::class, 'index'])->name('merchants.index')->can(SystemPermission::ViewMerchants->value);
 });

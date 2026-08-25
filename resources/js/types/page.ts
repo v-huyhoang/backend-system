@@ -8,5 +8,6 @@ export interface PageProps extends InertiaPageProps {
 		is_active?: string;
 		assigned?: string;
 		status?: string;
+		category_id?: string;
 	};
 }

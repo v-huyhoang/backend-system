@@ -34,9 +34,13 @@ import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import type { PageProps } from '@/types/page';
-import type { Product, ProductStatus } from '@/types/product';
+import type {
+	Product,
+	ProductCategoryOption,
+	ProductStatus,
+} from '@/types/product';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Pencil, Plus, Star, Trash2 } from 'lucide-react';
+import { Eye, Pencil, Plus, Star, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -45,18 +49,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const statusVariant = {
-	draft: 'secondary',
-	published: 'default',
-	archived: 'outline',
+	draft: 'yellow',
+	published: 'green',
+	archived: 'gray',
 } as const;
 
 interface ProductsPageProps {
 	products: Product;
+	categories: ProductCategoryOption[];
 	filters?: PageProps['filters'] & { status?: string };
 }
 
 export default function Products({
 	products,
+	categories,
 	filters = {},
 }: ProductsPageProps) {
 	const { can } = usePermissions();
@@ -64,6 +70,7 @@ export default function Products({
 		.props;
 	const [search, setSearch] = useState(filters.q ?? '');
 	const [status, setStatus] = useState(filters.status ?? 'all');
+	const [category, setCategory] = useState(filters.category_id ?? 'all');
 	const isFirstRender = useRef(true);
 
 	useEffect(() => {
@@ -82,12 +89,13 @@ export default function Products({
 				{
 					...(search.trim() ? { q: search.trim() } : {}),
 					...(status !== 'all' ? { status } : {}),
+					...(category !== 'all' ? { category_id: category } : {}),
 				},
 				{ preserveState: true, replace: true },
 			);
 		}, 400);
 		return () => clearTimeout(timeout);
-	}, [search, status]);
+	}, [search, status, category]);
 
 	function remove(id: number, name: string) {
 		if (confirm(`Delete product "${name}"?`)) {
@@ -99,7 +107,7 @@ export default function Products({
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Products" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-				<Card className='gap-2'>
+				<Card className="gap-2">
 					<CardHeader className="flex items-center justify-between">
 						<div>
 							<CardTitle>Products Management</CardTitle>
@@ -129,12 +137,12 @@ export default function Products({
 					</CardHeader>
 					<hr />
 					<CardContent>
-						<div className="mb-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]"></div>
 						<div className="pb-4">
 							<Table>
 								<TableHeader>
 									<TableRow className="border-none hover:bg-transparent">
 										<TableHead>Search</TableHead>
+										<TableHead>Category</TableHead>
 										<TableHead>Status</TableHead>
 									</TableRow>
 								</TableHeader>
@@ -151,6 +159,33 @@ export default function Products({
 												placeholder="Search by name or code..."
 												aria-label="Search products"
 											/>
+										</TableCell>
+										<TableCell>
+											<Select
+												value={category}
+												onValueChange={setCategory}
+											>
+												<SelectTrigger aria-label="Filter products by category">
+													<SelectValue placeholder="All categories" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="all">
+														All categories
+													</SelectItem>
+													{categories.map(
+														(option) => (
+															<SelectItem
+																key={option.id}
+																value={String(
+																	option.id,
+																)}
+															>
+																{option.name}
+															</SelectItem>
+														),
+													)}
+												</SelectContent>
+											</Select>
 										</TableCell>
 										<TableCell>
 											<Select
@@ -180,13 +215,13 @@ export default function Products({
 								</TableBody>
 							</Table>
 						</div>
-						<Table className="min-w-[48rem] table-fixed">
+						<Table className="min-w-[56rem] table-fixed">
 							<TableHeader className="bg-slate-500 dark:bg-slate-700">
 								<TableRow>
 									<TableHead className="w-20 font-bold text-white">
 										Code
 									</TableHead>
-									<TableHead className="font-bold text-white">
+									<TableHead className="w-64 font-bold text-white">
 										Product
 									</TableHead>
 									<TableHead className="w-40 font-bold text-white">
@@ -198,22 +233,21 @@ export default function Products({
 									<TableHead className="w-20 font-bold text-white">
 										Order
 									</TableHead>
-									<TableHead className="w-24 font-bold text-white">
+									<TableHead className="w-32 text-center font-bold text-white">
 										Actions
 									</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
 								{products.data.map((product) => (
-									console.log(product),
 									<TableRow
 										key={product.id}
 										className="odd:bg-slate-100 dark:odd:bg-slate-800"
 									>
-										<TableCell className="font-medium">
+										<TableCell className="font-mono font-medium whitespace-nowrap">
 											{product.code}
 										</TableCell>
-										<TableCell>
+										<TableCell className="max-w-64 overflow-hidden">
 											<div className="flex min-w-0 items-center gap-3">
 												{product.thumbnail_path ? (
 													<img
@@ -270,7 +304,27 @@ export default function Products({
 											{product.sort_order}
 										</TableCell>
 										<TableCell>
-											<div className="flex items-center gap-2">
+											<div className="flex items-center justify-end gap-2">
+												<Tooltip>
+													<TooltipTrigger asChild>
+														<Button
+															asChild
+															variant="outline"
+															size="icon"
+															className="size-8"
+														>
+															<Link
+																href={`/admin/products/${product.id}`}
+																aria-label={`View ${product.name}`}
+															>
+																<Eye />
+															</Link>
+														</Button>
+													</TooltipTrigger>
+													<TooltipContent>
+														View product
+													</TooltipContent>
+												</Tooltip>
 												{can(
 													SystemPermission.EditProducts,
 												) && (
