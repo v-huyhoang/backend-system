@@ -99,7 +99,7 @@ export default function Products({
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Products" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-				<Card>
+				<Card className='gap-2'>
 					<CardHeader className="flex items-center justify-between">
 						<div>
 							<CardTitle>Products Management</CardTitle>

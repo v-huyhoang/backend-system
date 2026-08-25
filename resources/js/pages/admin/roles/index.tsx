@@ -16,6 +16,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import {
 	Table,
 	TableBody,
@@ -33,10 +41,11 @@ import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import type { PageProps } from '@/types/page';
 import { Role } from '@/types/role_permissions';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 const visiblePermissionGroupCount = 3;
@@ -50,11 +59,7 @@ function permissionGroupLabel(permissionName: string) {
 	return resource.replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function PermissionDialogContent({
-	role,
-}: {
-	role: Role['data'][number];
-}) {
+function PermissionDialogContent({ role }: { role: Role['data'][number] }) {
 	return (
 		<DialogContent>
 			<DialogHeader>
@@ -93,13 +98,19 @@ function RolePermissions({ role }: { role: Role['data'][number] }) {
 	}
 
 	const permissionGroups = Object.entries(
-		role.permissions.reduce<Record<string, number>>((groups, permission) => {
-			const label = permissionGroupLabel(permission.name);
-			groups[label] = (groups[label] ?? 0) + 1;
-			return groups;
-		}, {}),
+		role.permissions.reduce<Record<string, number>>(
+			(groups, permission) => {
+				const label = permissionGroupLabel(permission.name);
+				groups[label] = (groups[label] ?? 0) + 1;
+				return groups;
+			},
+			{},
+		),
 	);
-	const visibleGroups = permissionGroups.slice(0, visiblePermissionGroupCount);
+	const visibleGroups = permissionGroups.slice(
+		0,
+		visiblePermissionGroupCount,
+	);
 	const hiddenGroupCount = permissionGroups.length - visibleGroups.length;
 
 	return (
@@ -146,11 +157,22 @@ function deleteRole(id: number) {
 	}
 }
 
-export default function Roles({ roles }: { roles: Role }) {
+interface RolesPageProps {
+	roles: Role;
+	permissions: Array<{ id: number; name: string }>;
+	filters: PageProps['filters'];
+}
+
+export default function Roles({ roles, permissions, filters }: RolesPageProps) {
 	const { flash } = usePage<{ flash: { message?: string; error: string } }>()
 		.props;
 
 	const { can } = usePermissions();
+	const [search, setSearch] = useState(filters.q ?? '');
+	const [permissionFilter, setPermissionFilter] = useState(
+		filters.permission_id ?? 'all',
+	);
+	const isFirstRender = useRef(true);
 
 	useEffect(() => {
 		if (flash.message) {
@@ -158,11 +180,35 @@ export default function Roles({ roles }: { roles: Role }) {
 		}
 	}, [flash.message]);
 
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+
+		const timeout = setTimeout(() => {
+			const query: { q?: string; permission_id?: string } = {};
+			const normalizedSearch = search.trim();
+
+			if (normalizedSearch) query.q = normalizedSearch;
+			if (permissionFilter !== 'all') {
+				query.permission_id = permissionFilter;
+			}
+
+			router.get('/admin/roles', query, {
+				preserveState: true,
+				replace: true,
+			});
+		}, 400);
+
+		return () => clearTimeout(timeout);
+	}, [search, permissionFilter]);
+
 	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Roles" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-				<Card>
+				<Card className='gap-2'>
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Roles Managements</CardTitle>
 						<CardAction>
@@ -178,13 +224,74 @@ export default function Roles({ roles }: { roles: Role }) {
 											</Link>
 										</Button>
 									</TooltipTrigger>
-									<TooltipContent>Add new role</TooltipContent>
+									<TooltipContent>
+										Add new role
+									</TooltipContent>
 								</Tooltip>
 							)}
 						</CardAction>
 					</CardHeader>
 					<hr />
 					<CardContent className="px-2 sm:px-6">
+						<div className="pb-4">
+							<Table>
+								<TableHeader>
+									<TableRow className="border-none hover:bg-transparent">
+										<TableHead>Search</TableHead>
+										<TableHead>Permission</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									<TableRow className="border-none hover:bg-transparent">
+										<TableCell>
+											<Input
+												value={search}
+												onChange={(event) =>
+													setSearch(
+														event.target.value,
+													)
+												}
+												placeholder="Search by name or description..."
+												aria-label="Search roles"
+											/>
+										</TableCell>
+										<TableCell>
+											<Select
+												value={permissionFilter}
+												onValueChange={
+													setPermissionFilter
+												}
+											>
+												<SelectTrigger aria-label="Filter roles by permission">
+													<SelectValue placeholder="All permissions" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="all">
+														All permissions
+													</SelectItem>
+													{permissions.map(
+														(permission) => (
+															<SelectItem
+																key={
+																	permission.id
+																}
+																value={String(
+																	permission.id,
+																)}
+															>
+																{
+																	permission.name
+																}
+															</SelectItem>
+														),
+													)}
+												</SelectContent>
+											</Select>
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</div>
 						<Table className="min-w-[38rem] table-fixed">
 							<TableHeader className="bg-slate-500 dark:bg-slate-700">
 								<TableRow>
@@ -212,11 +319,17 @@ export default function Roles({ roles }: { roles: Role }) {
 										className="odd:bg-slate-100 dark:odd:bg-slate-800"
 									>
 										<TableCell>{role.id}</TableCell>
-										<TableCell className="truncate" title={role.name}>
+										<TableCell
+											className="truncate"
+											title={role.name}
+										>
 											{role.name}
 										</TableCell>
 										<TableCell className="hidden lg:table-cell">
-											<p className="truncate" title={role.description}>
+											<p
+												className="truncate"
+												title={role.description}
+											>
 												{role.description || '—'}
 											</p>
 										</TableCell>
@@ -244,7 +357,9 @@ export default function Roles({ roles }: { roles: Role }) {
 																</Link>
 															</Button>
 														</TooltipTrigger>
-														<TooltipContent>Edit role</TooltipContent>
+														<TooltipContent>
+															Edit role
+														</TooltipContent>
 													</Tooltip>
 												)}
 												{can(
@@ -257,12 +372,18 @@ export default function Roles({ roles }: { roles: Role }) {
 																size="icon"
 																className="size-8"
 																aria-label={`Delete ${role.name}`}
-																onClick={() => deleteRole(role.id)}
+																onClick={() =>
+																	deleteRole(
+																		role.id,
+																	)
+																}
 															>
 																<Trash2 />
 															</Button>
 														</TooltipTrigger>
-														<TooltipContent>Delete role</TooltipContent>
+														<TooltipContent>
+															Delete role
+														</TooltipContent>
 													</Tooltip>
 												)}
 											</div>
@@ -280,8 +401,8 @@ export default function Roles({ roles }: { roles: Role }) {
 							links={roles.links}
 						/>
 					) : (
-						<div className="flex h-full items-center justify-center">
-							No Results Found!
+						<div className="flex h-full items-center justify-center px-4 py-8 text-center text-muted-foreground">
+							No roles match the current search and filters.
 						</div>
 					)}
 				</Card>

@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Permission;
 
 interface PermissionRepository
 {
-    public function paginate(int $perPage = 15): LengthAwarePaginator;
+    public function paginate(array $filters = [], int $perPage = 15): LengthAwarePaginator;
 
     public function create(array $attributes): Permission;
 

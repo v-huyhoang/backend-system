@@ -19,6 +19,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
+import {
 	Table,
 	TableBody,
 	TableCell,
@@ -35,10 +42,11 @@ import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import type { PageProps } from '@/types/page';
 import { Permission, SinglePermission } from '@/types/role_permissions';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -50,13 +58,20 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Permissions({
 	permissions,
+	filters,
 }: {
 	permissions: Permission;
+	filters: PageProps['filters'];
 }) {
 	const [openAddNewPermissionDialog, setOpenAddNewPermissionDialog] =
 		useState(false);
 	const [openEditPermissionDialog, setOpenEditPermissionDialog] =
 		useState(false);
+	const [search, setSearch] = useState(filters.q ?? '');
+	const [assignedFilter, setAssignedFilter] = useState(
+		filters.assigned ?? 'all',
+	);
+	const isFirstRender = useRef(true);
 
 	const { flash } = usePage<{ flash: { message?: string; error: string } }>()
 		.props;
@@ -70,6 +85,28 @@ export default function Permissions({
 			toast.success(flash.message);
 		}
 	}, [flash.message]);
+
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
+
+		const timeout = setTimeout(() => {
+			const query: { q?: string; assigned?: string } = {};
+			const normalizedSearch = search.trim();
+
+			if (normalizedSearch) query.q = normalizedSearch;
+			if (assignedFilter !== 'all') query.assigned = assignedFilter;
+
+			router.get('/admin/permissions', query, {
+				preserveState: true,
+				replace: true,
+			});
+		}, 400);
+
+		return () => clearTimeout(timeout);
+	}, [search, assignedFilter]);
 
 	const {
 		data,
@@ -121,7 +158,7 @@ export default function Permissions({
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Permissions" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-				<Card>
+				<Card className='gap-2'>
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle>Permissions Managements</CardTitle>
 						<CardAction>
@@ -132,19 +169,72 @@ export default function Permissions({
 											size="icon"
 											aria-label="Add new permission"
 											onClick={() =>
-												setOpenAddNewPermissionDialog(true)
+												setOpenAddNewPermissionDialog(
+													true,
+												)
 											}
 										>
 											<Plus />
 										</Button>
 									</TooltipTrigger>
-									<TooltipContent>Add new permission</TooltipContent>
+									<TooltipContent>
+										Add new permission
+									</TooltipContent>
 								</Tooltip>
 							)}
 						</CardAction>
 					</CardHeader>
 					<hr />
 					<CardContent>
+						<div className="pb-4">
+							<Table>
+								<TableHeader>
+									<TableRow className="border-none hover:bg-transparent">
+										<TableHead>Search</TableHead>
+										<TableHead>Assignment</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									<TableRow className="border-none hover:bg-transparent">
+										<TableCell>
+											<Input
+												value={search}
+												onChange={(event) =>
+													setSearch(
+														event.target.value,
+													)
+												}
+												placeholder="Search by name or description..."
+												aria-label="Search permissions"
+											/>
+										</TableCell>
+										<TableCell>
+											<Select
+												value={assignedFilter}
+												onValueChange={
+													setAssignedFilter
+												}
+											>
+												<SelectTrigger aria-label="Filter permissions by assignment">
+													<SelectValue placeholder="All assignments" />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectItem value="all">
+														All assignments
+													</SelectItem>
+													<SelectItem value="1">
+														Assigned to a role
+													</SelectItem>
+													<SelectItem value="0">
+														Not assigned
+													</SelectItem>
+												</SelectContent>
+											</Select>
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</div>
 						<Table>
 							<TableHeader className="bg-slate-500 dark:bg-slate-700">
 								<TableRow>
@@ -191,40 +281,48 @@ export default function Permissions({
 													SystemPermission.EditPermissions,
 												) && (
 													<Tooltip>
-													<TooltipTrigger asChild>
-														<Button
-															variant="outline"
-															size="icon"
-															className="size-8"
-															aria-label={`Edit ${permission.name}`}
-															onClick={() => edit(permission)}
-														>
-															<Pencil />
-														</Button>
-													</TooltipTrigger>
-													<TooltipContent>Edit permission</TooltipContent>
+														<TooltipTrigger asChild>
+															<Button
+																variant="outline"
+																size="icon"
+																className="size-8"
+																aria-label={`Edit ${permission.name}`}
+																onClick={() =>
+																	edit(
+																		permission,
+																	)
+																}
+															>
+																<Pencil />
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Edit permission
+														</TooltipContent>
 													</Tooltip>
 												)}
 												{can(
 													SystemPermission.DeletePermissions,
 												) && (
 													<Tooltip>
-													<TooltipTrigger asChild>
-														<Button
-															variant="destructive"
-															size="icon"
-															className="size-8"
+														<TooltipTrigger asChild>
+															<Button
+																variant="destructive"
+																size="icon"
+																className="size-8"
 																aria-label={`Delete ${permission.name}`}
 																onClick={() => {
 																	deletePermission(
 																		permission.id,
 																	);
 																}}
-														>
-															<Trash2 />
-														</Button>
-													</TooltipTrigger>
-													<TooltipContent>Delete permission</TooltipContent>
+															>
+																<Trash2 />
+															</Button>
+														</TooltipTrigger>
+														<TooltipContent>
+															Delete permission
+														</TooltipContent>
 													</Tooltip>
 												)}
 											</div>
@@ -242,8 +340,8 @@ export default function Permissions({
 							links={permissions.links}
 						/>
 					) : (
-						<div className="flex h-full items-center justify-center">
-							No Results Found!
+						<div className="flex h-full items-center justify-center px-4 py-8 text-center text-muted-foreground">
+							No permissions match the current search and filters.
 						</div>
 					)}
 				</Card>

@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 
 interface RoleRepository
 {
-    public function paginate(int $perPage = 10): LengthAwarePaginator;
+    public function paginate(array $filters = [], int $perPage = 10): LengthAwarePaginator;
 
     public function permissionOptions(): Collection;
 

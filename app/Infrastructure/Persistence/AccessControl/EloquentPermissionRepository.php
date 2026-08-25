@@ -8,11 +8,26 @@ use Spatie\Permission\Models\Permission;
 
 class EloquentPermissionRepository implements PermissionRepository
 {
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginate(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         return Permission::query()
+            ->when($filters['q'] ?? null, function ($query, string $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when(
+                ($filters['assigned'] ?? null) === '1',
+                fn ($query) => $query->whereHas('roles'),
+            )
+            ->when(
+                ($filters['assigned'] ?? null) === '0',
+                fn ($query) => $query->whereDoesntHave('roles'),
+            )
             ->latest()
             ->paginate($perPage)
+            ->withQueryString()
             ->through(fn (Permission $permission) => [
                 'id' => $permission->id,
                 'name' => $permission->name,

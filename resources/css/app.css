@@ -148,6 +148,7 @@
 	}
 
 	.gtg-theme {
+		--gtg-page-bg: #e9e5d8;
 		--gtg-bg: #fff8e7;
 		--gtg-surface: #ffffff;
 		--gtg-text: #20241f;

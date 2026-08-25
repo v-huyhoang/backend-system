@@ -11,9 +11,9 @@ class PermissionService
 {
     public function __construct(private readonly PermissionRepository $permissions) {}
 
-    public function paginate(): LengthAwarePaginator
+    public function paginate(array $filters = []): LengthAwarePaginator
     {
-        return $this->permissions->paginate();
+        return $this->permissions->paginate($filters);
     }
 
     public function create(PermissionData $data): Permission

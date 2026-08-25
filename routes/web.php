@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('user/welcome/index');
 })->name('home');
 
 Route::get('/p/{slug}', function (string $slug) {
@@ -14,7 +14,7 @@ Route::get('/p/{slug}', function (string $slug) {
         'tui-hut-chan-khong-dung-quan-ao',
     ], true), 404);
 
-    return Inertia::render('products/show', ['slug' => $slug]);
+    return Inertia::render('user/products/show', ['slug' => $slug]);
 })->name('products.show');
 
 require __DIR__.'/admin.php';

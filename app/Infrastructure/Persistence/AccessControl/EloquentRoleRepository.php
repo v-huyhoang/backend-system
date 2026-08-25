@@ -11,12 +11,26 @@ use Spatie\Permission\Models\Role;
 
 class EloquentRoleRepository implements RoleRepository
 {
-    public function paginate(int $perPage = 10): LengthAwarePaginator
+    public function paginate(array $filters = [], int $perPage = 10): LengthAwarePaginator
     {
         return Role::query()
             ->with('permissions:id,name,description,created_at,updated_at')
+            ->when($filters['q'] ?? null, function ($query, string $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when(
+                $filters['permission_id'] ?? null,
+                fn ($query, $permissionId) => $query->whereHas(
+                    'permissions',
+                    fn ($query) => $query->whereKey($permissionId),
+                ),
+            )
             ->latest()
             ->paginate($perPage)
+            ->withQueryString()
             ->through(fn (Role $role) => $this->mapRole($role));
     }
 

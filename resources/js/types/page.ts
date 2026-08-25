@@ -4,6 +4,9 @@ export interface PageProps extends InertiaPageProps {
 	filters: {
 		q?: string;
 		role_id?: string;
+		permission_id?: string;
 		is_active?: string;
+		assigned?: string;
+		status?: string;
 	};
 }

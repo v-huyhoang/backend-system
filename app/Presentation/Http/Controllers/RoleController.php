@@ -7,6 +7,7 @@ use App\Application\AccessControl\RoleService;
 use App\Presentation\Http\Requests\Roles\StoreRoleRequest;
 use App\Presentation\Http\Requests\Roles\UpdateRoleRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -15,9 +16,15 @@ class RoleController extends Controller
 {
     public function __construct(private readonly RoleService $roles) {}
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('admin/roles/index', ['roles' => $this->roles->paginate()]);
+        $filters = $request->only(['q', 'permission_id']);
+
+        return Inertia::render('admin/roles/index', [
+            'roles' => $this->roles->paginate($filters),
+            'permissions' => $this->roles->permissionOptions(),
+            'filters' => $filters,
+        ]);
     }
 
     public function create(): Response

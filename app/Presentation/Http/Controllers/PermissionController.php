@@ -7,6 +7,7 @@ use App\Application\AccessControl\PermissionService;
 use App\Presentation\Http\Requests\Permissions\StorePermissionRequest;
 use App\Presentation\Http\Requests\Permissions\UpdatePermissionRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -15,9 +16,14 @@ class PermissionController extends Controller
 {
     public function __construct(private readonly PermissionService $permissions) {}
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('admin/permissions/index', ['permissions' => $this->permissions->paginate()]);
+        $filters = $request->only(['q', 'assigned']);
+
+        return Inertia::render('admin/permissions/index', [
+            'permissions' => $this->permissions->paginate($filters),
+            'filters' => $filters,
+        ]);
     }
 
     public function store(StorePermissionRequest $request): RedirectResponse

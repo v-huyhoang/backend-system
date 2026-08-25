@@ -12,9 +12,9 @@ class RoleService
 {
     public function __construct(private readonly RoleRepository $roles) {}
 
-    public function paginate(): LengthAwarePaginator
+    public function paginate(array $filters = []): LengthAwarePaginator
     {
-        return $this->roles->paginate();
+        return $this->roles->paginate($filters);
     }
 
     public function permissionOptions(): Collection
