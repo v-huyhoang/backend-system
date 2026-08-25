@@ -12,7 +12,7 @@ interface CategoryRepository
 
     public function parentOptions(?Category $excluding = null): Collection;
 
-	public function productFilterOptions(): array;
+    public function productFilterOptions(): array;
 
     public function create(array $attributes): Category;
 

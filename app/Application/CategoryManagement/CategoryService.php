@@ -22,10 +22,10 @@ class CategoryService
         return $this->categories->parentOptions($excluding);
     }
 
-	public function productFilterOptions(): array
-	{
-		return $this->categories->productFilterOptions();
-	}
+    public function productFilterOptions(): array
+    {
+        return $this->categories->productFilterOptions();
+    }
 
     public function create(CategoryData $data): Category
     {

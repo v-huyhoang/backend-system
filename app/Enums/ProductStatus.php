@@ -5,6 +5,6 @@ namespace App\Enums;
 enum ProductStatus: string
 {
     case DRAFT = 'draft';
-	case PUBLISHED = 'published';
-	case ARCHIVED = 'archived';
+    case PUBLISHED = 'published';
+    case ARCHIVED = 'archived';
 }

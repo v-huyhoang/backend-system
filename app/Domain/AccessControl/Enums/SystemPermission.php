@@ -21,11 +21,11 @@ enum SystemPermission: string
     case CreateCategories = 'create_categories';
     case EditCategories = 'edit_categories';
     case DeleteCategories = 'delete_categories';
-	case ViewProducts = 'view_products';
+    case ViewProducts = 'view_products';
     case CreateProducts = 'create_products';
     case EditProducts = 'edit_products';
     case DeleteProducts = 'delete_products';
-	case ViewMerchants = 'view_merchants';
+    case ViewMerchants = 'view_merchants';
     case CreateMerchants = 'create_merchants';
     case EditMerchants = 'edit_merchants';
     case DeleteMerchants = 'delete_merchants';
@@ -54,11 +54,11 @@ enum SystemPermission: string
             self::CreateCategories => 'Create categories',
             self::EditCategories => 'Edit categories',
             self::DeleteCategories => 'Delete categories',
-			self::ViewProducts => 'View products',
+            self::ViewProducts => 'View products',
             self::CreateProducts => 'Create products',
             self::EditProducts => 'Edit products',
             self::DeleteProducts => 'Delete products',
-			self::ViewMerchants => 'View merchants',
+            self::ViewMerchants => 'View merchants',
             self::CreateMerchants => 'Create merchants',
             self::EditMerchants => 'Edit merchants',
             self::DeleteMerchants => 'Delete merchants',

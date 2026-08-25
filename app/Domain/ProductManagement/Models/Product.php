@@ -13,35 +13,36 @@ class Product extends Model
     use HasFactory;
 
     protected $guarded = [];
-	protected $fillable = [
-		'category_id',
-		'short_description',
-		'content',
-		'thumbnail_path',
-		'advantages',
-		'disadvantages',
-		'suitable_for',
-		'not_suitable_for',
-		'published_at',
-		'code',
-		'name',
-		'slug',
-		'status',
-		'is_featured',
-		'sort_order'
-	];
 
-	protected function casts(): array
+    protected $fillable = [
+        'category_id',
+        'short_description',
+        'content',
+        'thumbnail_path',
+        'advantages',
+        'disadvantages',
+        'suitable_for',
+        'not_suitable_for',
+        'published_at',
+        'code',
+        'name',
+        'slug',
+        'status',
+        'is_featured',
+        'sort_order',
+    ];
+
+    protected function casts(): array
     {
         return [
             'advantages' => 'array',
-			'disadvantages' => 'array',
-			'suitable_for' => 'array',
-			'not_suitable_for' => 'array',
+            'disadvantages' => 'array',
+            'suitable_for' => 'array',
+            'not_suitable_for' => 'array',
             'sort_order' => 'integer',
-			'is_featured' => 'boolean',
-			'published_at' => 'datetime',
-			'status' => ProductStatus::class,
+            'is_featured' => 'boolean',
+            'published_at' => 'datetime',
+            'status' => ProductStatus::class,
         ];
     }
 
@@ -57,8 +58,9 @@ class Product extends Model
             ],
         ];
     }
-	public function category(): BelongsTo
-	{
-		return $this->belongsTo(Category::class);
-	}
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
