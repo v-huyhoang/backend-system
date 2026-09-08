@@ -17,22 +17,6 @@ enum SystemPermission: string
     case CreateUsers = 'create_users';
     case EditUsers = 'edit_users';
     case DeleteUsers = 'delete_users';
-    case ViewCategories = 'view_categories';
-    case CreateCategories = 'create_categories';
-    case EditCategories = 'edit_categories';
-    case DeleteCategories = 'delete_categories';
-    case ViewProducts = 'view_products';
-    case CreateProducts = 'create_products';
-    case EditProducts = 'edit_products';
-    case DeleteProducts = 'delete_products';
-    case ViewMerchants = 'view_merchants';
-    case CreateMerchants = 'create_merchants';
-    case EditMerchants = 'edit_merchants';
-    case DeleteMerchants = 'delete_merchants';
-    case ViewProductOffers = 'view_product_offers';
-    case CreateProductOffers = 'create_product_offers';
-    case EditProductOffers = 'edit_product_offers';
-    case DeleteProductOffers = 'delete_product_offers';
 
     public function description(): string
     {
@@ -50,22 +34,6 @@ enum SystemPermission: string
             self::CreateUsers => 'Create users',
             self::EditUsers => 'Edit users',
             self::DeleteUsers => 'Delete users',
-            self::ViewCategories => 'View categories',
-            self::CreateCategories => 'Create categories',
-            self::EditCategories => 'Edit categories',
-            self::DeleteCategories => 'Delete categories',
-            self::ViewProducts => 'View products',
-            self::CreateProducts => 'Create products',
-            self::EditProducts => 'Edit products',
-            self::DeleteProducts => 'Delete products',
-            self::ViewMerchants => 'View merchants',
-            self::CreateMerchants => 'Create merchants',
-            self::EditMerchants => 'Edit merchants',
-            self::DeleteMerchants => 'Delete merchants',
-            self::ViewProductOffers => 'View product offers',
-            self::CreateProductOffers => 'Create product offers',
-            self::EditProductOffers => 'Edit product offers',
-            self::DeleteProductOffers => 'Delete product offers',
         };
     }
 

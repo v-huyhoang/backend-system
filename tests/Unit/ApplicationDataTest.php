@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Application\AccessControl\DTOs\PermissionData;
 use App\Application\AccessControl\DTOs\RoleData;
-use App\Application\CategoryManagement\DTOs\CategoryData;
 use App\Application\UserManagement\DTOs\StoreUserData;
 use App\Application\UserManagement\DTOs\UpdateUserData;
 use PHPUnit\Framework\Attributes\Test;
@@ -43,26 +42,5 @@ class ApplicationDataTest extends TestCase
         $this->assertNull($role->description);
         $this->assertSame(['edit users'], $role->permissions);
         $this->assertNull($permission->description);
-    }
-
-    #[Test]
-    public function it_maps_category_data_and_exposes_persistence_attributes(): void
-    {
-        $category = CategoryData::fromArray([
-            'name' => 'Backend',
-            'parent_id' => '12',
-            'slug' => null,
-            'description' => null,
-            'is_active' => 1,
-        ]);
-
-        $this->assertSame(12, $category->parentId);
-        $this->assertSame([
-            'name' => 'Backend',
-            'parent_id' => 12,
-            'slug' => null,
-            'description' => null,
-            'is_active' => true,
-        ], $category->toArray());
     }
 }

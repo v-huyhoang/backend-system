@@ -32,7 +32,7 @@ import {
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { SystemPermission } from '@/enums/access-control';
-import { ActiveStatus } from '@/enums/customer';
+import { ActiveStatus } from '@/enums/active-status';
 import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import * as userRoutes from '@/routes/admin/users';

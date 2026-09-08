@@ -23,6 +23,11 @@ class RolePermissionSeeder extends Seeder
             );
         }
 
+        Permission::query()
+            ->where('guard_name', 'web')
+            ->whereNotIn('name', SystemPermission::values())
+            ->delete();
+
         $adminRole = Role::firstOrCreate([
             'name' => SystemRole::Admin->value,
             'guard_name' => 'web',

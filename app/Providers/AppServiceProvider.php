@@ -4,13 +4,11 @@ namespace App\Providers;
 
 use App\Domain\AccessControl\Contracts\PermissionRepository;
 use App\Domain\AccessControl\Contracts\RoleRepository;
-use App\Domain\CategoryManagement\Models\Category;
 use App\Domain\UserManagement\Contracts\UserRepository;
 use App\Domain\UserManagement\Models\User;
 use App\Infrastructure\Persistence\AccessControl\EloquentPermissionRepository;
 use App\Infrastructure\Persistence\AccessControl\EloquentRoleRepository;
 use App\Infrastructure\Persistence\UserManagement\EloquentUserRepository;
-use App\Policies\CategoryPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
@@ -40,9 +38,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);
-        Gate::policy(Category::class, CategoryPolicy::class);
-
-		Model::preventLazyLoading(
+        Model::preventLazyLoading(
             $this->app->environment('local')
         );
     }

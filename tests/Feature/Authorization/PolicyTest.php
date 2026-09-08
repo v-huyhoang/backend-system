@@ -3,7 +3,6 @@
 namespace Tests\Feature\Authorization;
 
 use App\Domain\AccessControl\Enums\SystemPermission;
-use App\Domain\CategoryManagement\Models\Category;
 use App\Domain\UserManagement\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,7 +26,6 @@ class PolicyTest extends TestCase
     {
         $actor = User::factory()->create();
         $target = User::factory()->create();
-        $category = new Category;
         $role = new Role(['guard_name' => 'web']);
         $permission = new Permission(['guard_name' => 'web']);
 
@@ -35,13 +33,11 @@ class PolicyTest extends TestCase
             SystemPermission::ViewUsers->value,
             SystemPermission::CreateRoles->value,
             SystemPermission::EditPermissions->value,
-            SystemPermission::DeleteCategories->value,
         ]);
 
         $this->assertTrue(Gate::forUser($actor)->allows('view', $target));
         $this->assertTrue(Gate::forUser($actor)->allows('create', Role::class));
         $this->assertTrue(Gate::forUser($actor)->allows('update', $permission));
-        $this->assertTrue(Gate::forUser($actor)->allows('delete', $category));
         $this->assertFalse(Gate::forUser($actor)->allows('update', $target));
     }
 

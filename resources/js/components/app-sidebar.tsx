@@ -14,15 +14,7 @@ import { SystemPermission } from '@/enums/access-control';
 import { dashboard } from '@/routes/admin';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import {
-	BoxIcon,
-	Key,
-	LayoutGrid,
-	LockKeyholeIcon,
-	LucideBoxes,
-	Store,
-	User,
-} from 'lucide-react';
+import { Key, LayoutGrid, LockKeyholeIcon, User } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -49,24 +41,6 @@ const mainNavItems: NavItem[] = [
 		href: '/admin/users',
 		icon: User,
 		permission: SystemPermission.ViewUsers,
-	},
-	{
-		title: 'Categories',
-		href: '/admin/categories',
-		icon: BoxIcon,
-		permission: SystemPermission.ViewCategories,
-	},
-	{
-		title: 'Products',
-		href: '/admin/products',
-		icon: LucideBoxes,
-		permission: SystemPermission.ViewProducts,
-	},
-	{
-		title: 'Merchants',
-		href: '/admin/merchants',
-		icon: Store,
-		permission: SystemPermission.ViewMerchants,
 	},
 ];
 

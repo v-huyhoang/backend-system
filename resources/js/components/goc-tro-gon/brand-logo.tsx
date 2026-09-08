@@ -7,7 +7,7 @@ export function BrandLogo({ className = '' }: { className?: string }) {
 		<Link
 			href="/"
 			className={`inline-flex shrink-0 items-center gap-2 ${className}`}
-			aria-label="Góc Trọ Thông Minh - Trang chủ"
+			aria-label="Góc Trọ Gọn - Trang chủ"
 		>
 			<img
 				src={iconSrc}
@@ -17,7 +17,7 @@ export function BrandLogo({ className = '' }: { className?: string }) {
 				height="40"
 			/>
 			<span className="text-sm font-bold tracking-[-0.02em] whitespace-nowrap text-[var(--gtg-primary-dark)] sm:text-[17px]">
-				Góc Trọ Thông Minh
+				Góc Trọ Gọn
 			</span>
 		</Link>
 	);
