@@ -10,37 +10,29 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { usePermissions } from '@/hooks/user-permissions';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
+import type { Merchant, MerchantStatus } from '@/types/merchant';
+import { PageProps } from '@/types/page';
 import { Head, router } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
-type Merchant = {
-	id: number;
-	platform: string;
-	name: string;
-	shop_url: string | null;
-	status: string;
-};
-type MerchantPaginator = {
-	data: Merchant[];
-	current_page: number;
-	last_page: number;
-	per_page: number;
-	total: number;
-	from: number | null;
-	to: number | null;
-	links: { url: string | null; label: string; active: boolean }[];
-};
+const statusVariant = {
+	active: 'green',
+	inactive: 'secondary',
+} as const;
+interface MerchantsPageProps {
+	merchants: Merchant;
+	filters?: PageProps['filters'] & { status?: string };
+}
 
 export default function Merchants({
 	merchants,
-	filters,
-}: {
-	merchants: MerchantPaginator;
-	filters: { q?: string };
-}) {
+	filters = {},
+}: MerchantsPageProps) {
 	const [search, setSearch] = useState(filters.q ?? '');
+	const { can } = usePermissions();
 	const first = useRef(true);
 	useEffect(() => {
 		if (first.current) {
@@ -133,9 +125,9 @@ export default function Merchants({
 										<TableCell>
 											<Badge
 												variant={
-													merchant.status === 'active'
-														? 'green'
-														: 'gray'
+													statusVariant[
+													merchant.status as MerchantStatus
+													]
 												}
 											>
 												{merchant.status}

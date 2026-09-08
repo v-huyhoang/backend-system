@@ -1,0 +1,236 @@
+// ============================================================
+// GOC TRO GON - MVP DATABASE SCHEMA
+// Vietnam administrative model: province -> ward/commune/special zone
+// Paste this file into dbdiagram.io
+// ============================================================
+
+// Authentication is provided by Laravel Fortify. Authorization uses
+// Spatie Permission tables, so roles are not duplicated on users.
+Table users {
+  id bigint [pk, increment]
+  name varchar(255)
+  email varchar(255) [unique]
+  phone varchar(20) [null, unique]
+  phone_verified_at timestamp [null]
+  avatar_path varchar(500) [null]
+  email_verified_at timestamp [null]
+  password varchar(255)
+  is_active boolean [default: true]
+  remember_token varchar(100) [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table landlord_profiles {
+  id bigint [pk, increment]
+  user_id bigint [not null, unique, ref: > users.id]
+  display_name varchar(255) [null]
+  business_name varchar(255) [null]
+  bio text [null]
+  verification_status varchar(20) [default: 'unverified', note: 'unverified, pending, verified, rejected']
+  verified_at timestamp [null]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    verification_status
+  }
+}
+
+Table provinces {
+  id bigint [pk, increment]
+  code varchar(20) [unique, note: 'Official administrative code']
+  name varchar(255)
+  slug varchar(255) [unique]
+  type varchar(20) [note: 'province, municipality']
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (is_active, name)
+  }
+}
+
+// Rows may be wards, communes, or special zones under Vietnam's
+// two-level administrative model.
+Table wards {
+  id bigint [pk, increment]
+  province_id bigint [not null, ref: > provinces.id]
+  code varchar(20) [unique, note: 'Official administrative code']
+  name varchar(255)
+  slug varchar(255)
+  type varchar(20) [note: 'ward, commune, special_zone']
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (province_id, slug) [unique]
+    (province_id, is_active)
+  }
+}
+
+Table property_types {
+  id bigint [pk, increment]
+  name varchar(100)
+  slug varchar(120) [unique]
+  description text [null]
+  is_active boolean [default: true]
+  sort_order int [default: 0]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (is_active, sort_order)
+  }
+}
+
+Table amenities {
+  id bigint [pk, increment]
+  name varchar(100)
+  slug varchar(120) [unique]
+  icon varchar(100) [null]
+  is_active boolean [default: true]
+  sort_order int [default: 0]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (is_active, sort_order)
+  }
+}
+
+Table listings {
+  id bigint [pk, increment]
+  landlord_id bigint [not null, ref: > users.id]
+  property_type_id bigint [not null, ref: > property_types.id]
+  ward_id bigint [not null, ref: > wards.id]
+  title varchar(255)
+  slug varchar(255) [unique]
+  description text
+  address_detail varchar(500)
+  latitude decimal(10,7) [null]
+  longitude decimal(10,7) [null]
+  monthly_rent decimal(12,0)
+  deposit_amount decimal(12,0) [null]
+  area_sqm decimal(7,2)
+  max_occupants int [default: 1]
+  available_from date [null]
+  contact_name varchar(255)
+  contact_phone varchar(20)
+  status varchar(20) [default: 'draft', note: 'draft, pending_review, published, rejected, hidden, rented, expired']
+  rejection_reason text [null, note: 'Snapshot of the latest rejection reason']
+  submitted_at timestamp [null]
+  published_at timestamp [null]
+  expires_at timestamp [null]
+  view_count bigint [default: 0]
+  contact_count bigint [default: 0]
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp [null, note: 'soft delete']
+
+  indexes {
+    (status, published_at)
+    (status, ward_id, monthly_rent)
+    (landlord_id, status)
+    (property_type_id, status)
+    (status, expires_at)
+  }
+}
+
+Table listing_costs {
+  id bigint [pk, increment]
+  listing_id bigint [not null, ref: > listings.id]
+  type varchar(20) [note: 'electricity, water, service, parking, internet, other']
+  label varchar(100)
+  amount decimal(12,0) [null]
+  unit varchar(20) [note: 'kwh, person, month, fixed, free, negotiable']
+  note varchar(500) [null]
+  sort_order int [default: 0]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (listing_id, sort_order)
+  }
+}
+
+Table listing_images {
+  id bigint [pk, increment]
+  listing_id bigint [not null, ref: > listings.id]
+  path varchar(500)
+  alt_text varchar(255) [null]
+  is_primary boolean [default: false]
+  sort_order int [default: 0]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (listing_id, sort_order)
+    (listing_id, is_primary)
+  }
+}
+
+Table listing_amenities {
+  listing_id bigint [not null, ref: > listings.id]
+  amenity_id bigint [not null, ref: > amenities.id]
+  created_at timestamp
+
+  indexes {
+    (listing_id, amenity_id) [pk]
+    (amenity_id, listing_id)
+  }
+}
+
+Table favorites {
+  id bigint [pk, increment]
+  user_id bigint [not null, ref: > users.id]
+  listing_id bigint [not null, ref: > listings.id]
+  created_at timestamp
+
+  indexes {
+    (user_id, listing_id) [unique]
+    listing_id
+  }
+}
+
+Table listing_moderations {
+  id bigint [pk, increment]
+  listing_id bigint [not null, ref: > listings.id]
+  moderator_id bigint [null, ref: > users.id]
+  from_status varchar(20) [null]
+  to_status varchar(20)
+  reason text [null]
+  metadata json [null]
+  created_at timestamp
+
+  indexes {
+    (listing_id, created_at)
+    (moderator_id, created_at)
+  }
+}
+
+Table reports {
+  id bigint [pk, increment]
+  listing_id bigint [not null, ref: > listings.id]
+  reporter_id bigint [null, ref: > users.id]
+  reason varchar(30) [note: 'spam, wrong_information, already_rented, fraud, duplicate, other']
+  note text [null]
+  status varchar(20) [default: 'pending', note: 'pending, reviewed, dismissed']
+  reviewed_by bigint [null, ref: > users.id]
+  reviewed_at timestamp [null]
+  resolution_note text [null]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (status, created_at)
+    (listing_id, status)
+    (reporter_id, created_at)
+  }
+}
+
+// Deferred until after MVP:
+// saved searches, conversations/messages, notifications, VIP/promotions,
+// transactions/payments, reviews, booking, and rental contracts.

@@ -2,6 +2,7 @@
 
 use App\Domain\AccessControl\Enums\SystemPermission;
 use App\Domain\CategoryManagement\Models\Category;
+use App\Domain\MerchantManagement\Models\Merchant;
 use App\Domain\ProductManagement\Models\Product;
 use App\Domain\UserManagement\Models\User;
 use App\Presentation\Http\Controllers\CategoryController;
@@ -71,5 +72,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(
         Route::get('/{product}/offers', [ProductOfferController::class, 'index'])->name('offers.index')->can(SystemPermission::ViewProductOffers->value);
     });
 
-    Route::get('/merchants', [MerchantController::class, 'index'])->name('merchants.index')->can(SystemPermission::ViewMerchants->value);
-});
+		Route::prefix('merchants')->name('merchants.')->group(function () {
+        Route::get('/', [MerchantController::class, 'index'])->name('index')->can('viewAny', Merchant::class);
+        Route::post('/', [MerchantController::class, 'store'])->name('store')->can('create', Merchant::class);
+        Route::get('/create', [MerchantController::class, 'create'])->name('create')->can('create', Merchant::class);
+        Route::get('/{merchant}', [MerchantController::class, 'show'])->name('show')->can('view', 'merchant');
+        Route::get('/{merchant}/edit', [MerchantController::class, 'edit'])->name('edit')->can('update', 'merchant');
+        Route::put('/{merchant}', [MerchantController::class, 'update'])->name('update')->can('update', 'merchant');
+        Route::delete('/{merchant}', [MerchantController::class, 'destroy'])->name('destroy')->can('delete', 'merchant');
+    });
+	});

@@ -3,10 +3,12 @@
 namespace App\Domain\ProductManagement\Models;
 
 use App\Domain\CategoryManagement\Models\Category;
+use App\Domain\MerchantManagement\Models\ProductOffer;
 use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -62,5 +64,10 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function offers(): HasMany
+    {
+        return $this->hasMany(ProductOffer::class);
     }
 }
