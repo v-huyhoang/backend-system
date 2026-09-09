@@ -65,8 +65,8 @@ HTTP Request
   lại bằng `php artisan wayfinder:generate --with-form --no-interaction`.
 - Tuân theo `.prettierrc`: single quote, semicolon, print width 80, tab width 4;
   để plugin tự sắp import và class Tailwind.
-- Với giao diện thương hiệu Góc Trọ Gọn, tham khảo `design/goc-tro-gon.md` và
-  `design-system/goc-tro-gon/MASTER.md` trước khi đổi visual.
+- Với giao diện thương hiệu Trọ Đây, tham khảo `design.md` và
+  `design-system/tro-day/MASTER.md` trước khi đổi visual.
 
 ## Lệnh thường dùng
 

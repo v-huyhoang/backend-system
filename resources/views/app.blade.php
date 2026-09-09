@@ -30,12 +30,12 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Trọ Đây') }}</title>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="icon" href="/images/goc-tro-gon/goc-tro-thong-minh-icon.webp" type="image/webp">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="icon" href="/images/tro-day/favicons/favicon-16.png" type="image/png" sizes="16x16">
+        <link rel="icon" href="/images/tro-day/favicons/favicon-32.png" type="image/png" sizes="32x32">
+        <link rel="icon" href="/images/tro-day/favicons/favicon-48.png" type="image/png" sizes="48x48">
+        <link rel="apple-touch-icon" href="/images/tro-day/icons/app-icon.png">
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

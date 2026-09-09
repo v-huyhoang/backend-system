@@ -1,4 +1,4 @@
-# Góc Trọ Gọn Design System
+# Trọ Đây Design System
 
 ## Product direction
 
@@ -8,23 +8,24 @@ Avoid marketplace pressure patterns, fake social proof, and visual clutter.
 
 ## Semantic tokens
 
-| Token | Value | Purpose |
-| --- | --- | --- |
-| `--gtg-bg` | `#FFF8E7` | Warm supporting background |
-| `--gtg-surface` | `#FFFFFF` | Cards and controls |
-| `--gtg-text` | `#20241F` | Primary text |
-| `--gtg-muted` | `#687066` | Secondary text |
-| `--gtg-primary` | `#3A7D44` | Primary action |
-| `--gtg-primary-dark` | `#285B32` | Heading/action hover |
-| `--gtg-primary-soft` | `#E5F0E6` | Selected/supporting surface |
-| `--gtg-border` | `#E7E4DA` | Borders and dividers |
+| Token                | Value     | Purpose                     |
+| -------------------- | --------- | --------------------------- |
+| `--gtg-bg`           | `#F2F3F2` | Soft gray page background   |
+| `--gtg-surface`      | `#FFFFFF` | Cards and controls          |
+| `--gtg-text`         | `#252823` | Primary text                |
+| `--gtg-muted`        | `#62655E` | Secondary text              |
+| `--gtg-primary`      | `#A65334` | Accessible orange action    |
+| `--gtg-primary-dark` | `#8F432A` | Action hover                |
+| `--gtg-primary-soft` | `#F4E4DC` | Selected/supporting surface |
+| `--gtg-accent`       | `#B96843` | Terracotta emphasis         |
+| `--gtg-border`       | `#D5D7D2` | Borders and dividers        |
 
 Typography uses Be Vietnam Pro, a 16px minimum body size, and 1.5–1.75 line
 height. Prices use tabular figures. Heading weights are 600–700.
 
 ## Components and interaction
 
-- Card radius: 16px; controls: 12px.
+- Card radius: 12px; controls: 10px.
 - Interactive controls are at least 44px high; primary CTA is at least 48px.
 - Use Lucide icons. Decorative icons must have `aria-hidden="true"`.
 - Every listing card should prioritize price, area, location, availability, and a
