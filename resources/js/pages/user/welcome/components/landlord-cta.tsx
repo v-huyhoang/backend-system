@@ -1,4 +1,5 @@
-import { Link } from '@inertiajs/react';
+import type { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const benefits = [
@@ -8,6 +9,7 @@ const benefits = [
 ];
 
 export function LandlordCta() {
+	const { auth } = usePage<SharedData>().props;
 	return (
 		<section className="bg-white" aria-labelledby="chu-tro">
 			<div className="mx-auto max-w-[1200px] px-4 py-14 md:px-6 lg:py-20">
@@ -38,7 +40,11 @@ export function LandlordCta() {
 						</ul>
 					</div>
 					<Link
-						href="/register"
+						href={
+							auth.user
+								? '/chu-tro/tin-dang/tao-moi'
+								: '/register'
+						}
 						className="relative mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] bg-[var(--gtg-primary)] px-6 font-semibold text-white hover:bg-[var(--gtg-primary-dark)] lg:mt-0"
 					>
 						Bắt đầu đăng phòng{' '}

@@ -2,11 +2,16 @@
 
 namespace App\Domain\AdministrativeDivision\Models;
 
+use Database\Factories\ProvinceFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Province extends Model
 {
+    /** @use HasFactory<ProvinceFactory> */
+    use HasFactory;
+
     /** @var list<string> */
     protected $fillable = [
         'code',
@@ -32,5 +37,10 @@ class Province extends Model
     public function wards(): HasMany
     {
         return $this->hasMany(Ward::class);
+    }
+
+    protected static function newFactory(): ProvinceFactory
+    {
+        return ProvinceFactory::new();
     }
 }

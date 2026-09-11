@@ -1,4 +1,5 @@
-import { Link } from '@inertiajs/react';
+import type { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import { BrandLogo } from './brand-logo';
 
 const renterLinks = [
@@ -6,12 +7,18 @@ const renterLinks = [
 	{ label: 'Khám phá loại hình', href: '/#loai-hinh' },
 ] as const;
 
-const landlordLinks = [
-	{ label: 'Đăng phòng', href: '/register' },
-	{ label: 'Đăng nhập quản lý tin', href: '/login' },
-] as const;
-
 export function PublicFooter() {
+	const { auth } = usePage<SharedData>().props;
+	const landlordLinks = [
+		{
+			label: 'Đăng phòng',
+			href: auth.user ? '/chu-tro/tin-dang/tao-moi' : '/register',
+		},
+		{
+			label: auth.user ? 'Quản lý tin đăng' : 'Đăng nhập quản lý tin',
+			href: auth.user ? '/chu-tro/tin-dang' : '/login',
+		},
+	];
 	return (
 		<footer className="border-t border-[var(--gtg-border)] bg-[var(--gtg-surface-low)]">
 			<div className="mx-auto max-w-[1200px] px-4 py-12 md:px-6">

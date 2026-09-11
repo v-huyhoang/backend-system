@@ -14,6 +14,9 @@ const navigation = [
 
 export function PublicHeader() {
 	const { auth } = usePage<SharedData>().props;
+	const createListingHref = auth.user
+		? '/chu-tro/tin-dang/tao-moi'
+		: '/register';
 	const [menuOpen, setMenuOpen] = useState(false);
 	const getInitials = useInitials();
 
@@ -40,7 +43,7 @@ export function PublicHeader() {
 
 				<div className="flex items-center gap-2">
 					<Link
-						href="/register"
+						href={createListingHref}
 						className="hidden min-h-11 items-center gap-2 rounded-xl bg-[var(--gtg-primary)] px-4 text-[15px] font-semibold text-white shadow-sm hover:bg-[var(--gtg-primary-dark)] sm:inline-flex"
 					>
 						<Plus className="size-4" aria-hidden="true" />
@@ -49,7 +52,7 @@ export function PublicHeader() {
 
 					{auth.user ? (
 						<Link
-							href="/admin/dashboard"
+							href="/chu-tro/tin-dang"
 							className="rounded-full focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--gtg-secondary)]"
 							aria-label={`Mở tài khoản của ${auth.user.name}`}
 						>
@@ -104,7 +107,7 @@ export function PublicHeader() {
 					))}
 					<div className="mt-2 grid grid-cols-2 gap-2 border-t border-[var(--gtg-border)] pt-3">
 						<Link
-							href="/register"
+							href={createListingHref}
 							className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--gtg-primary)] px-3 font-semibold text-white"
 						>
 							<Plus className="size-4" aria-hidden="true" />

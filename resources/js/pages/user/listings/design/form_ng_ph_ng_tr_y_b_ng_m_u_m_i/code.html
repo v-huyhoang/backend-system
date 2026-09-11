@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary-dark": "#8F432A",
+          "inverse-surface": "#2e312c",
+          "on-error-container": "#93000a",
+          "tertiary-fixed-dim": "#d3c4bc",
+          "background": "#f9faf2",
+          "on-primary-fixed-variant": "#783114",
+          "on-surface": "#252823",
+          "on-tertiary-fixed-variant": "#4f453f",
+          "surface": "#FFFFFF",
+          "error": "#ba1a1a",
+          "secondary-container": "#ffa178",
+          "secondary-fixed": "#ffdbcd",
+          "surface-container-low": "#f3f4ec",
+          "on-secondary-fixed": "#360f00",
+          "on-error": "#ffffff",
+          "on-primary-fixed": "#380d00",
+          "primary-fixed-dim": "#ffb59b",
+          "outline-variant": "#D5D7D2",
+          "on-primary-container": "#ffe7e0",
+          "surface-container-lowest": "#ffffff",
+          "on-surface-variant": "#62655E",
+          "on-secondary-fixed-variant": "#753313",
+          "secondary": "#934a28",
+          "tertiary-container": "#746862",
+          "on-tertiary": "#ffffff",
+          "tertiary-fixed": "#efdfd7",
+          "on-secondary-container": "#783615",
+          "page-bg": "#F2F3F2",
+          "surface-container-highest": "#e1e3db",
+          "border-subtle": "#D5D7D2",
+          "primary-container": "#a65334",
+          "muted-text": "#62655E",
+          "surface-bright": "#f9faf2",
+          "on-background": "#252823",
+          "surface-container": "#edefe7",
+          "surface-container-high": "#e7e9e1",
+          "tertiary": "#5b504a",
+          "surface-dim": "#d9dbd3",
+          "error-container": "#ffdad6",
+          "on-tertiary-container": "#f9e9e1",
+          "inverse-primary": "#ffb59b",
+          "outline": "#88726c",
+          "on-tertiary-fixed": "#221a15",
+          "on-primary": "#ffffff",
+          "secondary-fixed-dim": "#ffb596",
+          "surface-tint": "#974729",
+          "on-secondary": "#ffffff",
+          "primary": "#a65334",
+          "inverse-on-surface": "#f0f2e9",
+          "primary-fixed": "#ffdbcf",
+          "surface-variant": "#e1e3db"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xs": "0.25rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "margin": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2rem",
+          "gutter": "1rem",
+          "touch-target": "44px",
+          "container-max": "1200px",
+          "gutter-mobile": "16px",
+          "gutter-desktop": "24px",
+          "pad-sm": "8px",
+          "pad-base": "16px",
+          "pad-md": "12px",
+          "pad-3xl": "48px",
+          "pad-2xl": "32px",
+          "pad-xl": "24px",
+          "pad-lg": "20px",
+          "pad-xs": "4px"
+        },
+        "fontFamily": {
+          "headline-md": [ "Be Vietnam Pro" ],
+          "price-md": [ "Be Vietnam Pro" ],
+          "headline-lg": [ "Be Vietnam Pro" ],
+          "body-lg": [ "Be Vietnam Pro" ],
+          "label-md": [ "Be Vietnam Pro" ],
+          "price-lg": [ "Be Vietnam Pro" ],
+          "headline-sm": [ "Be Vietnam Pro" ],
+          "label-sm": [ "Be Vietnam Pro" ],
+          "body-md": [ "Be Vietnam Pro" ],
+          "body-sm": [ "Be Vietnam Pro" ],
+          "display": [ "Be Vietnam Pro" ],
+          "headline-lg-mobile": [ "Be Vietnam Pro" ],
+          "price-display": [ "Be Vietnam Pro" ],
+          "label-btn": [ "Be Vietnam Pro" ],
+          "price-card": [ "Be Vietnam Pro" ],
+          "metadata": [ "Be Vietnam Pro" ],
+          "headline-xl-mobile": [ "Be Vietnam Pro" ],
+          "headline-xl": [ "Be Vietnam Pro" ]
+        },
+        "fontSize": {
+          "headline-md": [ "22px", { "lineHeight": "30px", "fontWeight": "600" } ],
+          "price-md": [ "16px", { "lineHeight": "24px", "fontWeight": "700" } ],
+          "headline-lg": [ "28px", { "lineHeight": "36px", "fontWeight": "700" } ],
+          "body-lg": [ "18px", { "lineHeight": "28px", "fontWeight": "400" } ],
+          "label-md": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ],
+          "price-lg": [ "20px", { "lineHeight": "26px", "fontWeight": "700" } ],
+          "headline-sm": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ],
+          "label-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "600" } ],
+          "body-md": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ],
+          "body-sm": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ],
+          "display": [ "36px", { "lineHeight": "44px", "fontWeight": "700" } ],
+          "headline-lg-mobile": [ "26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" } ],
+          "price-display": [ "24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "700" } ],
+          "label-btn": [ "15px", { "lineHeight": "20px", "fontWeight": "600" } ],
+          "price-card": [ "20px", { "lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "700" } ],
+          "metadata": [ "13px", { "lineHeight": "18px", "fontWeight": "500" } ],
+          "headline-xl-mobile": [ "34px", { "lineHeight": "42px", "letterSpacing": "-0.015em", "fontWeight": "700" } ],
+          "headline-xl": [ "48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" } ]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-page-bg font-body-md text-body-md text-[#252823]"><header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-[#D5D7D2]"><div class="h-16 max-w-container-max mx-auto px-gutter-mobile md:px-gutter-desktop flex items-center justify-between gap-pad-base"><div class="flex items-center gap-pad-lg"><a class="flex items-center gap-pad-sm py-pad-xs" data-path="tim-phong" href="#"><img alt="Logo Trọ Đây" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vvb4B4l1Aj-lzwMqSAoX21rU47dxlDWpiq-KfO6uYU7m6IPAHbFgGKRjZA6rk6wHj2UPpxt9w-9AaDomENiWwWkWNBI-w88l14G3gFQNNwgoba8ifwHbFs8lk3-9XWesKDybIANvWDQco1793NVJLXZAHacWptqKbZhycyzdXwpQtQ12OPiNlVXKD7LIo89RrzNSDbMBcNxCAmeh3cuAF3w4qd-JyzDwhxl0PxvIuL6Ep3kCCvbzuDoQ"/><span class="font-headline-sm text-headline-sm text-[#A65334] hidden sm:inline-block tracking-tight font-bold">Trọ Đây</span></a><nav class="hidden md:flex items-center gap-pad-sm"><a class="px-pad-md py-pad-sm rounded-lg font-label-btn text-label-btn text-[#62655E] hover:bg-[#F2F3F2] hover:text-[#252823] transition-colors" data-path="tim-phong" href="#">Tìm phòng</a><a class="px-pad-md py-pad-sm rounded-lg font-label-btn text-label-btn bg-[#FFDBCF]/50 text-[#A65334] font-bold" data-path="dang-tin" href="#">Đăng tin</a><a class="px-pad-md py-pad-sm rounded-lg font-label-btn text-label-btn text-[#62655E] hover:bg-[#F2F3F2] hover:text-[#252823] transition-colors" data-path="tin-da-luu" href="#">Tin đã lưu</a></nav></div><div class="flex items-center gap-pad-md"><a class="inline-flex items-center justify-center h-touch-target px-pad-lg rounded-xl bg-[#A65334] text-white font-label-btn text-label-btn hover:bg-[#8F432A] transition-colors shadow-[0_1px_3px_rgba(166,83,52,0.18)]" data-path="dang-tin" href="#"><span class="material-symbols-outlined mr-pad-xs">add_home</span>Đăng phòng của bạn</a><div class="flex items-center pl-pad-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#FFDBCF]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpWamDHv_IrBSveP6_auJNHr-ZFC4SXrfZ0jshed4_lG8GY5LY5X6WuLZcpq05YO7nSkS4_6TSatgPm-5c9qQb3UjSJs1IN6GH1He5I-0YU5zbOoaaLnMxW5GC-F_0BYgHb03OLlLSPp14xctLhSMUyc5GmYQPabejkgCzZEZhqrUj3U70NoTvk8T8z6QGgl7GdD67dYbL6hNzNNl3zUn75NnNV6ueDxxuMr_It75fLVtiFCZCexNr"/></div></div></div></header><main class="w-full pt-16 bg-[#F2F3F2] min-h-[calc(100vh-280px)]"><div class="flex flex-col w-full">
+<!-- Main Form Content Wrapper with responsive container -->
+<div class="max-w-container-max mx-auto px-gutter-mobile md:px-gutter-desktop py-pad-xl md:py-pad-2xl w-full">
+<!-- Editorial Page Header -->
+<header class="mb-pad-2xl">
+<div class="flex flex-wrap items-center justify-between gap-pad-md pb-pad-md">
+<div class="flex items-center gap-pad-sm">
+<span class="px-pad-sm py-1 rounded bg-[#FFDBCF] text-[#380d00] font-metadata text-metadata uppercase tracking-wider font-semibold">
+            Biểu mẫu đăng ký minh bạch
+          </span>
+<span class="font-metadata text-metadata text-[#D5D7D2] hidden sm:inline-block">/</span>
+<span class="font-metadata text-metadata text-[#62655E] hidden sm:inline-block">Quy chế kiểm duyệt 2025</span>
+</div>
+<div class="flex items-center gap-pad-xs text-[#62655E] font-metadata text-metadata">
+<span class="material-symbols-outlined text-[18px] text-[#A65334]">verified</span>
+<span>Miễn phí 100% tin đăng chính chủ</span>
+</div>
+</div>
+<h1 class="font-headline-xl text-headline-xl md:text-[42px] md:leading-[50px] text-[#A65334] tracking-tight mb-pad-sm">
+        Đăng tin phòng trọ
+      </h1>
+<p class="font-body-lg text-body-lg text-[#62655E] max-w-3xl">
+        Thông tin càng chính xác, phòng của bạn càng nhanh tìm được người thuê phù hợp và được duyệt nhanh chóng.
+      </p>
+<!-- Stepper Progress Tracker (Cam đất nung #A65334) -->
+<nav aria-label="Tiến trình biểu mẫu" class="mt-pad-xl pt-pad-base overflow-x-auto pb-pad-xs">
+<div class="flex items-center min-w-[760px] gap-pad-xs">
+<!-- Step 1: Completed -->
+<div class="flex items-center gap-pad-xs flex-1">
+<div class="h-2 w-full rounded-full bg-[#A65334]"></div>
+<span class="font-label-btn text-label-btn text-[#A65334] whitespace-nowrap pl-1">Thông tin cơ bản</span>
+</div>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[18px]">chevron_right</span>
+<!-- Step 2: Completed -->
+<div class="flex items-center gap-pad-xs flex-1">
+<div class="h-2 w-full rounded-full bg-[#A65334]"></div>
+<span class="font-label-btn text-label-btn text-[#A65334] whitespace-nowrap pl-1">Địa chỉ &amp; Vị trí</span>
+</div>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[18px]">chevron_right</span>
+<!-- Step 3: Completed -->
+<div class="flex items-center gap-pad-xs flex-1">
+<div class="h-2 w-full rounded-full bg-[#A65334]"></div>
+<span class="font-label-btn text-label-btn text-[#A65334] whitespace-nowrap pl-1">Giá &amp; Chi phí</span>
+</div>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[18px]">chevron_right</span>
+<!-- Step 4: In Progress (#A65334) -->
+<div class="flex items-center gap-pad-xs flex-1">
+<div class="h-2 w-full rounded-full bg-[#A65334]"></div>
+<span class="font-label-btn text-label-btn text-[#A65334] font-bold whitespace-nowrap pl-1">Tiện ích</span>
+</div>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[18px]">chevron_right</span>
+<!-- Step 5 -->
+<div class="flex items-center gap-pad-xs flex-1">
+<div class="h-2 w-full rounded-full bg-[#D5D7D2]"></div>
+<span class="font-label-btn text-label-btn text-[#62655E] whitespace-nowrap pl-1">Hình ảnh thực tế</span>
+</div>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[18px]">chevron_right</span>
+<!-- Step 6 -->
+<div class="flex items-center gap-pad-xs flex-1">
+<div class="h-2 w-full rounded-full bg-[#D5D7D2]"></div>
+<span class="font-label-btn text-label-btn text-[#62655E] whitespace-nowrap pl-1">Liên hệ</span>
+</div>
+</div>
+</nav>
+</header>
+<!-- Unified Form Sections -->
+<form class="space-y-pad-xl" onsubmit="event.preventDefault();">
+<!-- ================= NHÓM 1: Loại hình & Tiêu đề ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center gap-pad-sm mb-pad-lg">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">apartment</span>
+</span>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Loại hình &amp; Tiêu đề bài đăng</h2>
+</div>
+<!-- Room Type Radio Cards -->
+<div class="mb-pad-xl">
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-sm">
+            Loại hình phòng <span class="text-[#A65334]">*</span>
+</label>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-pad-base">
+<!-- Card 1 (Selected) -->
+<label class="cursor-pointer group relative flex flex-col p-pad-base rounded-xl bg-[#FFDBCF]/30 border-2 border-[#A65334] transition-all shadow-sm">
+<input checked="" class="sr-only" name="room_type" type="radio" value="mezzanine"/>
+<div class="flex items-start justify-between mb-pad-sm">
+<span class="w-10 h-10 rounded-lg bg-[#A65334] text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">stairs</span>
+</span>
+<span class="material-symbols-outlined text-[#A65334] text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-[#A65334] mb-1">Phòng trọ có gác</span>
+<span class="font-metadata text-metadata text-[#62655E]">Tối ưu diện tích sinh hoạt, gác lửng đúc hoặc ván ép kiên cố</span>
+</label>
+<!-- Card 2 -->
+<label class="cursor-pointer group relative flex flex-col p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:border-[#A65334]/50 hover:bg-white transition-all">
+<input class="sr-only" name="room_type" type="radio" value="studio"/>
+<div class="flex items-start justify-between mb-pad-sm">
+<span class="w-10 h-10 rounded-lg bg-white border border-[#D5D7D2] text-[#252823] flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">single_bed</span>
+</span>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[20px]">radio_button_unchecked</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-[#252823] mb-1">Căn hộ mini / Studio</span>
+<span class="font-metadata text-metadata text-[#62655E]">Không gian khép kín full nội thất, máy giặt riêng</span>
+</label>
+<!-- Card 3 -->
+<label class="cursor-pointer group relative flex flex-col p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:border-[#A65334]/50 hover:bg-white transition-all">
+<input class="sr-only" name="room_type" type="radio" value="private"/>
+<div class="flex items-start justify-between mb-pad-sm">
+<span class="w-10 h-10 rounded-lg bg-white border border-[#D5D7D2] text-[#252823] flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">meeting_room</span>
+</span>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[20px]">radio_button_unchecked</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-[#252823] mb-1">Phòng trọ khép kín</span>
+<span class="font-metadata text-metadata text-[#62655E]">WC riêng trong phòng, lối đi hành lang thông thoáng</span>
+</label>
+<!-- Card 4 -->
+<label class="cursor-pointer group relative flex flex-col p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:border-[#A65334]/50 hover:bg-white transition-all">
+<input class="sr-only" name="room_type" type="radio" value="coliving"/>
+<div class="flex items-start justify-between mb-pad-sm">
+<span class="w-10 h-10 rounded-lg bg-white border border-[#D5D7D2] text-[#252823] flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">group</span>
+</span>
+<span class="material-symbols-outlined text-[#D5D7D2] text-[20px]">radio_button_unchecked</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-[#252823] mb-1">Ở ghép</span>
+<span class="font-metadata text-metadata text-[#62655E]">Chia sẻ phòng với người đi làm/sinh viên văn minh</span>
+</label>
+</div>
+</div>
+<!-- Title Input -->
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="post-title">
+            Tiêu đề tin đăng <span class="text-[#A65334]">*</span>
+</label>
+<input class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="post-title" placeholder="Ví dụ: Phòng gác lửng 24m², ban công thoáng, gần ĐH Quốc Gia" type="text" value="Phòng gác lửng 24m², ban công thoáng, gần ĐH Quốc Gia"/>
+<p class="mt-pad-xs font-metadata text-metadata text-[#62655E] flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-[#A65334]">info</span>
+            Nêu bật đặc điểm thật, không viết in hoa toàn bộ tiêu đề (tối đa 90 ký tự).
+          </p>
+</div>
+</section>
+<!-- ================= NHÓM 2: Địa chỉ & Vị trí ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center gap-pad-sm mb-pad-lg">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Địa chỉ &amp; Vị trí phòng trọ</h2>
+<p class="font-metadata text-metadata text-[#62655E]">Địa chỉ chuẩn giúp định vị chính xác khoảng cách đến trường học và trạm xe buýt</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-pad-base mb-pad-base">
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="province">
+              Tỉnh / Thành phố <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md appearance-none focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="province">
+<option selected="">TP. Hồ Chí Minh</option>
+<option>Hà Nội</option>
+<option>Đà Nẵng</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#62655E] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="district">
+              Quận / Huyện / Thành phố <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md appearance-none focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="district">
+<option selected="">TP. Thủ Đức</option>
+<option>Quận Bình Thạnh</option>
+<option>Quận 10</option>
+<option>Quận Gò Vấp</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#62655E] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="ward">
+              Xã / Phường <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md appearance-none focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="ward">
+<option selected="">Phường Linh Xuân</option>
+<option>Phường Linh Trung</option>
+<option>Phường Tăng Nhơn Phú A</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#62655E] pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="street-address">
+            Số nhà, ngõ/hẻm, tên đường <span class="text-[#A65334]">*</span>
+</label>
+<input class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="street-address" placeholder="Ví dụ: 124/8A Hẻm xe ba gác, Đường Hoàng Diệu 2" type="text" value="Hẻm 71 Đường Số 8, Khu phố 2"/>
+<div class="mt-pad-sm p-pad-sm rounded-lg bg-[#F2F3F2] border border-[#D5D7D2] flex items-start gap-pad-xs">
+<span class="material-symbols-outlined text-[18px] text-[#A65334] shrink-0 mt-0.5">alt_route</span>
+<p class="font-metadata text-metadata text-[#62655E]">
+<strong>Ghi chú chỉ dẫn đường:</strong> Đầu hẻm có tiệm tạp hóa Cô Ba, cách cổng phụ ký túc xá khu B ĐHQG 400m, hẻm bê tông 4m xe ba gác vào tận cửa.
+            </p>
+</div>
+</div>
+</section>
+<!-- ================= NHÓM 3: Giá thuê & Tiền cọc ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center gap-pad-sm mb-pad-lg">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Giá thuê và tiền cọc</h2>
+<p class="font-metadata text-metadata text-[#62655E]">Cam kết không phát sinh các loại phí dịch vụ không báo trước</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-pad-lg">
+<!-- Rent Input -->
+<div class="p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2]">
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="rent-amount">
+              Giá thuê mỗi tháng (VNĐ) <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative flex items-center">
+<input class="w-full h-touch-target pl-pad-base pr-20 rounded-lg bg-white border border-[#D5D7D2] font-price-display text-price-display text-[#A65334] tracking-tight focus:outline-none focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20" id="rent-amount" type="text" value="3.200.000"/>
+<span class="absolute right-4 font-label-btn text-label-btn text-[#62655E]">đ/tháng</span>
+</div>
+<p class="mt-pad-xs font-metadata text-metadata text-[#62655E]">
+              Bằng chữ: <strong class="text-[#252823]">Ba triệu hai trăm nghìn đồng</strong>
+</p>
+</div>
+<!-- Deposit Input -->
+<div class="p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2]">
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="deposit-amount">
+              Tiền đặt cọc (VNĐ) <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative flex items-center">
+<input class="w-full h-touch-target pl-pad-base pr-20 rounded-lg bg-white border border-[#D5D7D2] font-price-display text-price-display text-[#A65334] tracking-tight focus:outline-none focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20" id="deposit-amount" type="text" value="3.200.000"/>
+<span class="absolute right-4 font-label-btn text-label-btn text-[#62655E]">VNĐ</span>
+</div>
+<p class="mt-pad-xs font-metadata text-metadata text-[#62655E] flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-[#A65334]">info</span>
+              Gợi ý: 1 tháng tiền nhà = 3.200.000 VNĐ (Hoàn lại 100% khi hết HĐ).
+            </p>
+</div>
+</div>
+</section>
+<!-- ================= NHÓM 4: Các chi phí khác (Minh bạch) ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center justify-between flex-wrap gap-pad-sm mb-pad-lg">
+<div class="flex items-center gap-pad-sm">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Các chi phí khác (Minh bạch từng dòng)</h2>
+<p class="font-metadata text-metadata text-[#62655E]">Tránh tranh cãi khi lập biên bản chốt đồng hồ hàng tháng</p>
+</div>
+</div>
+<span class="px-pad-sm py-1 rounded bg-[#FFDBCF] text-[#783615] font-metadata text-metadata font-semibold">
+            Chuẩn hóa biểu phí hẻm thị
+          </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-pad-base">
+<!-- Điện -->
+<div class="p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-pad-xs">
+<span class="font-label-btn text-label-btn text-[#252823] flex items-center gap-1">
+<span class="material-symbols-outlined text-[#A65334] text-[18px]">bolt</span>
+                  Giá điện
+                </span>
+<span class="font-metadata text-metadata text-[#62655E]">đ/kWh</span>
+</div>
+<input class="w-full h-11 px-pad-sm rounded bg-white border border-[#D5D7D2] font-headline-sm text-headline-sm text-[#A65334] font-bold focus:outline-none focus:border-[#A65334]" type="text" value="3.500"/>
+</div>
+<label class="mt-pad-md flex items-center gap-pad-xs cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded text-[#A65334] border-[#D5D7D2] focus:ring-[#A65334]" type="checkbox"/>
+<span class="font-metadata text-metadata text-[#252823]">Có đồng hồ riêng</span>
+</label>
+</div>
+<!-- Nước -->
+<div class="p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-pad-xs">
+<span class="font-label-btn text-label-btn text-[#252823] flex items-center gap-1">
+<span class="material-symbols-outlined text-[#A65334] text-[18px]">water_drop</span>
+                  Giá nước
+                </span>
+<span class="font-metadata text-metadata text-[#62655E]">đ/m³</span>
+</div>
+<input class="w-full h-11 px-pad-sm rounded bg-white border border-[#D5D7D2] font-headline-sm text-headline-sm text-[#A65334] font-bold focus:outline-none focus:border-[#A65334]" type="text" value="25.000"/>
+</div>
+<p class="mt-pad-md font-metadata text-metadata text-[#62655E]">
+              Hoặc: <strong class="text-[#252823]">80.000 đ/người/tháng</strong>
+</p>
+</div>
+<!-- Internet / Wifi -->
+<div class="p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-pad-xs">
+<span class="font-label-btn text-label-btn text-[#252823] flex items-center gap-1">
+<span class="material-symbols-outlined text-[#A65334] text-[18px]">wifi</span>
+                  Internet / Wifi
+                </span>
+<span class="font-metadata text-metadata text-[#62655E]">đ/phòng</span>
+</div>
+<input class="w-full h-11 px-pad-sm rounded bg-white border border-[#D5D7D2] font-headline-sm text-headline-sm text-[#A65334] font-bold focus:outline-none focus:border-[#A65334]" type="text" value="80.000"/>
+</div>
+<p class="mt-pad-md font-metadata text-metadata text-[#62655E]">
+              Cáp quang FPT 150Mbps mỗi tầng
+            </p>
+</div>
+<!-- Gửi xe -->
+<div class="p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-pad-xs">
+<span class="font-label-btn text-label-btn text-[#252823] flex items-center gap-1">
+<span class="material-symbols-outlined text-[#A65334] text-[18px]">two_wheeler</span>
+                  Phí gửi xe
+                </span>
+<span class="font-metadata text-metadata text-[#A65334] font-bold">Miễn phí</span>
+</div>
+<input class="w-full h-11 px-pad-sm rounded bg-white border border-[#D5D7D2] font-headline-sm text-headline-sm text-[#A65334] font-bold focus:outline-none focus:border-[#A65334]" type="text" value="Miễn phí"/>
+</div>
+<p class="mt-pad-md font-metadata text-metadata text-[#62655E]">
+              Hầm để xe camera an ninh 24/7
+            </p>
+</div>
+</div>
+</section>
+<!-- ================= NHÓM 5: Diện tích, Số người & Ngày vào ở ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center gap-pad-sm mb-pad-lg">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">straighten</span>
+</span>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Diện tích, số người &amp; Ngày có thể dọn vào</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-pad-base">
+<!-- Area -->
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="room-area">
+              Diện tích sử dụng (m²) <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<input class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-headline-sm text-headline-sm focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="room-area" type="number" value="24"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-metadata text-metadata text-[#62655E] font-medium">m² sàn + gác</span>
+</div>
+</div>
+<!-- Max occupants -->
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="max-occupants">
+              Số người ở tối đa <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-headline-sm text-headline-sm appearance-none focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="max-occupants">
+<option>1 người</option>
+<option selected="">2 người</option>
+<option>3 người</option>
+<option>4 người</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#62655E] pointer-events-none">group</span>
+</div>
+</div>
+<!-- Move-in date -->
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs">
+              Ngày có thể dọn vào <span class="text-[#A65334]">*</span>
+</label>
+<div class="grid grid-cols-2 gap-pad-xs">
+<button class="h-touch-target px-pad-xs rounded-xl bg-[#A65334] text-white font-label-btn text-label-btn hover:bg-[#8F432A] transition-colors flex items-center justify-center gap-1 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+                Dọn vào ngay
+              </button>
+<button class="h-touch-target px-pad-xs rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-label-btn text-label-btn hover:bg-white transition-colors flex items-center justify-center gap-1" type="button">
+<span class="material-symbols-outlined text-[18px] text-[#62655E]">calendar_today</span>
+                Chọn ngày
+              </button>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= NHÓM 6: Tiện ích (Checkbox grid) ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center justify-between flex-wrap gap-pad-sm mb-pad-lg">
+<div class="flex items-center gap-pad-sm">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Tiện ích phòng &amp; tòa nhà</h2>
+<p class="font-metadata text-metadata text-[#62655E]">Chọn các tiện ích đã có sẵn, hoạt động bình thường</p>
+</div>
+</div>
+<span class="font-metadata text-metadata text-[#A65334] font-semibold">Đã chọn 6 tiện ích</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-pad-sm">
+<!-- Item 1 (Selected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#FFDBCF]/40 border border-[#A65334]/40 text-[#A65334] transition-all">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">stairs</span>
+<span class="font-label-btn text-label-btn text-center text-[#A65334]">Gác lửng</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#A65334]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Item 2 (Selected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#FFDBCF]/40 border border-[#A65334]/40 text-[#A65334] transition-all">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">window</span>
+<span class="font-label-btn text-label-btn text-center text-[#A65334]">Cửa sổ lớn</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#A65334]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Item 3 (Selected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#FFDBCF]/40 border border-[#A65334]/40 text-[#A65334] transition-all">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">countertops</span>
+<span class="font-label-btn text-label-btn text-center text-[#A65334]">Kệ bếp riêng</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#A65334]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Item 4 (Selected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#FFDBCF]/40 border border-[#A65334]/40 text-[#A65334] transition-all">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">garage</span>
+<span class="font-label-btn text-label-btn text-center text-[#A65334]">Chỗ để xe</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#A65334]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Item 5 (Selected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#FFDBCF]/40 border border-[#A65334]/40 text-[#A65334] transition-all">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">lock_open</span>
+<span class="font-label-btn text-label-btn text-center text-[#A65334]">Không chung chủ</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#A65334]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Item 6 (Selected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#FFDBCF]/40 border border-[#A65334]/40 text-[#A65334] transition-all">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">fingerprint</span>
+<span class="font-label-btn text-label-btn text-center text-[#A65334]">Khóa vân tay</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#A65334]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<!-- Item 7 (Unselected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:bg-white text-[#62655E] hover:text-[#252823] transition-all">
+<input class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">balcony</span>
+<span class="font-label-btn text-label-btn text-center">Ban công</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#D5D7D2]">add_circle</span>
+</label>
+<!-- Item 8 (Unselected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:bg-white text-[#62655E] hover:text-[#252823] transition-all">
+<input class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">ac_unit</span>
+<span class="font-label-btn text-label-btn text-center">Máy lạnh</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#D5D7D2]">add_circle</span>
+</label>
+<!-- Item 9 (Unselected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:bg-white text-[#62655E] hover:text-[#252823] transition-all">
+<input class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">local_laundry_service</span>
+<span class="font-label-btn text-label-btn text-center">Máy giặt chung</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#D5D7D2]">add_circle</span>
+</label>
+<!-- Item 10 (Unselected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:bg-white text-[#62655E] hover:text-[#252823] transition-all">
+<input class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">pets</span>
+<span class="font-label-btn text-label-btn text-center">Cho nuôi thú cưng</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#D5D7D2]">add_circle</span>
+</label>
+<!-- Item 11 (Unselected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:bg-white text-[#62655E] hover:text-[#252823] transition-all">
+<input class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">water_heater</span>
+<span class="font-label-btn text-label-btn text-center">Bình nóng lạnh</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#D5D7D2]">add_circle</span>
+</label>
+<!-- Item 12 (Unselected) -->
+<label class="cursor-pointer flex flex-col items-center justify-center p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] hover:bg-white text-[#62655E] hover:text-[#252823] transition-all">
+<input class="sr-only" type="checkbox"/>
+<span class="material-symbols-outlined text-[28px] mb-1">redeem</span>
+<span class="font-label-btn text-label-btn text-center">Thang máy</span>
+<span class="material-symbols-outlined text-[16px] mt-1 text-[#D5D7D2]">add_circle</span>
+</label>
+</div>
+</section>
+<!-- ================= NHÓM 7: Hình ảnh thực tế (Photo Grid) ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center justify-between flex-wrap gap-pad-sm mb-pad-lg">
+<div class="flex items-center gap-pad-sm">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">add_a_photo</span>
+</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Hình ảnh thực tế</h2>
+<p class="font-metadata text-metadata text-[#62655E]">Yêu cầu chụp góc rộng, đủ sáng ban ngày, thấy rõ sàn gạch và nhà vệ sinh (tối thiểu 3 ảnh)</p>
+</div>
+</div>
+<span class="font-metadata text-metadata text-[#62655E]">Định dạng JPG, PNG tối đa 10MB/ảnh</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-pad-base">
+<!-- Ảnh 1 (Ảnh đại diện - Ảnh bìa) -->
+<div class="group relative rounded-xl overflow-hidden aspect-[4/3] bg-[#F2F3F2]">
+<img alt="Ảnh bìa căn phòng trọ có gác lửng ngập nắng" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvnhcTGkVJBoJFcLr_vzK_eNlT30RxHJe8pfCZYrbVKixvCzBH-HC1NNCYaz9L19RfonCFrxiM2P2INxoRXj2UnRJ9GLU7gCVCViBVmGvZ2bj49OEhskuOXCK6OmzstxXliJsMJQSbS0fKt0b1yifIPlvT4faMaFtmh5x8SKjlYNBByPr21fnQDXLU5NVJwqNlgAsD7pyYVX5V2JhXDdTwgfempuEvIaDCu0tNzilabsGqnfApZm_h"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute top-2.5 left-2.5">
+<span class="px-pad-sm py-1 rounded bg-[#A65334] text-white font-metadata text-metadata font-semibold shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">star</span>
+                Ảnh bìa
+              </span>
+</div>
+<div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
+<span class="font-metadata text-metadata font-medium">Toàn cảnh phòng + gác</span>
+<button class="w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 flex items-center justify-center text-white transition-colors" title="Xóa ảnh" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Ảnh 2 -->
+<div class="group relative rounded-xl overflow-hidden aspect-[4/3] bg-[#F2F3F2]">
+<img class="w-full h-full object-cover" data-alt="Real photo of a neat Vietnamese studio rental apartment kitchen nook with clean tile walls, small refrigerator, gas stove, dish drying rack, and sunlight coming through open balcony door." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASJ3EHi0rgXipz-LnriOyxP7Rv_VFrc-tKILjwVlDdnO5vgjho6rj9RgZxSMOHeT56dZjcUaLQTKULG9cs4LuRCzECVFnayAa1Fiz7dA5CuVVohAZnklbTuNZEqNTKM0Qcchb6KeM-H8s8zUVPOBVM7eBxga-CSsmiPis_CAapPYtCu2E5xm1tPTvT13vknEDoij99FdxEWP_ACkU5UZoH-qQLS3QVPii4aceQ2XlX4bN9wEd4aBFn"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
+<span class="font-metadata text-metadata font-medium">Khu vực bếp nấu &amp; bồn rửa</span>
+<button class="w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 flex items-center justify-center text-white transition-colors" title="Xóa ảnh" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Ảnh 3 (Đang uploading - progress bar 75% trên nền #F4E4DC) -->
+<div class="relative rounded-xl overflow-hidden aspect-[4/3] bg-[#F4E4DC] border border-[#D5D7D2] flex flex-col items-center justify-center p-pad-base text-center">
+<img class="absolute inset-0 w-full h-full object-cover opacity-20 filter blur-sm" data-alt="Blurry thumbnail preview of an apartment bathroom with clean white ceramic tiles, shower, mirror, and toilet in a Vietnamese rental room." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2wR02rHhEGdQTclrbmxIFKSL06QK4dJmcQ0vIl7DuDoGmQkmmNsTQYtpqT3BdOV9cLkZwhMgL4KwxEaydihV40fINpaZquIAgDHC8ptSR5hHLKtIeKFwZLBBjv6FsSG-tOhxMOTtD1jy1ly9IwDrsXhRrRgukSiw8I-Je8aHmkAoDGe8LuJE44MHEEeKZElFSu3QDLZFOIIK5ceCq0cerYqPw_epCSy29FN0xRJZQZK6s_14-T7TO"/>
+<div class="relative z-10 w-full max-w-[180px] flex flex-col items-center">
+<span class="material-symbols-outlined text-[#A65334] text-[32px] animate-pulse mb-pad-xs">cloud_upload</span>
+<span class="font-label-btn text-label-btn text-[#A65334] mb-pad-xs">Đang tải ảnh lên... (75%)</span>
+<!-- Progress bar in terracotta #A65334 on #F4E4DC background -->
+<div class="w-full bg-[#EAD4CA] h-2 rounded-full overflow-hidden">
+<div class="bg-[#A65334] h-full rounded-full transition-all duration-300" style="width: 75%;"></div>
+</div>
+<span class="font-metadata text-metadata text-[#62655E] mt-1.5">toilet_khoang_tam.jpg</span>
+</div>
+</div>
+<!-- Box nút 'Thêm ảnh mới' (viền đứt dashed viền #A65334) -->
+<button class="group relative rounded-xl aspect-[4/3] bg-[#F2F3F2] hover:bg-[#FFDBCF]/30 transition-all flex flex-col items-center justify-center p-pad-base text-center cursor-pointer border-2 border-dashed border-[#A65334]" type="button">
+<div class="w-12 h-12 rounded-full bg-[#FFDBCF] group-hover:bg-[#FFB59B] text-[#A65334] flex items-center justify-center mb-pad-sm transition-colors">
+<span class="material-symbols-outlined text-[28px]">add_photo_alternate</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-[#A65334] mb-1">Thêm ảnh mới</span>
+<p class="font-metadata text-metadata text-[#62655E] leading-snug">
+              Chụp ảnh sáng rõ, thấy rõ sàn và cửa sổ
+            </p>
+</button>
+</div>
+</section>
+<!-- ================= NHÓM 8: Thông tin liên hệ ================= -->
+<section class="bg-white border border-[#D5D7D2] rounded-2xl p-pad-xl md:p-pad-2xl shadow-sm">
+<div class="flex items-center gap-pad-sm mb-pad-lg">
+<span class="w-8 h-8 rounded-lg bg-[#FFDBCF]/40 flex items-center justify-center text-[#A65334]">
+<span class="material-symbols-outlined text-[20px]">person_pin</span>
+</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-[#252823]">Thông tin người liên hệ</h2>
+<p class="font-metadata text-metadata text-[#62655E]">Người thuê sẽ trực tiếp gọi điện hoặc nhắn tin Zalo qua số này</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-pad-base">
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="contact-name">
+              Tên người liên hệ <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<input class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="contact-name" type="text" value="Nguyễn Thị Mai"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#62655E] pointer-events-none">badge</span>
+</div>
+</div>
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="contact-phone">
+              Số điện thoại <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<input class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="contact-phone" type="tel" value="0918 234 421"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#A65334] pointer-events-none">phone_iphone</span>
+</div>
+</div>
+<div>
+<label class="block font-label-btn text-label-btn text-[#252823] mb-pad-xs" for="contact-role">
+              Vai trò người đăng <span class="text-[#A65334]">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-touch-target px-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-body-md text-body-md appearance-none focus:outline-none focus:bg-white focus:border-[#A65334] focus:ring-2 focus:ring-[#A65334]/20 transition-all" id="contact-role">
+<option selected="">Chính chủ cho thuê</option>
+<option>Quản lý dãy trọ / Tòa nhà</option>
+<option>Người thuê hiện tại nhượng phòng</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#62655E] pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div class="mt-pad-base p-pad-base rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] flex items-center justify-between flex-wrap gap-pad-sm">
+<div class="flex items-center gap-pad-sm">
+<span class="w-9 h-9 rounded-full bg-[#FFDBCF] text-[#A65334] flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</span>
+<div>
+<span class="font-label-btn text-label-btn text-[#252823] block">Nhận tin nhắn Zalo tự động</span>
+<span class="font-metadata text-metadata text-[#62655E]">Cho phép khách thuê kết nối trực tiếp qua Zalo số 0918 234 421</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-[#D5D7D2] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#A65334]"></div>
+</label>
+</div>
+</section>
+<!-- ================= THANH HÀNH ĐỘNG CHÂN TRANG ================= -->
+<footer class="sticky bottom-0 z-40 bg-white/95 backdrop-blur-md -mx-gutter-mobile md:-mx-gutter-desktop px-gutter-mobile md:px-gutter-desktop py-pad-base shadow-xl rounded-t-2xl border-t border-[#D5D7D2]">
+<div class="max-w-container-max mx-auto flex flex-col sm:flex-row items-center justify-between gap-pad-base">
+<div class="flex items-center gap-pad-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-[#A65334] animate-ping"></span>
+<p class="font-metadata text-metadata text-[#62655E]">
+              Tự động lưu bản nháp vào lúc <strong>14:28 hôm nay</strong>.
+            </p>
+</div>
+<div class="flex items-center gap-pad-base w-full sm:w-auto">
+<!-- Secondary Action: Lưu bản nháp -->
+<button class="h-touch-target px-pad-xl rounded-xl bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-label-btn text-label-btn hover:bg-[#FFDBCF]/30 hover:border-[#A65334] transition-colors flex-1 sm:flex-none" type="button">
+              Lưu bản nháp
+            </button>
+<!-- Primary Action: Xem trước tin đăng (đổi sang cam đất nung #A65334, hover #8F432A) -->
+<div class="flex flex-col items-end flex-1 sm:flex-none">
+<button class="h-touch-target px-pad-2xl rounded-xl bg-[#A65334] text-white font-label-btn text-label-btn hover:bg-[#8F432A] transition-colors flex items-center justify-center gap-pad-xs w-full shadow-md" type="submit">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+<span>Xem trước tin đăng</span>
+</button>
+<span class="font-metadata text-[11px] text-[#62655E] mt-1 text-right hidden sm:block">
+                Sau bước xem trước bạn có thể bấm Gửi duyệt tin
+              </span>
+</div>
+</div>
+</div>
+</footer>
+</form>
+</div>
+</div></main><footer class="w-full bg-white border-t border-[#D5D7D2] mt-pad-3xl"><div class="max-w-container-max mx-auto px-gutter-mobile md:px-gutter-desktop py-pad-3xl"><div class="grid grid-cols-1 md:grid-cols-4 gap-pad-2xl mb-pad-2xl"><div><div class="flex items-center gap-pad-sm mb-pad-md"><img alt="Logo Trọ Đây" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vvb4B4l1Aj-lzwMqSAoX21rU47dxlDWpiq-KfO6uYU7m6IPAHbFgGKRjZA6rk6wHj2UPpxt9w-9AaDomENiWwWkWNBI-w88l14G3gFQNNwgoba8ifwHbFs8lk3-9XWesKDybIANvWDQco1793NVJLXZAHacWptqKbZhycyzdXwpQtQ12OPiNlVXKD7LIo89RrzNSDbMBcNxCAmeh3cuAF3w4qd-JyzDwhxl0PxvIuL6Ep3kCCvbzuDoQ"/><span class="font-headline-sm text-headline-sm text-[#A65334] tracking-tight font-bold">Trọ Đây</span></div><p class="font-body-sm text-body-sm text-[#62655E] mb-pad-md">Nền tảng tìm kiếm và kiểm duyệt phòng trọ dài hạn khu vực hẻm và phố thị Việt Nam. Phòng thật, giá minh bạch, không phí ẩn.</p><span class="inline-block px-pad-sm py-pad-xs rounded bg-[#F2F3F2] border border-[#D5D7D2] text-[#252823] font-metadata text-metadata">Bản quyền © 2025 Trọ Đây</span></div><div><h3 class="font-headline-sm text-headline-sm text-[#252823] mb-pad-base">Người Thuê Trọ</h3><ul class="space-y-pad-sm"><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="huong-dan-thue-tro" href="#">Hướng dẫn thuê trọ</a></li><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="chinh-sach-bao-ve-nguoi-thue" href="#">Bảo vệ người thuê</a></li><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="bieu-phi-tien-ich-chuan" href="#">Biểu phí điện nước thực tế</a></li><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="mau-hop-dong-thue-phong" href="#">Mẫu hợp đồng pháp lý chuẩn</a></li></ul></div><div><h3 class="font-headline-sm text-headline-sm text-[#252823] mb-pad-base">Vận Hành &amp; Quy Chế</h3><ul class="space-y-pad-sm"><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="quy-che-hoat-dong" href="#">Quy chế hoạt động</a></li><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="tieu-chuan-phong-xac-thuc" href="#">Tiêu chuẩn kiểm duyệt phòng</a></li><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="chinh-sach-bao-mat" href="#">Bảo mật thông tin</a></li><li class="list-none"><a class="font-body-sm text-body-sm text-[#62655E] hover:text-[#A65334] transition-colors" data-path="giai-quyet-khieu-nai" href="#">Giải quyết khiếu nại</a></li></ul></div><div><h3 class="font-headline-sm text-headline-sm text-[#252823] mb-pad-base">Tổng Đài Hỗ Trợ</h3><div class="space-y-pad-md font-body-sm text-body-sm"><div class="bg-[#F2F3F2] border border-[#D5D7D2] p-pad-md rounded-xl"><span class="font-label-btn text-label-btn text-[#A65334] block">Hà Nội &amp; Miền Bắc:</span><a class="font-price-card text-price-card text-[#A65334] font-bold block hover:underline" href="tel:19008899">1900 8899 (HĐ 8h-21h)</a><p class="font-metadata text-metadata text-[#62655E] mt-pad-xs">Hỗ trợ xác minh địa chỉ hẻm ngõ</p></div><div class="bg-[#F2F3F2] border border-[#D5D7D2] p-pad-md rounded-xl"><span class="font-label-btn text-label-btn text-[#A65334] block">TP. Hồ Chí Minh &amp; Miền Nam:</span><a class="font-price-card text-price-card text-[#A65334] font-bold block hover:underline" href="tel:19008898">1900 8898 (HĐ 8h-21h)</a><p class="font-metadata text-metadata text-[#62655E] mt-pad-xs">Kiểm định giờ giấc &amp; an ninh khu phố</p></div></div></div></div><div class="pt-pad-lg border-t border-[#D5D7D2] flex flex-col md:flex-row items-center justify-between font-metadata text-metadata text-[#62655E] gap-pad-base"><p>Nền tảng vận hành bởi Cộng Đồng Nhà Thuê Minh Bạch Việt Nam. Kết nối chính chủ - Không phụ phí môi giới trung gian.</p><div class="flex items-center gap-pad-lg"><a class="hover:text-[#A65334]" data-path="quy-che-hoat-dong" href="#">Điều khoản</a><a class="hover:text-[#A65334]" data-path="chinh-sach-bao-mat" href="#">Riêng tư</a><a class="hover:text-[#A65334]" data-path="huong-dan-thue-tro" href="#">Trợ giúp</a></div></div></div></footer></body></html>

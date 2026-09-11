@@ -127,6 +127,7 @@ Table amenities {
 
 Table listings {
   id bigint [pk, increment]
+  public_id varchar(26) [null, unique, note: 'Stable public identifier for detail URLs']
   landlord_id bigint [not null, ref: > users.id]
   property_type_id bigint [not null, ref: > property_types.id]
   ward_id bigint [not null, ref: > wards.id]

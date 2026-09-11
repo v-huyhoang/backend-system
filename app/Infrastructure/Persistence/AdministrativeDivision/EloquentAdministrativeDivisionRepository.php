@@ -8,6 +8,7 @@ use App\Domain\AdministrativeDivision\Models\AdministrativeDivisionImport;
 use App\Domain\AdministrativeDivision\Models\Province;
 use App\Domain\AdministrativeDivision\Models\Ward;
 use Carbon\CarbonInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class EloquentAdministrativeDivisionRepository implements AdministrativeDivisionRepository
@@ -134,5 +135,105 @@ class EloquentAdministrativeDivisionRepository implements AdministrativeDivision
             'error_message' => str($errorMessage)->limit(65535)->toString(),
             'finished_at' => $finishedAt,
         ]);
+    }
+
+    public function activeProvinceOptions(): Collection
+    {
+        return Province::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['name', 'slug'])
+            ->map(fn (Province $province) => [
+                'label' => str($province->name)
+                    ->replaceStart('Thành phố ', '')
+                    ->replaceStart('Tỉnh ', '')
+                    ->toString(),
+                'slug' => $province->slug,
+            ]);
+    }
+
+    public function searchActiveLocations(string $query, int $limit = 8): Collection
+    {
+        $query = str($query)->trim()->toString();
+
+        if ($query === '') {
+            return $this->popularProvinceSuggestions($limit);
+        }
+
+        $like = "%{$query}%";
+        $slugLike = '%'.str($query)->slug()->toString().'%';
+
+        $provinces = Province::query()
+            ->where('is_active', true)
+            ->where(fn ($query) => $query->where('name', 'like', $like)->orWhere('slug', 'like', $slugLike))
+            ->orderBy('name')
+            ->limit($limit)
+            ->get(['name', 'slug'])
+            ->map(fn (Province $province) => [
+                'label' => $this->displayProvinceName($province->name),
+                'url' => "/phong-tro/tinh-thanh/{$province->slug}",
+                'type' => 'Tỉnh/thành',
+            ]);
+
+        $wards = Ward::query()
+            ->where('is_active', true)
+            ->with('province:id,name,slug')
+            ->where(fn ($query) => $query->where('name', 'like', $like)->orWhere('slug', 'like', $slugLike))
+            ->orderBy('name')
+            ->limit(max(0, $limit - $provinces->count()))
+            ->get(['id', 'province_id', 'name', 'slug'])
+            ->map(fn (Ward $ward) => [
+                'label' => "{$ward->name}, {$this->displayProvinceName($ward->province->name)}",
+                'url' => "/phong-tro/tinh-thanh/{$ward->province->slug}/phuong-xa/{$ward->slug}",
+                'type' => 'Phường/xã',
+            ]);
+
+        return $provinces->concat($wards)->values();
+    }
+
+    public function activeWardSuggestionsForProvince(Province $province): Collection
+    {
+        return $province->wards()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['name', 'slug'])
+            ->map(fn (Ward $ward) => [
+                'label' => $ward->name,
+                'url' => "/phong-tro/tinh-thanh/{$province->slug}/phuong-xa/{$ward->slug}",
+                'type' => 'Phường/xã',
+            ]);
+    }
+
+    /** @return Collection<int, array{label: string, url: string, type: string}> */
+    private function popularProvinceSuggestions(int $limit): Collection
+    {
+        $popularSlugs = [
+            'ho-chi-minh',
+            'ha-noi',
+            'da-nang',
+            'can-tho',
+            'hai-phong',
+        ];
+
+        return Province::query()
+            ->where('is_active', true)
+            ->whereIn('slug', $popularSlugs)
+            ->get(['name', 'slug'])
+            ->sortBy(fn (Province $province) => array_search($province->slug, $popularSlugs, true))
+            ->take($limit)
+            ->values()
+            ->map(fn (Province $province) => [
+                'label' => $this->displayProvinceName($province->name),
+                'url' => "/phong-tro/tinh-thanh/{$province->slug}",
+                'type' => 'Tỉnh/thành',
+            ]);
+    }
+
+    private function displayProvinceName(string $name): string
+    {
+        return str($name)
+            ->replaceStart('Thành phố ', '')
+            ->replaceStart('Tỉnh ', '')
+            ->toString();
     }
 }

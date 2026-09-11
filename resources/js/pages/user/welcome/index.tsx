@@ -31,12 +31,7 @@ export default function Welcome() {
 			<PublicHeader />
 			<main id="main-content" tabIndex={-1}>
 				<HeroSearch />
-				<QuickSearch
-					query=""
-					onSearch={(location) =>
-						router.get('/phong-tro', { location })
-					}
-				/>
+				<QuickSearch query="" onSearch={(url) => router.get(url)} />
 				<PropertyTypesSection />
 				<LatestListingsSection query="" />
 				<LandlordCta />
