@@ -28,6 +28,12 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    'province_open_api' => [
+        'base_url' => env('PROVINCE_OPEN_API_BASE_URL', 'https://provinces.open-api.vn/api/v2'),
+        'connect_timeout' => (int) env('PROVINCE_OPEN_API_CONNECT_TIMEOUT', 5),
+        'timeout' => (int) env('PROVINCE_OPEN_API_TIMEOUT', 20),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

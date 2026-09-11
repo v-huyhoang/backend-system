@@ -43,7 +43,10 @@ Table provinces {
   name varchar(255)
   slug varchar(255) [unique]
   type varchar(20) [note: 'province, municipality']
+  source varchar(50) [default: 'province_open_api_v2']
+  meta json [null, note: 'Upstream metadata, e.g. phone_code and division_type']
   is_active boolean [default: true]
+  source_synced_at timestamp [null]
   created_at timestamp
   updated_at timestamp
 
@@ -61,13 +64,34 @@ Table wards {
   name varchar(255)
   slug varchar(255)
   type varchar(20) [note: 'ward, commune, special_zone']
+  source varchar(50) [default: 'province_open_api_v2']
+  meta json [null, note: 'Upstream metadata, e.g. codename and division_type']
   is_active boolean [default: true]
+  source_synced_at timestamp [null]
   created_at timestamp
   updated_at timestamp
 
   indexes {
     (province_id, slug) [unique]
     (province_id, is_active)
+  }
+}
+
+Table administrative_division_imports {
+  id bigint [pk, increment]
+  source varchar(50)
+  status varchar(20) [default: 'running', note: 'running, completed, failed']
+  province_count int [default: 0]
+  ward_count int [default: 0]
+  error_message text [null]
+  started_at timestamp
+  finished_at timestamp [null]
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (source, status)
+    started_at
   }
 }
 

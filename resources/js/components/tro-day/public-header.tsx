@@ -7,9 +7,9 @@ import { useState } from 'react';
 import { BrandLogo } from './brand-logo';
 
 const navigation = [
-	{ label: 'Tìm phòng', href: '#tim-phong' },
-	{ label: 'Loại hình', href: '#loai-hinh' },
-	{ label: 'Dành cho chủ trọ', href: '#chu-tro' },
+	{ label: 'Tìm phòng', href: '/phong-tro' },
+	{ label: 'Loại hình', href: '/#loai-hinh' },
+	{ label: 'Dành cho chủ trọ', href: '/#chu-tro' },
 ] as const;
 
 export function PublicHeader() {
@@ -27,13 +27,13 @@ export function PublicHeader() {
 						aria-label="Điều hướng chính"
 					>
 						{navigation.map((item) => (
-							<a
+							<Link
 								key={item.href}
 								href={item.href}
 								className="inline-flex min-h-11 items-center rounded-lg px-3 text-[15px] font-semibold text-[var(--gtg-muted)] hover:bg-[var(--gtg-surface-low)] hover:text-[var(--gtg-text)]"
 							>
 								{item.label}
-							</a>
+							</Link>
 						))}
 					</nav>
 				</div>
@@ -93,14 +93,14 @@ export function PublicHeader() {
 					aria-label="Điều hướng di động"
 				>
 					{navigation.map((item) => (
-						<a
+						<Link
 							key={item.href}
 							href={item.href}
 							onClick={() => setMenuOpen(false)}
 							className="flex min-h-11 items-center rounded-lg px-3 font-semibold text-[var(--gtg-text)] hover:bg-[var(--gtg-surface-low)]"
 						>
 							{item.label}
-						</a>
+						</Link>
 					))}
 					<div className="mt-2 grid grid-cols-2 gap-2 border-t border-[var(--gtg-border)] pt-3">
 						<Link

@@ -1,7 +1,6 @@
 import { PublicFooter } from '@/components/tro-day/public-footer';
 import { PublicHeader } from '@/components/tro-day/public-header';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, router } from '@inertiajs/react';
 import { HeroSearch } from './components/hero-search';
 import { LandlordCta } from './components/landlord-cta';
 import { LatestListingsSection } from './components/latest-listings-section';
@@ -9,8 +8,6 @@ import { PropertyTypesSection } from './components/property-types-section';
 import { QuickSearch } from './components/quick-search';
 
 export default function Welcome() {
-	const [query, setQuery] = useState('');
-
 	return (
 		<div className="gtg-theme min-h-screen bg-[var(--gtg-page-bg)] text-[var(--gtg-text)]">
 			<Head title="Trọ Đây — Tìm phòng trọ phù hợp">
@@ -34,9 +31,14 @@ export default function Welcome() {
 			<PublicHeader />
 			<main id="main-content" tabIndex={-1}>
 				<HeroSearch />
-				<QuickSearch query={query} onSearch={setQuery} />
+				<QuickSearch
+					query=""
+					onSearch={(location) =>
+						router.get('/phong-tro', { location })
+					}
+				/>
 				<PropertyTypesSection />
-				<LatestListingsSection query={query} />
+				<LatestListingsSection query="" />
 				<LandlordCta />
 			</main>
 			<PublicFooter />

@@ -2,8 +2,8 @@ import { Link } from '@inertiajs/react';
 import { BrandLogo } from './brand-logo';
 
 const renterLinks = [
-	{ label: 'Tìm phòng mới đăng', href: '#phong-moi' },
-	{ label: 'Khám phá loại hình', href: '#loai-hinh' },
+	{ label: 'Tìm phòng mới đăng', href: '/phong-tro' },
+	{ label: 'Khám phá loại hình', href: '/#loai-hinh' },
 ] as const;
 
 const landlordLinks = [
@@ -48,21 +48,12 @@ function FooterLinks({
 			<ul className="mt-4 space-y-3">
 				{links.map((link) => (
 					<li key={link.href}>
-						{link.href.startsWith('#') ? (
-							<a
-								href={link.href}
-								className="text-sm text-[var(--gtg-muted)] hover:text-[var(--gtg-primary)] hover:underline"
-							>
-								{link.label}
-							</a>
-						) : (
-							<Link
-								href={link.href}
-								className="text-sm text-[var(--gtg-muted)] hover:text-[var(--gtg-primary)] hover:underline"
-							>
-								{link.label}
-							</Link>
-						)}
+						<Link
+							href={link.href}
+							className="text-sm text-[var(--gtg-muted)] hover:text-[var(--gtg-primary)] hover:underline"
+						>
+							{link.label}
+						</Link>
 					</li>
 				))}
 			</ul>
