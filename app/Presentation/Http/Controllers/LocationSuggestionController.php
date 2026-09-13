@@ -32,6 +32,7 @@ class LocationSuggestionController extends Controller
         return response()->json([
             'data' => $this->divisions->activeProvinceOptions()->map(
                 fn (array $province) => [
+                    'id' => $province['id'],
                     'label' => $province['label'],
                     'url' => "/phong-tro/tinh-thanh/{$province['slug']}",
                     'type' => 'Tỉnh/thành',

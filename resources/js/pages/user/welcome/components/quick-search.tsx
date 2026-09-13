@@ -9,14 +9,14 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog';
+import {
+	getProvinces,
+	getWards,
+	searchLocations,
+	type LocationSuggestion,
+} from '@/services/location-service';
 import { ChevronDown, Search } from 'lucide-react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-
-export interface LocationSuggestion {
-	label: string;
-	url: string;
-	type: string;
-}
 
 interface QuickSearchProps {
 	query: string;
@@ -63,7 +63,9 @@ export function QuickSearch({
 		useState<LocationSuggestion | null>(province ?? null);
 	const [selectedLocation, setSelectedLocation] =
 		useState<LocationSuggestion | null>(
-			locationUrl ? { label: query, url: locationUrl, type: '' } : null,
+			locationUrl
+				? { id: '', label: query, url: locationUrl, type: '' }
+				: null,
 		);
 	const [wards, setWards] = useState<LocationSuggestion[]>([]);
 	const [isLoadingWards, setIsLoadingWards] = useState(false);
@@ -80,16 +82,8 @@ export function QuickSearch({
 
 		async function loadPopularProvinces() {
 			try {
-				const response = await fetch('/api/dia-chi/goi-y', {
-					signal: controller.signal,
-				});
-
-				if (response.ok) {
-					const payload = (await response.json()) as {
-						data: LocationSuggestion[];
-					};
-					setPopularProvinces(payload.data);
-				}
+				const payload = await searchLocations('', controller.signal);
+				setPopularProvinces(payload.data);
 			} catch (exception) {
 				if (
 					!(
@@ -114,16 +108,8 @@ export function QuickSearch({
 
 		async function loadAllProvinces() {
 			try {
-				const response = await fetch('/api/tinh-thanh', {
-					signal: controller.signal,
-				});
-
-				if (response.ok) {
-					const payload = (await response.json()) as {
-						data: LocationSuggestion[];
-					};
-					setAllProvinces(payload.data);
-				}
+				const payload = await getProvinces(controller.signal);
+				setAllProvinces(payload.data);
 			} catch (exception) {
 				if (
 					!(
@@ -143,7 +129,9 @@ export function QuickSearch({
 
 	useEffect(() => {
 		setSelectedLocation(
-			locationUrl ? { label: query, url: locationUrl, type: '' } : null,
+			locationUrl
+				? { id: '', label: query, url: locationUrl, type: '' }
+				: null,
 		);
 	}, [locationUrl, query]);
 
@@ -188,20 +176,9 @@ export function QuickSearch({
 			setIsLoadingWards(true);
 
 			try {
-				const response = await fetch(
-					`/api/tinh-thanh/${slug}/phuong-xa`,
-					{ signal: controller.signal },
-				);
-
-				if (response.ok) {
-					const payload = (await response.json()) as {
-						data: LocationSuggestion[];
-					};
-					setWards(payload.data);
-					setWardQuery(
-						locationUrl?.includes('/phuong-xa/') ? query : '',
-					);
-				}
+				const payload = await getWards(slug, controller.signal);
+				setWards(payload.data);
+				setWardQuery(locationUrl?.includes('/phuong-xa/') ? query : '');
 			} catch (exception) {
 				if (
 					!(

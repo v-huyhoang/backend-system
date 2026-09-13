@@ -2,12 +2,14 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Presentation\Http\Requests\Landlord\StoreLandlordRequest;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class LandlordListingController extends Controller
 {
-    public function __invoke(): Response
+    public function index(): Response
     {
         return Inertia::render('user/landlord-listings/index');
     }
@@ -16,4 +18,14 @@ class LandlordListingController extends Controller
     {
         return Inertia::render('user/landlord-listings/create');
     }
+
+	public function store(StoreLandlordRequest $request): RedirectResponse
+	{
+		dd($request->validated());
+		// Handle the request data and save the landlord listing
+		// For example:
+		// $landlordListing = LandlordListing::create($request->validated());
+
+		return redirect()->route('landlord.listings.index')->with('success', 'Landlord listing created successfully.');
+	}
 }

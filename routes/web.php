@@ -1,34 +1,32 @@
 <?php
 
 use App\Presentation\Http\Controllers\PublicListingController;
-use App\Presentation\Http\Controllers\LocationSuggestionController;
 use App\Presentation\Http\Controllers\WelcomeController;
 use App\Presentation\Http\Controllers\LandlordListingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', WelcomeController::class)->name('home');
-Route::get('/api/dia-chi/goi-y', [LocationSuggestionController::class, 'index'])
-    ->middleware('throttle:60,1')
-    ->name('locations.suggestions');
-Route::get('/api/tinh-thanh', [LocationSuggestionController::class, 'provinces'])
-    ->middleware('throttle:60,1')
-    ->name('locations.provinces');
-Route::get('/api/tinh-thanh/{province:slug}/phuong-xa', [LocationSuggestionController::class, 'wards'])
-    ->middleware('throttle:60,1')
-    ->name('locations.wards');
+Route::prefix('phong-tro')->group(function () {
+    Route::get('/', [PublicListingController::class, 'index'])
+        ->name('listings.index');
+    Route::get('/tinh-thanh/{province:slug}', [PublicListingController::class, 'index'])
+        ->name('listings.province');
+    Route::get('/tinh-thanh/{province:slug}/phuong-xa/{ward:slug}', [PublicListingController::class, 'index'])
+        ->name('listings.ward');
+});
 
-Route::get('/phong-tro', [PublicListingController::class, 'index'])
-    ->name('listings.index');
-Route::get('/phong-tro/tinh-thanh/{province:slug}', [PublicListingController::class, 'index'])
-    ->name('listings.province');
-Route::get('/phong-tro/tinh-thanh/{province:slug}/phuong-xa/{ward:slug}', [PublicListingController::class, 'index'])
-    ->name('listings.ward');
-Route::get('/chu-tro/tin-dang', LandlordListingController::class)
-    ->middleware('auth')
-    ->name('landlord.listings.index');
-Route::get('/chu-tro/tin-dang/tao-moi', [LandlordListingController::class, 'create'])
-    ->middleware('auth')
-    ->name('landlord.listings.create');
+Route::prefix('chu-tro/tin-dang')->middleware('auth')->group(function () {
+    Route::get('/', [LandlordListingController::class, 'index'])
+        ->name('landlord.listings.index');
+    Route::get('/tao-moi', [LandlordListingController::class, 'create'])
+        ->name('landlord.listings.create');
+	Route::post('/tao-moi', [LandlordListingController::class, 'store'])
+		->name('landlord.listings.store');
+	Route::get('/{listing:uuid}/chinh-sua', [LandlordListingController::class, 'edit'])
+		->name('landlord.listings.edit');
+	Route::put('/{listing:uuid}/chinh-sua', [LandlordListingController::class, 'update'])
+		->name('landlord.listings.update');
+});
 
 require __DIR__.'/admin.php';
 require __DIR__.'/settings.php';

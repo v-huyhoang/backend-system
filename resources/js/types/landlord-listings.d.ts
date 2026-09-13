@@ -5,6 +5,14 @@ export type LandlordListingStatus =
 	| 'draft'
 	| 'rented';
 
+export interface LandlordListingCostForm {
+	type: string;
+	label: string;
+	amount: string;
+	unit: string;
+	note: string;
+}
+
 export interface LandlordListing {
 	publicId: string;
 	title: string;

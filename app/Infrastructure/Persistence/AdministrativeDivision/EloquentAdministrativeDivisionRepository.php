@@ -142,8 +142,9 @@ class EloquentAdministrativeDivisionRepository implements AdministrativeDivision
         return Province::query()
             ->where('is_active', true)
             ->orderBy('name')
-            ->get(['name', 'slug'])
+            ->get(['id', 'name', 'slug'])
             ->map(fn (Province $province) => [
+                'id' => $province->id,
                 'label' => str($province->name)
                     ->replaceStart('Thành phố ', '')
                     ->replaceStart('Tỉnh ', '')
@@ -168,8 +169,9 @@ class EloquentAdministrativeDivisionRepository implements AdministrativeDivision
             ->where(fn ($query) => $query->where('name', 'like', $like)->orWhere('slug', 'like', $slugLike))
             ->orderBy('name')
             ->limit($limit)
-            ->get(['name', 'slug'])
+            ->get(['id', 'name', 'slug'])
             ->map(fn (Province $province) => [
+                'id' => $province->id,
                 'label' => $this->displayProvinceName($province->name),
                 'url' => "/phong-tro/tinh-thanh/{$province->slug}",
                 'type' => 'Tỉnh/thành',
@@ -196,8 +198,9 @@ class EloquentAdministrativeDivisionRepository implements AdministrativeDivision
         return $province->wards()
             ->where('is_active', true)
             ->orderBy('name')
-            ->get(['name', 'slug'])
+            ->get(['id', 'name', 'slug'])
             ->map(fn (Ward $ward) => [
+                'id' => $ward->id,
                 'label' => $ward->name,
                 'url' => "/phong-tro/tinh-thanh/{$province->slug}/phuong-xa/{$ward->slug}",
                 'type' => 'Phường/xã',

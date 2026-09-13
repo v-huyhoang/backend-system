@@ -7,7 +7,21 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Head } from '@inertiajs/react';
+import {
+	getProvinces,
+	getWards,
+	type LocationSuggestion,
+} from '@/services/location-service';
+import {
+	getAmenities,
+	getCostTypes,
+	getPropertyTypes,
+	type Amenity,
+	type CostType,
+	type PropertyType,
+} from '@/services/rental-master-data-service';
+import type { LandlordListingCostForm } from '@/types/landlord-listings';
+import { Head, useForm } from '@inertiajs/react';
 import {
 	Building2,
 	CalendarDays,
@@ -19,36 +33,115 @@ import {
 	Sparkles,
 	Upload,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const types = [
-	'Phòng trọ có gác',
-	'Căn hộ mini / Studio',
-	'Phòng trọ khép kín',
-	'Ở ghép',
-];
-const amenities = [
-	'Máy lạnh',
-	'Máy giặt riêng',
-	'Bếp riêng',
-	'Thang máy',
-	'Camera an ninh',
-	'Giờ giấc tự do',
-	'Chỗ để xe',
-	'Ban công',
-];
 export default function CreateLandlordListing() {
-	const [type, setType] = useState(types[0]);
-	const [selectedAmenities, setSelectedAmenities] = useState<string[]>([
-		'Máy lạnh',
-		'Giờ giấc tự do',
-	]);
-	const toggle = (amenity: string) =>
-		setSelectedAmenities((items) =>
-			items.includes(amenity)
-				? items.filter((item) => item !== amenity)
-				: [...items, amenity],
-		);
+	const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
+	const [amenities, setAmenities] = useState<Amenity[]>([]);
+	const [costTypes, setCostTypes] = useState<CostType[]>([]);
+	const [type, setType] = useState<number | null>(null);
+	const [selectedAmenities, setSelectedAmenities] = useState<number[]>([]);
+	const [provinces, setProvinces] = useState<LocationSuggestion[]>([]);
+	const [wards, setWards] = useState<LocationSuggestion[]>([]);
+	const [selectedProvinceSlug, setSelectedProvinceSlug] = useState('');
+
+	useEffect(() => {
+		const controller = new AbortController();
+		Promise.all([
+			getPropertyTypes(controller.signal),
+			getAmenities(controller.signal),
+			getCostTypes(controller.signal),
+		])
+			.then(
+				([propertyTypeResponse, amenityResponse, costTypeResponse]) => {
+					setPropertyTypes(propertyTypeResponse.data);
+					setAmenities(amenityResponse.data);
+					setCostTypes(costTypeResponse.data);
+					setType(propertyTypeResponse.data[0]?.id ?? null);
+					setData(
+						'property_type_id',
+						propertyTypeResponse.data[0]?.id ?? null,
+					);
+				},
+			)
+			.catch(() => undefined);
+
+		return () => controller.abort();
+	}, []);
+
+	useEffect(() => {
+		const controller = new AbortController();
+		getProvinces(controller.signal)
+			.then((response) => setProvinces(response.data))
+			.catch(() => setProvinces([]));
+
+		return () => controller.abort();
+	}, []);
+
+	useEffect(() => {
+		if (!selectedProvinceSlug) {
+			setWards([]);
+			return;
+		}
+
+		const controller = new AbortController();
+		getWards(selectedProvinceSlug, controller.signal)
+			.then((response) => setWards(response.data))
+			.catch(() => setWards([]));
+
+		return () => controller.abort();
+	}, [selectedProvinceSlug]);
+
+	const { data, setData, post, processing, errors } = useForm({
+		property_type_id: null as number | null,
+		ward_id: null as number | null,
+		title: '',
+		description: '',
+		address_detail: '',
+		monthly_rent: '',
+		deposit_amount: '',
+		area_sqm: '',
+		max_occupants: 1,
+		available_from: '',
+		contact_name: '',
+		contact_phone: '',
+		amenity_ids: [] as number[],
+		costs: [] as LandlordListingCostForm[],
+	});
+
+	const toggle = (amenityId: number) => {
+		const nextAmenities = data.amenity_ids.includes(amenityId)
+			? data.amenity_ids.filter((id) => id !== amenityId)
+			: [...data.amenity_ids, amenityId];
+
+		setSelectedAmenities(nextAmenities);
+		setData('amenity_ids', nextAmenities);
+	};
+
+	function updateCost(costType: CostType, amount: string) {
+		const costs = data.costs.some((cost) => cost.type === costType.slug)
+			? data.costs.map((cost) =>
+					cost.type === costType.slug ? { ...cost, amount } : cost,
+				)
+			: [
+					...data.costs,
+					{
+						type: costType.slug,
+						label: costType.name,
+						amount,
+						unit: costType.unit,
+						note: '',
+					},
+				];
+
+		setData('costs', costs);
+	}
+
+	function submit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		post('/chu-tro/tin-dang/tao-moi');
+	}
+
 	return (
 		<div className="gtg-theme flex min-h-screen flex-col bg-[var(--gtg-page-bg)] text-[var(--gtg-text)]">
 			<Head title="Đăng phòng mới | Trọ Đây" />
@@ -65,7 +158,7 @@ export default function CreateLandlordListing() {
 						Thông tin càng chính xác, phòng càng dễ tìm được người
 						thuê phù hợp và được duyệt nhanh hơn.
 					</p>
-					<div
+					{/* <div
 						className="mt-7 flex gap-2 overflow-x-auto"
 						aria-label="Tiến trình đăng tin"
 					>
@@ -89,35 +182,65 @@ export default function CreateLandlordListing() {
 								{step}
 							</div>
 						))}
-					</div>
-					<form
-						className="mt-8 space-y-6"
-						onSubmit={(event) => event.preventDefault()}
-					>
+					</div> */}
+					<form className="mt-8 space-y-6" onSubmit={submit}>
 						<Section
 							icon={Building2}
 							title="Loại hình & tiêu đề bài đăng"
 						>
 							<div className="mb-3 grid gap-3 sm:grid-cols-2">
-								{types.map((item) => (
+								{propertyTypes.map((item) => (
 									<button
-										key={item}
+										key={item.id}
 										type="button"
-										onClick={() => setType(item)}
-										className={`min-h-24 rounded-xl border p-4 text-left ${type === item ? 'border-[var(--gtg-primary)] bg-[var(--gtg-primary-soft)] text-[var(--gtg-primary-dark)]' : 'border-[var(--gtg-border)] bg-[var(--gtg-surface-low)] hover:border-[var(--gtg-primary)]'}`}
+										onClick={() => {
+											setType(item.id);
+											setData(
+												'property_type_id',
+												item.id,
+											);
+										}}
+										className={`min-h-24 rounded-xl border p-4 text-left ${type === item.id ? 'border-[var(--gtg-primary)] bg-[var(--gtg-primary-soft)] text-[var(--gtg-primary-dark)]' : 'border-[var(--gtg-border)] bg-[var(--gtg-surface-low)] hover:border-[var(--gtg-primary)]'}`}
 									>
-										<strong>{item}</strong>
+										<strong>{item.name}</strong>
 										<span className="mt-1 block text-sm text-[var(--gtg-muted)]">
 											Chọn loại hình phù hợp nhất với
 											phòng của bạn.
 										</span>
-									</button>
-								))}
-							</div>
+										</button>
+									))}
+								</div>
+								{errors.property_type_id && (
+									<p className="text-sm text-red-600">
+										{errors.property_type_id}
+									</p>
+								)}
 							<Field
 								label="Tiêu đề tin đăng"
 								placeholder="Ví dụ: Phòng gác lửng 24m², ban công thoáng"
+								type="text"
+								value={data.title}
+								onChange={(value) => setData('title', value)}
+								error={errors.title}
 							/>
+							<div className="mt-4 grid gap-2">
+								<Label htmlFor="description">Mô tả phòng</Label>
+								<textarea
+									id="description"
+									value={data.description}
+									onChange={(event) =>
+										setData('description', event.target.value)
+									}
+									placeholder="Mô tả diện tích, nội thất, giờ giấc và điều kiện thuê..."
+									aria-invalid={Boolean(errors.description)}
+									className="min-h-32 w-full rounded-xl border border-[var(--gtg-border-strong)] bg-white px-3 py-3 text-base outline-none focus:border-[var(--gtg-primary)] focus:ring-2 focus:ring-[var(--gtg-primary-soft)]"
+								/>
+								{errors.description && (
+									<p className="text-sm text-red-600">
+										{errors.description}
+									</p>
+								)}
+							</div>
 							<p className="mt-2 flex items-center gap-1 text-xs text-[var(--gtg-muted)]">
 								Nêu bật đặc điểm thật; không viết in hoa toàn bộ
 								tiêu đề.
@@ -130,25 +253,47 @@ export default function CreateLandlordListing() {
 							<div className="grid gap-4 md:grid-cols-3">
 								<Select
 									label="Tỉnh / Thành phố"
-									options={[
-										'TP. Hồ Chí Minh',
-										'Hà Nội',
-										'Đà Nẵng',
-									]}
+									options={provinces.map(
+										(province) => province.label,
+									)}
+									onValueChange={(value) => {
+										const province = provinces.find(
+											(item) => item.label === value,
+										);
+										const slug =
+											province?.url.split('/').at(-1) ??
+											'';
+										setData('ward_id', null);
+										setSelectedProvinceSlug(slug);
+									}}
 								/>
 								<Select
 									label="Khu vực / Phường xã"
-									options={[
-										'Phường Linh Xuân',
-										'Phường Linh Trung',
-										'Phường Tăng Nhơn Phú',
-									]}
+									options={wards.map((ward) => ward.label)}
+									disabled={!selectedProvinceSlug}
+									onValueChange={(value) => {
+										const ward = wards.find(
+											(item) => item.label === value,
+										);
+										setData('ward_id', ward?.id ?? null);
+									}}
 								/>
 								<Field
 									label="Số nhà, ngõ/hẻm, tên đường"
 									placeholder="Ví dụ: 124/8A Đường Hoàng Diệu 2"
+									type="text"
+									value={data.address_detail}
+									onChange={(value) =>
+										setData('address_detail', value)
+									}
+									error={errors.address_detail}
 								/>
 							</div>
+							{errors.ward_id && (
+								<p className="mt-2 text-sm text-red-600">
+									{errors.ward_id}
+								</p>
+							)}
 							<div className="mt-4 rounded-lg border border-[var(--gtg-border)] bg-[var(--gtg-surface-low)] px-4 py-3 text-sm text-[var(--gtg-muted)]">
 								Gợi ý chỉ dẫn: đầu hẻm có biển hiệu dễ nhận
 								biết, xe máy có thể vào tận cửa.
@@ -162,29 +307,72 @@ export default function CreateLandlordListing() {
 								<Field
 									label="Giá thuê mỗi tháng"
 									placeholder="3.200.000"
+									type="text"
+									value={data.monthly_rent}
+									onChange={(value) =>
+										setData('monthly_rent', value)
+									}
+									error={errors.monthly_rent}
 								/>
 								<Field
 									label="Tiền đặt cọc"
 									placeholder="3.200.000"
+									type="text"
+									value={data.deposit_amount}
+									onChange={(value) =>
+										setData('deposit_amount', value)
+									}
+									error={errors.deposit_amount}
 								/>
 								<Field
 									label="Diện tích sử dụng (m²)"
 									placeholder="24"
+									type="text"
+									value={data.area_sqm}
+									onChange={(value) =>
+										setData('area_sqm', value)
+									}
+									error={errors.area_sqm}
 								/>
 							</div>
 							<div className="mt-5 grid gap-3 sm:grid-cols-4">
-								{[
-									'Điện (đ/kWh)',
-									'Nước (đ/m³)',
-									'Internet / Wifi',
-									'Gửi xe',
-								].map((label) => (
-									<Field
-										key={label}
-										label={label}
-										placeholder="Nhập mức phí"
-									/>
-								))}
+								{costTypes.map((costType) => {
+									const costIndex = data.costs.findIndex(
+										(cost) => cost.type === costType.slug,
+									);
+
+									return (
+										<Field
+											key={costType.id}
+											label={`${costType.name} (${costType.unit})`}
+											placeholder="Nhập mức phí"
+											type="number"
+											value={
+												data.costs.find(
+													(cost) =>
+														cost.type ===
+														costType.slug,
+												)?.amount ?? ''
+											}
+											onChange={(value) =>
+												updateCost(costType, value)
+											}
+											error={
+												costIndex >= 0
+													? (
+															errors as Record<
+																string,
+																| string
+																| undefined
+															>
+														)[
+															`costs.${costIndex}.amount`
+														]
+													: undefined
+											}
+										/>
+									);
+								})}
 							</div>
 						</Section>
 						<Section
@@ -195,6 +383,12 @@ export default function CreateLandlordListing() {
 								<Field
 									label="Diện tích sử dụng (m²)"
 									placeholder="24"
+									type="text"
+									value={data.area_sqm}
+									onChange={(value) =>
+										setData('area_sqm', value)
+									}
+									error={errors.area_sqm}
 								/>
 								<Select
 									label="Số người ở tối đa"
@@ -204,6 +398,9 @@ export default function CreateLandlordListing() {
 										'3 người',
 										'4 người',
 									]}
+									onValueChange={(value) =>
+										setData('max_occupants', Number.parseInt(value, 10))
+									}
 								/>
 								<div className="grid gap-2">
 									<Label>Ngày có thể dọn vào</Label>
@@ -227,18 +424,18 @@ export default function CreateLandlordListing() {
 							<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
 								{amenities.map((amenity) => (
 									<label
-										key={amenity}
+										key={amenity.id}
 										className="flex min-h-11 items-center gap-3 rounded-lg border border-[var(--gtg-border)] bg-[var(--gtg-surface-low)] px-3 text-sm font-medium"
 									>
 										<Checkbox
 											checked={selectedAmenities.includes(
-												amenity,
+												amenity.id,
 											)}
 											onCheckedChange={() =>
-												toggle(amenity)
+												toggle(amenity.id)
 											}
 										/>
-										{amenity}
+										{amenity.name}
 									</label>
 								))}
 							</div>
@@ -249,15 +446,6 @@ export default function CreateLandlordListing() {
 								khu vệ sinh và lối đi (tối thiểu 3 ảnh).
 							</p>
 							<div className="grid gap-3 sm:grid-cols-4">
-								<div className="aspect-[4/3] rounded-xl bg-[var(--gtg-surface-low)] p-3 text-sm text-[var(--gtg-muted)]">
-									Ảnh bìa phòng
-								</div>
-								<div className="aspect-[4/3] rounded-xl bg-[var(--gtg-surface-low)] p-3 text-sm text-[var(--gtg-muted)]">
-									Khu vực bếp
-								</div>
-								<div className="aspect-[4/3] rounded-xl bg-[var(--gtg-primary-soft)] p-3 text-sm text-[var(--gtg-primary)]">
-									Đang tải ảnh…
-								</div>
 								<button
 									type="button"
 									className="flex aspect-[4/3] flex-col items-center justify-center rounded-xl border-2 border-dashed border-[var(--gtg-primary)] bg-[var(--gtg-primary-soft)]/40 text-[var(--gtg-primary)]"
@@ -280,10 +468,22 @@ export default function CreateLandlordListing() {
 								<Field
 									label="Tên người liên hệ"
 									placeholder="Nguyễn Thị Mai"
+									type="text"
+									value={data.contact_name}
+									onChange={(value) =>
+										setData('contact_name', value)
+									}
+									error={errors.contact_name}
 								/>
 								<Field
 									label="Số điện thoại"
 									placeholder="0918 234 421"
+									type="text"
+									value={data.contact_phone}
+									onChange={(value) =>
+										setData('contact_phone', value)
+									}
+									error={errors.contact_phone}
 								/>
 								<Select
 									label="Vai trò người đăng"
@@ -340,21 +540,60 @@ function Section({
 		</section>
 	);
 }
-function Field({ label, placeholder }: { label: string; placeholder: string }) {
+function Field({
+	label,
+	placeholder,
+	value,
+	onChange,
+	error,
+	type = 'text',
+}: {
+	label: string;
+	placeholder: string;
+	value: string | number;
+	onChange: (value: string) => void;
+	error?: string;
+	type?: string;
+}) {
 	const id = label.toLowerCase().replaceAll(' ', '-');
+
 	return (
 		<div className="grid gap-2">
 			<Label htmlFor={id}>{label}</Label>
+
 			<Input
 				id={id}
+				type={type}
+				value={value}
 				placeholder={placeholder}
-				className="min-h-12 border-[var(--gtg-border-strong)] bg-[var(--gtg-surface-low)] text-base"
+				onChange={(event) => onChange(event.target.value)}
+				aria-invalid={Boolean(error)}
+				className="min-h-12 border-[var(--gtg-border-strong)] bg-white text-base"
 			/>
+
+			<p className="min-h-5 text-sm text-red-600">
+				{error ?? ''}
+			</p>
 		</div>
 	);
 }
-function Select({ label, options }: { label: string; options: string[] }) {
-	const [value, setValue] = useState(options[0]);
+function Select({
+	label,
+	options,
+	disabled = false,
+	onValueChange,
+}: {
+	label: string;
+	options: string[];
+	disabled?: boolean;
+	onValueChange?: (value: string) => void;
+}) {
+	const [value, setValue] = useState('');
+	useEffect(() => {
+		if (value && !options.includes(value)) {
+			setValue('');
+		}
+	}, [options, value]);
 	const id = `listing-${label.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`;
 	const selectOptions: SearchableSelectOption[] = options.map((option) => ({
 		label: option,
@@ -368,9 +607,16 @@ function Select({ label, options }: { label: string; options: string[] }) {
 				id={id}
 				value={value}
 				options={selectOptions}
+				disabled={disabled}
 				placeholder={`Chọn ${label.toLowerCase()}`}
-				onValueChange={setValue}
-				onSelect={(option) => setValue(option.label)}
+				onValueChange={(nextValue) => {
+					setValue(nextValue);
+					onValueChange?.(nextValue);
+				}}
+				onSelect={(option) => {
+					setValue(option.label);
+					onValueChange?.(option.label);
+				}}
 			/>
 		</div>
 	);
