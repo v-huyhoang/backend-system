@@ -207,14 +207,14 @@ export default function CreateLandlordListing() {
 											Chọn loại hình phù hợp nhất với
 											phòng của bạn.
 										</span>
-										</button>
-									))}
-								</div>
-								{errors.property_type_id && (
-									<p className="text-sm text-red-600">
-										{errors.property_type_id}
-									</p>
-								)}
+									</button>
+								))}
+							</div>
+							{errors.property_type_id && (
+								<p className="text-sm text-red-600">
+									{errors.property_type_id}
+								</p>
+							)}
 							<Field
 								label="Tiêu đề tin đăng"
 								placeholder="Ví dụ: Phòng gác lửng 24m², ban công thoáng"
@@ -229,7 +229,10 @@ export default function CreateLandlordListing() {
 									id="description"
 									value={data.description}
 									onChange={(event) =>
-										setData('description', event.target.value)
+										setData(
+											'description',
+											event.target.value,
+										)
 									}
 									placeholder="Mô tả diện tích, nội thất, giờ giấc và điều kiện thuê..."
 									aria-invalid={Boolean(errors.description)}
@@ -271,6 +274,7 @@ export default function CreateLandlordListing() {
 									label="Khu vực / Phường xã"
 									options={wards.map((ward) => ward.label)}
 									disabled={!selectedProvinceSlug}
+									error={errors.ward_id}
 									onValueChange={(value) => {
 										const ward = wards.find(
 											(item) => item.label === value,
@@ -289,11 +293,6 @@ export default function CreateLandlordListing() {
 									error={errors.address_detail}
 								/>
 							</div>
-							{errors.ward_id && (
-								<p className="mt-2 text-sm text-red-600">
-									{errors.ward_id}
-								</p>
-							)}
 							<div className="mt-4 rounded-lg border border-[var(--gtg-border)] bg-[var(--gtg-surface-low)] px-4 py-3 text-sm text-[var(--gtg-muted)]">
 								Gợi ý chỉ dẫn: đầu hẻm có biển hiệu dễ nhận
 								biết, xe máy có thể vào tận cửa.
@@ -303,7 +302,7 @@ export default function CreateLandlordListing() {
 							icon={ReceiptText}
 							title="Giá thuê và tiền cọc"
 						>
-							<div className="grid gap-4 md:grid-cols-3">
+							<div className="grid gap-4 md:grid-cols-2">
 								<Field
 									label="Giá thuê mỗi tháng"
 									placeholder="3.200.000"
@@ -323,16 +322,6 @@ export default function CreateLandlordListing() {
 										setData('deposit_amount', value)
 									}
 									error={errors.deposit_amount}
-								/>
-								<Field
-									label="Diện tích sử dụng (m²)"
-									placeholder="24"
-									type="text"
-									value={data.area_sqm}
-									onChange={(value) =>
-										setData('area_sqm', value)
-									}
-									error={errors.area_sqm}
 								/>
 							</div>
 							<div className="mt-5 grid gap-3 sm:grid-cols-4">
@@ -399,7 +388,10 @@ export default function CreateLandlordListing() {
 										'4 người',
 									]}
 									onValueChange={(value) =>
-										setData('max_occupants', Number.parseInt(value, 10))
+										setData(
+											'max_occupants',
+											Number.parseInt(value, 10),
+										)
 									}
 								/>
 								<div className="grid gap-2">
@@ -570,10 +562,11 @@ function Field({
 				aria-invalid={Boolean(error)}
 				className="min-h-12 border-[var(--gtg-border-strong)] bg-white text-base"
 			/>
-
-			<p className="min-h-5 text-sm text-red-600">
-				{error ?? ''}
-			</p>
+			{error && (
+				<p className="text-sm text-red-600" role="alert">
+					{error}
+				</p>
+			)}
 		</div>
 	);
 }
@@ -581,11 +574,13 @@ function Select({
 	label,
 	options,
 	disabled = false,
+	error,
 	onValueChange,
 }: {
 	label: string;
 	options: string[];
 	disabled?: boolean;
+	error?: string;
 	onValueChange?: (value: string) => void;
 }) {
 	const [value, setValue] = useState('');
@@ -608,6 +603,7 @@ function Select({
 				value={value}
 				options={selectOptions}
 				disabled={disabled}
+				invalid={Boolean(error)}
 				placeholder={`Chọn ${label.toLowerCase()}`}
 				onValueChange={(nextValue) => {
 					setValue(nextValue);
@@ -618,6 +614,11 @@ function Select({
 					onValueChange?.(option.label);
 				}}
 			/>
+			{error && (
+				<p className="text-sm text-red-600" role="alert">
+					{error}
+				</p>
+			)}
 		</div>
 	);
 }

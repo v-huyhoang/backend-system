@@ -2,34 +2,33 @@
 
 namespace App\Presentation\Http\Controllers;
 
-use App\Domain\Rental\Models\Amenity;
-use App\Domain\Rental\Models\ListingCostType;
-use App\Domain\Rental\Models\PropertyType;
+use App\Application\Rental\RentalMasterDataService;
 use Illuminate\Http\JsonResponse;
 
-class RentalMasterDataController extends Controller
+final class RentalMasterDataController extends Controller
 {
+    public function __construct(
+        private readonly RentalMasterDataService $masterData,
+    ) {}
+
     public function propertyTypes(): JsonResponse
     {
-        return response()->json(['data' => PropertyType::query()
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->get(['id', 'name', 'slug'])]);
+        return response()->json([
+            'data' => $this->masterData->propertyTypes(),
+        ]);
     }
 
     public function amenities(): JsonResponse
     {
-        return response()->json(['data' => Amenity::query()
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->get(['id', 'name', 'slug', 'icon'])]);
+        return response()->json([
+            'data' => $this->masterData->amenities(),
+        ]);
     }
 
     public function costTypes(): JsonResponse
     {
-        return response()->json(['data' => ListingCostType::query()
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->get(['id', 'name', 'slug', 'unit'])]);
+        return response()->json([
+            'data' => $this->masterData->costTypes(),
+        ]);
     }
 }

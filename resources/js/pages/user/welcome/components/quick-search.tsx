@@ -63,9 +63,7 @@ export function QuickSearch({
 		useState<LocationSuggestion | null>(province ?? null);
 	const [selectedLocation, setSelectedLocation] =
 		useState<LocationSuggestion | null>(
-			locationUrl
-				? { id: '', label: query, url: locationUrl, type: '' }
-				: null,
+			locationUrl ? { label: query, url: locationUrl, type: '' } : null,
 		);
 	const [wards, setWards] = useState<LocationSuggestion[]>([]);
 	const [isLoadingWards, setIsLoadingWards] = useState(false);
@@ -129,9 +127,7 @@ export function QuickSearch({
 
 	useEffect(() => {
 		setSelectedLocation(
-			locationUrl
-				? { id: '', label: query, url: locationUrl, type: '' }
-				: null,
+			locationUrl ? { label: query, url: locationUrl, type: '' } : null,
 		);
 	}, [locationUrl, query]);
 

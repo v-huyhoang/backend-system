@@ -53,4 +53,33 @@ class TwoFactorChallengeTest extends TestCase
                 ->component('auth/two-factor-challenge')
             );
     }
+
+    public function test_two_factor_login_uses_the_post_authentication_redirect(): void
+    {
+        if (! Features::canManageTwoFactorAuthentication()) {
+            $this->markTestSkipped('Two-factor authentication is not enabled.');
+        }
+
+        Features::twoFactorAuthentication([
+            'confirm' => true,
+            'confirmPassword' => true,
+        ]);
+
+        $user = User::factory()->create();
+
+        $user->forceFill([
+            'two_factor_secret' => encrypt('test-secret'),
+            'two_factor_recovery_codes' => encrypt(json_encode(['code1'])),
+            'two_factor_confirmed_at' => now(),
+        ])->save();
+
+        $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $this->post(route('two-factor.login'), [
+            'recovery_code' => 'code1',
+        ])->assertRedirect(route('home', absolute: false));
+    }
 }

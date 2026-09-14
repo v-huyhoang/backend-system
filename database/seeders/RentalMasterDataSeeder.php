@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Domain\Rental\Models\Amenity;
 use App\Domain\Rental\Models\ListingCostType;
 use App\Domain\Rental\Models\PropertyType;
+use App\Infrastructure\Persistence\Rental\Cache\RentalMasterDataCache;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Database\Seeder;
 
 class RentalMasterDataSeeder extends Seeder
@@ -14,6 +16,8 @@ class RentalMasterDataSeeder extends Seeder
         $this->seedPropertyTypes();
         $this->seedAmenities();
         $this->seedCostTypes();
+
+        RentalMasterDataCache::forget(app(CacheRepository::class));
     }
 
     private function seedPropertyTypes(): void

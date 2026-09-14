@@ -4,6 +4,7 @@ namespace App\Presentation\Http\Controllers\Auth;
 
 use App\Presentation\Http\Controllers\Controller;
 use App\Presentation\Http\Requests\Auth\LoginRequest;
+use App\Presentation\Http\Support\PostAuthenticationRedirector;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,10 @@ use Laravel\Fortify\Features;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function __construct(
+        private readonly PostAuthenticationRedirector $redirector,
+    ) {}
+
     /**
      * Show the login page.
      */
@@ -45,7 +50,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        return $this->redirector->redirect($request, $user);
     }
 
     /**

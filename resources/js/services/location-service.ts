@@ -1,7 +1,7 @@
 import { apiFetch } from '@/lib/api-client';
 
 export interface LocationSuggestion {
-	id: number;
+	id?: number;
 	label: string;
 	url: string;
 	type: string;

@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Domain\AccessControl\Enums\SystemPermission;
 use App\Domain\UserManagement\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Features;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -29,6 +31,49 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
+        $response->assertRedirect(route('home', absolute: false));
+    }
+
+    public function test_users_are_redirected_back_to_a_public_or_landlord_page_after_login(): void
+    {
+        $user = User::factory()->withoutTwoFactor()->create();
+
+        $this->get(route('landlord.listings.index'))
+            ->assertRedirect(route('login'));
+
+        $this->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertRedirect(route('landlord.listings.index', absolute: false));
+    }
+
+    public function test_users_without_admin_permission_are_not_redirected_to_an_admin_intended_url(): void
+    {
+        $user = User::factory()->withoutTwoFactor()->create();
+
+        $this->get(route('admin.dashboard'))
+            ->assertRedirect(route('login'));
+
+        $this->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ])->assertRedirect(route('home', absolute: false));
+    }
+
+    public function test_users_with_dashboard_permission_are_redirected_to_the_admin_dashboard(): void
+    {
+        $user = User::factory()->withoutTwoFactor()->create();
+        $permission = Permission::create([
+            'name' => SystemPermission::ViewDashboard->value,
+            'guard_name' => 'web',
+        ]);
+        $user->givePermissionTo($permission);
+
+        $response = $this->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
         $response->assertRedirect(route('admin.dashboard', absolute: false));
     }
 
