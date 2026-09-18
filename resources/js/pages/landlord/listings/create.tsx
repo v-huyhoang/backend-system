@@ -6,6 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import LandlordLayout from '@/layouts/landlord-layout';
+import { index, store } from '@/routes/landlord/listings';
 import {
 	getProvinces,
 	getWards,
@@ -20,7 +21,7 @@ import {
 	type PropertyType,
 } from '@/services/rental-master-data-service';
 import type { LandlordListingCostForm } from '@/types/landlord-listings';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import {
 	Building2,
 	CalendarDays,
@@ -149,7 +150,7 @@ export default function CreateLandlordListing() {
 
 	function submit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		post('/landlord/listings');
+		post(store().url);
 	}
 
 	return (
@@ -518,17 +519,18 @@ export default function CreateLandlordListing() {
 						</label>
 					</Section>
 					<div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-						<button
-							type="button"
-							className="min-h-12 rounded-xl border border-[var(--gtg-border)] px-5 font-semibold"
+						<Link
+							href={index()}
+							className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[var(--gtg-border)] px-5 font-semibold"
 						>
-							Lưu bản nháp
-						</button>
+							Hủy
+						</Link>
 						<button
 							type="submit"
-							className="min-h-12 rounded-xl bg-[var(--gtg-primary)] px-6 font-semibold text-white hover:bg-[var(--gtg-primary-dark)]"
+							disabled={processing}
+							className="min-h-12 rounded-xl bg-[var(--gtg-primary)] px-6 font-semibold text-white hover:bg-[var(--gtg-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
 						>
-							Xem trước & gửi duyệt
+							{processing ? 'Đang lưu...' : 'Lưu bản nháp'}
 						</button>
 					</div>
 				</form>

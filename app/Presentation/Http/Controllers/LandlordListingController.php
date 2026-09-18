@@ -2,6 +2,9 @@
 
 namespace App\Presentation\Http\Controllers;
 
+use App\Application\Rental\DTOs\StoreLandlordListingData;
+use App\Application\Rental\LandlordListingService;
+use App\Domain\UserManagement\Models\User;
 use App\Presentation\Http\Requests\Landlord\StoreLandlordRequest;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -19,12 +22,19 @@ class LandlordListingController extends Controller
         return Inertia::render('landlord/listings/create');
     }
 
-	public function store(StoreLandlordRequest $request): RedirectResponse
-	{
-		// Handle the request data and save the landlord listing
-		// For example:
-		// $landlordListing = LandlordListing::create($request->validated());
+    public function store(
+        StoreLandlordRequest $request,
+        LandlordListingService $listings,
+    ): RedirectResponse {
+        /** @var User $landlord */
+        $landlord = $request->user();
 
-		return redirect()->route('landlord.listings.index')->with('success', 'Landlord listing created successfully.');
-	}
+        $listings->create(
+            $landlord,
+            StoreLandlordListingData::fromArray($request->validated()),
+        );
+
+        return to_route('landlord.listings.index')
+            ->with('success', 'Tin đăng đã được lưu ở trạng thái bản nháp.');
+    }
 }

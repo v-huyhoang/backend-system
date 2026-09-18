@@ -30,7 +30,7 @@ class StoreLandlordRequest extends FormRequest
             'amenity_ids' => ['sometimes', 'array'],
             'amenity_ids.*' => ['integer', 'distinct', Rule::exists('amenities', 'id')->where('is_active', true)],
             'costs' => ['sometimes', 'array'],
-            'costs.*.type' => ['required', 'string', 'max:20'],
+            'costs.*.type' => ['required', 'string', 'max:20', Rule::exists('listing_cost_types', 'slug')->where('is_active', true)],
             'costs.*.label' => ['required', 'string', 'max:100'],
             'costs.*.amount' => ['nullable', 'numeric', 'min:0'],
             'costs.*.unit' => ['required', 'string', 'max:20'],
