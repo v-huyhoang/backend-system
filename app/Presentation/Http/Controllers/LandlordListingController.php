@@ -11,17 +11,16 @@ class LandlordListingController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render('user/landlord-listings/index');
+        return Inertia::render('landlord/listings/index');
     }
 
     public function create(): Response
     {
-        return Inertia::render('user/landlord-listings/create');
+        return Inertia::render('landlord/listings/create');
     }
 
 	public function store(StoreLandlordRequest $request): RedirectResponse
 	{
-		dd($request->validated());
 		// Handle the request data and save the landlord listing
 		// For example:
 		// $landlordListing = LandlordListing::create($request->validated());

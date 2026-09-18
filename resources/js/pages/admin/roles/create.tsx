@@ -10,7 +10,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
+import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { SinglePermission } from '@/types/role_permissions';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -39,7 +39,7 @@ export default function CreateRoles({
 	}
 
 	return (
-		<AppLayout breadcrumbs={breadcrumbs}>
+		<AdminLayout breadcrumbs={breadcrumbs}>
 			<Head title="Roles" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 				<Card>
@@ -137,6 +137,6 @@ export default function CreateRoles({
 					</CardContent>
 				</Card>
 			</div>
-		</AppLayout>
+		</AdminLayout>
 	);
 }

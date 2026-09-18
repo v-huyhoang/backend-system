@@ -19,6 +19,7 @@ interface SearchableSelectProps {
 	placeholder: string;
 	disabled?: boolean;
 	invalid?: boolean;
+	describedBy?: string;
 	inputRef?: RefObject<HTMLInputElement | null>;
 	emptyMessage?: string;
 	onValueChange: (value: string) => void;
@@ -32,6 +33,7 @@ export function SearchableSelect({
 	placeholder,
 	disabled = false,
 	invalid = false,
+	describedBy,
 	inputRef,
 	emptyMessage = 'Không tìm thấy kết quả.',
 	onValueChange,
@@ -83,6 +85,7 @@ export function SearchableSelect({
 				aria-controls={listboxId}
 				aria-expanded={isOpen && !disabled}
 				aria-invalid={invalid}
+				aria-describedby={describedBy}
 				onFocus={() => {
 					setFilterValue('');
 					setIsOpen(true);

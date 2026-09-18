@@ -2,7 +2,7 @@ import { ArrowDown } from 'lucide-react';
 
 export function HeroSearch() {
 	return (
-		<section className="overflow-hidden border-b border-[var(--gtg-border)] bg-[var(--gtg-page-bg)] pt-16">
+		<section className="overflow-hidden border-b border-[var(--gtg-border)] bg-[var(--gtg-page-bg)] pt-16 lg:pt-[104px]">
 			<div className="mx-auto grid max-w-[1200px] items-center gap-10 px-4 py-12 md:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:py-20">
 				<div className="relative z-10">
 					<p className="flex items-center gap-3 text-sm font-bold tracking-[0.12em] text-[var(--gtg-primary)] uppercase">

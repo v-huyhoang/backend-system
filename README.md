@@ -65,12 +65,12 @@ docker compose exec php php artisan migrate --seed
 
 Các địa chỉ sử dụng trong môi trường local:
 
-| Dịch vụ | Địa chỉ |
-| --- | --- |
-| Web | <http://localhost:8080> |
-| Vite | <http://localhost:5173> |
-| MailHog | <http://localhost:8025> |
-| MariaDB từ máy host | `127.0.0.1:3306` |
+| Dịch vụ             | Địa chỉ                 |
+| ------------------- | ----------------------- |
+| Web                 | <http://localhost:8080> |
+| Vite                | <http://localhost:5173> |
+| MailHog             | <http://localhost:8025> |
+| MariaDB từ máy host | `127.0.0.1:3306`        |
 
 Tài khoản được tạo bởi seeder:
 
@@ -112,6 +112,30 @@ HTTP Request
 ```
 
 Eloquent Model hiện được đặt trong `Domain/<Module>/Models`. Khi domain phát triển phức tạp hơn, có thể tách domain entity thuần PHP khỏi persistence model.
+
+## Khu vực sản phẩm và subdomain
+
+Ứng dụng chia giao diện theo ba khu vực độc lập về layout và authorization:
+
+| Khu vực  | URL hiện tại        | Layout               | Mục đích                 |
+| -------- | ------------------- | -------------------- | ------------------------ |
+| Public   | `/`, `/phong-tro/*` | Public header/footer | Người tìm phòng          |
+| Landlord | `/landlord/*`       | `LandlordLayout`     | Chủ trọ quản lý tin đăng |
+| Admin    | `/admin/*`          | `AdminLayout`        | Vận hành và phân quyền   |
+
+Tất cả vẫn chạy trong một Laravel/Inertia application. Khi chuyển sang subdomain,
+giữ route name và Inertia page hiện tại; chỉ bọc route group bằng
+`Route::domain(...)` và cấu hình production tương ứng:
+
+```dotenv
+APP_URL=https://troday.vn
+SESSION_DOMAIN=.troday.vn
+SESSION_SECURE_COOKIE=true
+```
+
+Subdomain dự kiến: `troday.vn` (public), `landlord.troday.vn` và
+`admin.troday.vn`. Không đặt `SESSION_DOMAIN` này trong môi trường local nếu
+không có DNS/HTTPS tương ứng.
 
 ## DDD Generator
 
@@ -260,11 +284,11 @@ public function toArray(Request $request): array
 
 ```json
 {
-  "data": [],
-  "from": 1,
-  "to": 10,
-  "total": 20,
-  "links": []
+	"data": [],
+	"from": 1,
+	"to": 10,
+	"total": 20,
+	"links": []
 }
 ```
 
@@ -317,7 +341,7 @@ Ví dụ trong React:
 ```tsx
 import * as productRoutes from '@/routes/products';
 
-<Link href={productRoutes.create()}>Add product</Link>
+<Link href={productRoutes.create()}>Add product</Link>;
 
 router.delete(productRoutes.destroy.url(product.id));
 ```
@@ -366,13 +390,13 @@ stubs/ddd/
 
 Các placeholder được generator hỗ trợ:
 
-| Placeholder | Ví dụ |
-| --- | --- |
-| `{{ entity }}` | `Product` |
-| `{{ module }}` | `Catalog` |
-| `{{ plural }}` | `Products` |
-| `{{ page }}` | `products` |
-| `{{ variable }}` | `product` |
+| Placeholder       | Ví dụ      |
+| ----------------- | ---------- |
+| `{{ entity }}`    | `Product`  |
+| `{{ module }}`    | `Catalog`  |
+| `{{ plural }}`    | `Products` |
+| `{{ page }}`      | `products` |
+| `{{ variable }}`  | `product`  |
 | `{{ variables }}` | `products` |
 
 Khi thay đổi stub, nên generate một entity thử nghiệm và chạy PHP syntax check trước khi sử dụng cho module thật.
@@ -414,7 +438,7 @@ Nếu MySQL/MariaDB của Laragon cũng sử dụng port `3306`, cần dừng da
 
 ```yaml
 ports:
-  - "3307:3306"
+    - '3307:3306'
 ```
 
 Sau đó kết nối database client qua `127.0.0.1:3307`. Cấu hình Laravel bên trong Docker vẫn giữ `DB_HOST=mysql` và `DB_PORT=3306`.

@@ -34,7 +34,7 @@ import {
 import { SystemPermission } from '@/enums/access-control';
 import { ActiveStatus } from '@/enums/active-status';
 import { usePermissions } from '@/hooks/user-permissions';
-import AppLayout from '@/layouts/app-layout';
+import AdminLayout from '@/layouts/admin-layout';
 import * as userRoutes from '@/routes/admin/users';
 import { type BreadcrumbItem } from '@/types';
 import type { PageProps } from '@/types/page';
@@ -118,7 +118,7 @@ export default function Users({ users, roles, filters }: UsersPageProps) {
 	}, [search, roleFilter, activeFilter]);
 
 	return (
-		<AppLayout breadcrumbs={breadcrumbs}>
+		<AdminLayout breadcrumbs={breadcrumbs}>
 			<Head title="Users" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 				<Card className="gap-2">
@@ -364,6 +364,6 @@ export default function Users({ users, roles, filters }: UsersPageProps) {
 					)}
 				</Card>
 			</div>
-		</AppLayout>
+		</AdminLayout>
 	);
 }

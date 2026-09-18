@@ -1,39 +1,68 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useInitials } from '@/hooks/use-initials';
+import { mergeListingUrl } from '@/lib/listing-url';
+import {
+	getPropertyTypes,
+	type PropertyType,
+} from '@/services/rental-master-data-service';
 import type { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Menu, Plus, UserRound, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrandLogo } from './brand-logo';
+import { HeaderLocationSearch } from './header-location-search';
+import { PublicAccountMenu } from './public-account-menu';
 
 const navigation = [
 	{ label: 'Tìm phòng', href: '/phong-tro' },
 	{ label: 'Loại hình', href: '/#loai-hinh' },
-	{ label: 'Dành cho chủ trọ', href: '/#chu-tro' },
 ] as const;
 
 export function PublicHeader() {
-	const { auth } = usePage<SharedData>().props;
+	const page = usePage<SharedData>();
+	const { auth } = page.props;
 	const createListingHref = auth.user
-		? '/chu-tro/tin-dang/tao-moi'
+		? '/landlord/listings/create'
 		: '/register';
 	const [menuOpen, setMenuOpen] = useState(false);
-	const getInitials = useInitials();
+	const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
+	const currentType = new URL(page.url, 'http://localhost').searchParams.get(
+		'loai-hinh',
+	);
+	const typeUrl = (slug: string | null) =>
+		mergeListingUrl(page.url, { 'loai-hinh': slug });
+	useEffect(() => {
+		const controller = new AbortController();
+		getPropertyTypes(controller.signal)
+			.then((response) => setPropertyTypes(response.data))
+			.catch(() => setPropertyTypes([]));
+		return () => controller.abort();
+	}, []);
+	const isActiveNavigation = (href: string) =>
+		href === '/phong-tro' && page.url.startsWith('/phong-tro');
 
 	return (
 		<header className="fixed inset-x-0 top-0 z-50 border-b border-[var(--gtg-border)] bg-white/95 backdrop-blur-md">
-			<div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-4 md:px-6">
-				<div className="flex min-w-0 items-center gap-6">
+			<div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-3 px-4 md:px-6">
+				<div className="flex min-w-0 flex-1 items-center gap-3 xl:gap-6">
 					<BrandLogo />
+					<HeaderLocationSearch className="hidden min-w-0 flex-1 md:block" />
 					<nav
-						className="hidden items-center gap-1 md:flex"
+						className="hidden shrink-0 items-center gap-1 xl:flex"
 						aria-label="Điều hướng chính"
 					>
 						{navigation.map((item) => (
 							<Link
 								key={item.href}
 								href={item.href}
-								className="inline-flex min-h-11 items-center rounded-lg px-3 text-[15px] font-semibold text-[var(--gtg-muted)] hover:bg-[var(--gtg-surface-low)] hover:text-[var(--gtg-text)]"
+								aria-current={
+									isActiveNavigation(item.href)
+										? 'page'
+										: undefined
+								}
+								className={`inline-flex min-h-11 items-center rounded-lg px-3 text-[15px] font-semibold transition-colors ${
+									isActiveNavigation(item.href)
+										? 'bg-[var(--gtg-primary-soft)] text-[var(--gtg-primary)]'
+										: 'text-[var(--gtg-muted)] hover:bg-[var(--gtg-surface-low)] hover:text-[var(--gtg-text)]'
+								}`}
 							>
 								{item.label}
 							</Link>
@@ -41,32 +70,21 @@ export function PublicHeader() {
 					</nav>
 				</div>
 
-				<div className="flex items-center gap-2">
+				<div className="flex shrink-0 items-center gap-2">
 					<Link
 						href={createListingHref}
-						className="hidden min-h-11 items-center gap-2 rounded-xl bg-[var(--gtg-primary)] px-4 text-[15px] font-semibold text-white shadow-sm hover:bg-[var(--gtg-primary-dark)] sm:inline-flex"
+						className="hidden min-h-11 items-center gap-2 rounded-xl bg-[var(--gtg-primary)] px-4 text-[15px] font-semibold whitespace-nowrap text-white shadow-sm hover:bg-[var(--gtg-primary-dark)] lg:inline-flex"
 					>
 						<Plus className="size-4" aria-hidden="true" />
 						Đăng phòng
 					</Link>
 
 					{auth.user ? (
-						<Link
-							href="/chu-tro/tin-dang"
-							className="rounded-full focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--gtg-secondary)]"
-							aria-label={`Mở tài khoản của ${auth.user.name}`}
-						>
-							<Avatar className="size-9 ring-2 ring-[var(--gtg-primary-soft)]">
-								<AvatarImage src={auth.user.avatar} alt="" />
-								<AvatarFallback className="bg-[var(--gtg-primary-soft)] text-sm font-semibold text-[var(--gtg-primary)]">
-									{getInitials(auth.user.name)}
-								</AvatarFallback>
-							</Avatar>
-						</Link>
+						<PublicAccountMenu user={auth.user} />
 					) : (
 						<Link
 							href="/login"
-							className="hidden min-h-11 items-center px-3 text-[15px] font-semibold text-[var(--gtg-primary)] hover:underline sm:inline-flex"
+							className="hidden min-h-11 items-center px-3 text-[15px] font-semibold whitespace-nowrap text-[var(--gtg-primary)] hover:underline lg:inline-flex"
 						>
 							Đăng nhập
 						</Link>
@@ -88,6 +106,34 @@ export function PublicHeader() {
 					</button>
 				</div>
 			</div>
+			<nav
+				className="hidden border-t border-[var(--gtg-border)] lg:block"
+				aria-label="Loại hình phòng"
+			>
+				<div className="mx-auto flex h-10 max-w-[1200px] items-center gap-6 px-6">
+					<Link
+						href={typeUrl(null)}
+						aria-current={!currentType ? 'page' : undefined}
+						className={`shrink-0 text-sm font-semibold ${!currentType ? 'text-[var(--gtg-primary)]' : 'text-[var(--gtg-text)] hover:text-[var(--gtg-primary)]'}`}
+					>
+						Tất cả phòng
+					</Link>
+					{propertyTypes.map((propertyType) => (
+						<Link
+							key={propertyType.slug}
+							href={typeUrl(propertyType.slug)}
+							aria-current={
+								currentType === propertyType.slug
+									? 'page'
+									: undefined
+							}
+							className={`shrink-0 text-sm ${currentType === propertyType.slug ? 'font-semibold text-[var(--gtg-primary)]' : 'text-[var(--gtg-text)] hover:text-[var(--gtg-primary)]'}`}
+						>
+							{propertyType.name}
+						</Link>
+					))}
+				</div>
+			</nav>
 
 			{menuOpen && (
 				<nav
@@ -100,7 +146,16 @@ export function PublicHeader() {
 							key={item.href}
 							href={item.href}
 							onClick={() => setMenuOpen(false)}
-							className="flex min-h-11 items-center rounded-lg px-3 font-semibold text-[var(--gtg-text)] hover:bg-[var(--gtg-surface-low)]"
+							aria-current={
+								isActiveNavigation(item.href)
+									? 'page'
+									: undefined
+							}
+							className={`flex min-h-11 items-center rounded-lg px-3 font-semibold transition-colors ${
+								isActiveNavigation(item.href)
+									? 'bg-[var(--gtg-primary-soft)] text-[var(--gtg-primary)]'
+									: 'text-[var(--gtg-text)] hover:bg-[var(--gtg-surface-low)]'
+							}`}
 						>
 							{item.label}
 						</Link>
@@ -114,11 +169,21 @@ export function PublicHeader() {
 							Đăng phòng
 						</Link>
 						<Link
-							href={auth.user ? '/admin/dashboard' : '/login'}
+							href={
+								auth.user
+									? auth.user.hasListings
+										? '/landlord/listings'
+										: '/settings/profile'
+									: '/login'
+							}
 							className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--gtg-surface-low)] px-3 font-semibold text-[var(--gtg-primary)]"
 						>
 							<UserRound className="size-4" aria-hidden="true" />
-							{auth.user ? 'Tài khoản' : 'Đăng nhập'}
+							{auth.user?.hasListings
+								? 'Tin đăng của tôi'
+								: auth.user
+									? 'Tài khoản'
+									: 'Đăng nhập'}
 						</Link>
 					</div>
 				</nav>

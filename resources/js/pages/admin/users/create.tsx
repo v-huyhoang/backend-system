@@ -11,7 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ActiveStatus } from '@/enums/active-status';
-import AppLayout from '@/layouts/app-layout';
+import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -37,7 +37,7 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 	}
 
 	return (
-		<AppLayout breadcrumbs={breadcrumbs}>
+		<AdminLayout breadcrumbs={breadcrumbs}>
 			<Head title="Users" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 				<Card>
@@ -163,6 +163,6 @@ export default function CreateUsers({ roles }: { roles: string[] }) {
 					</CardContent>
 				</Card>
 			</div>
-		</AppLayout>
+		</AdminLayout>
 	);
 }

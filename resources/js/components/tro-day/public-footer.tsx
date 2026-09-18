@@ -9,15 +9,19 @@ const renterLinks = [
 
 export function PublicFooter() {
 	const { auth } = usePage<SharedData>().props;
-	const landlordLinks = [
+	const publishingLinks = [
 		{
 			label: 'Đăng phòng',
-			href: auth.user ? '/chu-tro/tin-dang/tao-moi' : '/register',
+			href: auth.user ? '/landlord/listings/create' : '/register',
 		},
-		{
-			label: auth.user ? 'Quản lý tin đăng' : 'Đăng nhập quản lý tin',
-			href: auth.user ? '/chu-tro/tin-dang' : '/login',
-		},
+		...(auth.user?.hasListings
+			? [
+					{
+						label: 'Quản lý tin đăng',
+						href: '/landlord/listings',
+					},
+				]
+			: []),
 	];
 	return (
 		<footer className="border-t border-[var(--gtg-border)] bg-[var(--gtg-surface-low)]">
@@ -31,7 +35,10 @@ export function PublicFooter() {
 						</p>
 					</div>
 					<FooterLinks title="Người thuê trọ" links={renterLinks} />
-					<FooterLinks title="Chủ trọ" links={landlordLinks} />
+					<FooterLinks
+						title="Đăng tin cho thuê"
+						links={publishingLinks}
+					/>
 				</div>
 				<div className="mt-10 flex flex-col gap-2 border-t border-[var(--gtg-border)] pt-6 text-sm text-[var(--gtg-muted)] sm:flex-row sm:items-center sm:justify-between">
 					<p>© {new Date().getFullYear()} Trọ Đây.</p>

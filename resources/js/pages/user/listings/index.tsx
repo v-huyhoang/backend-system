@@ -37,7 +37,11 @@ export default function ListingsIndex({ filters }: ListingsIndexProps) {
 				Bỏ qua đến nội dung chính
 			</a>
 			<PublicHeader />
-			<main id="main-content" className="pt-16" tabIndex={-1}>
+			<main
+				id="main-content"
+				className="pt-16 lg:pt-[104px]"
+				tabIndex={-1}
+			>
 				<QuickSearch
 					query={filters.location}
 					locationUrl={

@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/tooltip';
 import { SystemPermission } from '@/enums/access-control';
 import { usePermissions } from '@/hooks/user-permissions';
-import AppLayout from '@/layouts/app-layout';
+import AdminLayout from '@/layouts/admin-layout';
 import { type BreadcrumbItem } from '@/types';
 import type { PageProps } from '@/types/page';
 import { Permission, SinglePermission } from '@/types/role_permissions';
@@ -155,7 +155,7 @@ export default function Permissions({
 	}
 
 	return (
-		<AppLayout breadcrumbs={breadcrumbs}>
+		<AdminLayout breadcrumbs={breadcrumbs}>
 			<Head title="Permissions" />
 			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
 				<Card className="gap-2">
@@ -484,6 +484,6 @@ export default function Permissions({
 					</DialogContent>
 				</Dialog>
 			</div>
-		</AppLayout>
+		</AdminLayout>
 	);
 }

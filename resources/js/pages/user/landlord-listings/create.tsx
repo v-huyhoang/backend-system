@@ -102,12 +102,23 @@ export default function CreateLandlordListing() {
 		deposit_amount: '',
 		area_sqm: '',
 		max_occupants: 1,
-		available_from: '',
+		available_from: null as string | null,
 		contact_name: '',
 		contact_phone: '',
 		amenity_ids: [] as number[],
 		costs: [] as LandlordListingCostForm[],
 	});
+	const hasAddressErrors = Boolean(errors.ward_id || errors.address_detail);
+	const hasRentErrors = Boolean(errors.monthly_rent || errors.deposit_amount);
+	const hasCostErrors = Object.keys(errors).some((key) =>
+		key.startsWith('costs.'),
+	);
+	const hasRoomDetailErrors = Boolean(
+		errors.area_sqm || errors.max_occupants || errors.available_from,
+	);
+	const hasContactErrors = Boolean(
+		errors.contact_name || errors.contact_phone,
+	);
 
 	const toggle = (amenityId: number) => {
 		const nextAmenities = data.amenity_ids.includes(amenityId)
@@ -146,7 +157,7 @@ export default function CreateLandlordListing() {
 		<div className="gtg-theme flex min-h-screen flex-col bg-[var(--gtg-page-bg)] text-[var(--gtg-text)]">
 			<Head title="Đăng phòng mới | Trọ Đây" />
 			<PublicHeader />
-			<main className="flex-1 pt-16">
+			<main className="flex-1 pt-16 lg:pt-[104px]">
 				<div className="mx-auto max-w-[960px] px-4 py-8 md:px-6 lg:py-12">
 					<p className="text-sm font-bold tracking-wider text-[var(--gtg-accent)] uppercase">
 						Dành cho chủ trọ
@@ -256,6 +267,7 @@ export default function CreateLandlordListing() {
 							<div className="grid gap-4 md:grid-cols-3">
 								<Select
 									label="Tỉnh / Thành phố"
+									reserveErrorSpace={hasAddressErrors}
 									options={provinces.map(
 										(province) => province.label,
 									)}
@@ -272,6 +284,7 @@ export default function CreateLandlordListing() {
 								/>
 								<Select
 									label="Khu vực / Phường xã"
+									reserveErrorSpace={hasAddressErrors}
 									options={wards.map((ward) => ward.label)}
 									disabled={!selectedProvinceSlug}
 									error={errors.ward_id}
@@ -284,6 +297,7 @@ export default function CreateLandlordListing() {
 								/>
 								<Field
 									label="Số nhà, ngõ/hẻm, tên đường"
+									reserveErrorSpace={hasAddressErrors}
 									placeholder="Ví dụ: 124/8A Đường Hoàng Diệu 2"
 									type="text"
 									value={data.address_detail}
@@ -305,6 +319,7 @@ export default function CreateLandlordListing() {
 							<div className="grid gap-4 md:grid-cols-2">
 								<Field
 									label="Giá thuê mỗi tháng"
+									reserveErrorSpace={hasRentErrors}
 									placeholder="3.200.000"
 									type="text"
 									value={data.monthly_rent}
@@ -315,6 +330,7 @@ export default function CreateLandlordListing() {
 								/>
 								<Field
 									label="Tiền đặt cọc"
+									reserveErrorSpace={hasRentErrors}
 									placeholder="3.200.000"
 									type="text"
 									value={data.deposit_amount}
@@ -333,6 +349,7 @@ export default function CreateLandlordListing() {
 									return (
 										<Field
 											key={costType.id}
+											reserveErrorSpace={hasCostErrors}
 											label={`${costType.name} (${costType.unit})`}
 											placeholder="Nhập mức phí"
 											type="number"
@@ -371,6 +388,7 @@ export default function CreateLandlordListing() {
 							<div className="grid gap-4 md:grid-cols-3">
 								<Field
 									label="Diện tích sử dụng (m²)"
+									reserveErrorSpace={hasRoomDetailErrors}
 									placeholder="24"
 									type="text"
 									value={data.area_sqm}
@@ -381,6 +399,7 @@ export default function CreateLandlordListing() {
 								/>
 								<Select
 									label="Số người ở tối đa"
+									reserveErrorSpace={hasRoomDetailErrors}
 									options={[
 										'1 người',
 										'2 người',
@@ -395,17 +414,48 @@ export default function CreateLandlordListing() {
 									}
 								/>
 								<div className="grid gap-2">
-									<Label>Ngày có thể dọn vào</Label>
-									<button
-										type="button"
-										className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[var(--gtg-primary)] px-4 font-semibold text-white"
-									>
+									<Label htmlFor="available_from">
+										Ngày có thể dọn vào
+									</Label>
+									<div className="relative">
+										<Input
+											id="available_from"
+											type="date"
+											value={data.available_from ?? ''}
+											onChange={(event) =>
+												setData(
+													'available_from',
+													event.target.value || null,
+												)
+											}
+											aria-invalid={Boolean(
+												errors.available_from,
+											)}
+											aria-describedby={
+												errors.available_from
+													? 'available_from-error'
+													: undefined
+											}
+											className="min-h-12 border-[var(--gtg-border-strong)] bg-white pr-12 text-base [&::-webkit-calendar-picker-indicator]:pointer-events-none [&::-webkit-calendar-picker-indicator]:opacity-0"
+										/>
 										<CalendarDays
-											className="size-4"
+											className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-[var(--gtg-text)]"
 											aria-hidden="true"
 										/>
-										Dọn vào ngay
-									</button>
+									</div>
+									{hasRoomDetailErrors && (
+										<div className="min-h-5">
+											{errors.available_from && (
+												<p
+													id="available_from-error"
+													className="text-sm leading-5 text-red-600"
+													role="alert"
+												>
+													{errors.available_from}
+												</p>
+											)}
+										</div>
+									)}
 								</div>
 							</div>
 						</Section>
@@ -459,6 +509,7 @@ export default function CreateLandlordListing() {
 							<div className="grid gap-4 md:grid-cols-3">
 								<Field
 									label="Tên người liên hệ"
+									reserveErrorSpace={hasContactErrors}
 									placeholder="Nguyễn Thị Mai"
 									type="text"
 									value={data.contact_name}
@@ -469,6 +520,7 @@ export default function CreateLandlordListing() {
 								/>
 								<Field
 									label="Số điện thoại"
+									reserveErrorSpace={hasContactErrors}
 									placeholder="0918 234 421"
 									type="text"
 									value={data.contact_phone}
@@ -479,6 +531,7 @@ export default function CreateLandlordListing() {
 								/>
 								<Select
 									label="Vai trò người đăng"
+									reserveErrorSpace={hasContactErrors}
 									options={[
 										'Chính chủ cho thuê',
 										'Quản lý nhà trọ',
@@ -538,6 +591,7 @@ function Field({
 	value,
 	onChange,
 	error,
+	reserveErrorSpace = false,
 	type = 'text',
 }: {
 	label: string;
@@ -545,9 +599,11 @@ function Field({
 	value: string | number;
 	onChange: (value: string) => void;
 	error?: string;
+	reserveErrorSpace?: boolean;
 	type?: string;
 }) {
 	const id = label.toLowerCase().replaceAll(' ', '-');
+	const errorId = `${id}-error`;
 
 	return (
 		<div className="grid gap-2">
@@ -560,12 +616,21 @@ function Field({
 				placeholder={placeholder}
 				onChange={(event) => onChange(event.target.value)}
 				aria-invalid={Boolean(error)}
+				aria-describedby={error ? errorId : undefined}
 				className="min-h-12 border-[var(--gtg-border-strong)] bg-white text-base"
 			/>
-			{error && (
-				<p className="text-sm text-red-600" role="alert">
-					{error}
-				</p>
+			{(reserveErrorSpace || error) && (
+				<div className="min-h-5">
+					{error && (
+						<p
+							id={errorId}
+							className="text-sm leading-5 text-red-600"
+							role="alert"
+						>
+							{error}
+						</p>
+					)}
+				</div>
 			)}
 		</div>
 	);
@@ -575,12 +640,14 @@ function Select({
 	options,
 	disabled = false,
 	error,
+	reserveErrorSpace = false,
 	onValueChange,
 }: {
 	label: string;
 	options: string[];
 	disabled?: boolean;
 	error?: string;
+	reserveErrorSpace?: boolean;
 	onValueChange?: (value: string) => void;
 }) {
 	const [value, setValue] = useState('');
@@ -590,6 +657,7 @@ function Select({
 		}
 	}, [options, value]);
 	const id = `listing-${label.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`;
+	const errorId = `${id}-error`;
 	const selectOptions: SearchableSelectOption[] = options.map((option) => ({
 		label: option,
 		value: option,
@@ -604,6 +672,7 @@ function Select({
 				options={selectOptions}
 				disabled={disabled}
 				invalid={Boolean(error)}
+				describedBy={error ? errorId : undefined}
 				placeholder={`Chọn ${label.toLowerCase()}`}
 				onValueChange={(nextValue) => {
 					setValue(nextValue);
@@ -614,10 +683,18 @@ function Select({
 					onValueChange?.(option.label);
 				}}
 			/>
-			{error && (
-				<p className="text-sm text-red-600" role="alert">
-					{error}
-				</p>
+			{(reserveErrorSpace || error) && (
+				<div className="min-h-5">
+					{error && (
+						<p
+							id={errorId}
+							className="text-sm leading-5 text-red-600"
+							role="alert"
+						>
+							{error}
+						</p>
+					)}
+				</div>
 			)}
 		</div>
 	);
