@@ -20,7 +20,7 @@ final class PostAuthenticationRedirector
 
     private function fallbackUrl(User $user): string
     {
-        return $user->can(SystemPermission::ViewDashboard->value)
+        return $user->can(SystemPermission::ViewListingModeration->value)
             ? route('admin.dashboard', absolute: false)
             : route('home', absolute: false);
     }

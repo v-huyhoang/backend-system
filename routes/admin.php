@@ -2,20 +2,28 @@
 
 use App\Domain\AccessControl\Enums\SystemPermission;
 use App\Domain\UserManagement\Models\User;
+use App\Presentation\Http\Controllers\ListingModerationController;
 use App\Presentation\Http\Controllers\PermissionController;
 use App\Presentation\Http\Controllers\RoleController;
 use App\Presentation\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', fn () => to_route('admin.dashboard'))->name('index');
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('admin/dashboard');
-    })->name('dashboard')->can(SystemPermission::ViewDashboard->value);
+    Route::get('/dashboard', [ListingModerationController::class, 'index'])
+        ->name('dashboard')
+        ->can(SystemPermission::ViewListingModeration->value);
+
+    Route::prefix('listings')->name('listings.')->group(function () {
+        Route::get('/{listing:public_id}', [ListingModerationController::class, 'show'])
+            ->can(SystemPermission::ViewListingModeration->value)
+            ->name('show');
+        Route::post('/{listing:public_id}/approve', [ListingModerationController::class, 'approve'])->can('review', 'listing')->name('approve');
+        Route::post('/{listing:public_id}/reject', [ListingModerationController::class, 'reject'])->can('review', 'listing')->name('reject');
+    });
 
     Route::prefix('permissions')->name('permissions.')->group(function () {
         Route::get('/', [PermissionController::class, 'index'])->name('index')->can('viewAny', Permission::class);

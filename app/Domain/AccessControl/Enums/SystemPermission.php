@@ -17,6 +17,8 @@ enum SystemPermission: string
     case CreateUsers = 'create_users';
     case EditUsers = 'edit_users';
     case DeleteUsers = 'delete_users';
+    case ViewListingModeration = 'view_listing_moderation';
+    case ReviewListings = 'review_listings';
 
     public function description(): string
     {
@@ -34,6 +36,8 @@ enum SystemPermission: string
             self::CreateUsers => 'Create users',
             self::EditUsers => 'Edit users',
             self::DeleteUsers => 'Delete users',
+            self::ViewListingModeration => 'View listing moderation queue and details',
+            self::ReviewListings => 'Review listings',
         };
     }
 

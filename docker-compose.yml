@@ -52,6 +52,23 @@ services:
     networks:
       - laravel
 
+  scheduler:
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html:delegated
+    depends_on:
+      - mysql
+      - redis
+    command: php artisan schedule:work
+    networks:
+      - laravel
+
   redis:
     image: redis:alpine
     restart: unless-stopped

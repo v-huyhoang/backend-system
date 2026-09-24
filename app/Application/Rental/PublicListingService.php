@@ -29,4 +29,8 @@ class PublicListingService
     {
         return $this->listings->latest($limit);
     }
+
+    public function recordView(Listing $listing): void { $this->listings->incrementView($listing); }
+
+    public function recordContact(Listing $listing): void { $this->listings->incrementContact($listing); }
 }

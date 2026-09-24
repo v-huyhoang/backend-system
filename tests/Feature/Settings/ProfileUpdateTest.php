@@ -21,7 +21,7 @@ class ProfileUpdateTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_profile_information_can_be_updated()
+    public function test_profile_information_can_be_updated_without_persisting_shared_auth_capabilities(): void
     {
         $user = User::factory()->create();
 

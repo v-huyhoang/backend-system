@@ -35,6 +35,8 @@ class StoreLandlordRequest extends FormRequest
             'costs.*.amount' => ['nullable', 'numeric', 'min:0'],
             'costs.*.unit' => ['required', 'string', 'max:20'],
             'costs.*.note' => ['nullable', 'string', 'max:500'],
+            'images' => ['required', 'array', 'min:3', 'max:20'],
+            'images.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 }

@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
                     'hasListings' => Listing::query()
                         ->where('landlord_id', $user->id)
                         ->exists(),
-                    'canAccessAdmin' => $user->can(SystemPermission::ViewDashboard->value),
+                    'canAccessAdmin' => $user->can(SystemPermission::ViewListingModeration->value),
                 ] : null,
                 'permissions' => $user ? $user->getAllPermissions()->pluck('name') : [],
             ],

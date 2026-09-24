@@ -21,6 +21,7 @@ RUN adduser -G laravel --system -D -s /bin/sh -u ${UID} laravel
 RUN sed -i "s/user = www-data/user = laravel/g" /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i "s/group = www-data/group = laravel/g" /usr/local/etc/php-fpm.d/www.conf
 RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
+RUN printf "upload_max_filesize = 10M\npost_max_size = 60M\nmax_file_uploads = 20\n" > /usr/local/etc/php/conf.d/uploads.ini
 
 RUN docker-php-ext-install pdo pdo_mysql
 

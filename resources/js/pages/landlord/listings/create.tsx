@@ -33,7 +33,7 @@ import {
 	Sparkles,
 	Upload,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function CreateLandlordListing() {
 	const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
@@ -107,6 +107,7 @@ export default function CreateLandlordListing() {
 		contact_phone: '',
 		amenity_ids: [] as number[],
 		costs: [] as LandlordListingCostForm[],
+		images: [] as File[],
 	});
 	const hasAddressErrors = Boolean(errors.ward_id || errors.address_detail);
 	const hasRentErrors = Boolean(errors.monthly_rent || errors.deposit_amount);
@@ -119,6 +120,17 @@ export default function CreateLandlordListing() {
 	const hasContactErrors = Boolean(
 		errors.contact_name || errors.contact_phone,
 	);
+	const imagePreviews = useMemo(
+		() => data.images.map((image) => URL.createObjectURL(image)),
+		[data.images],
+	);
+	const imageSlots = Array.from({ length: 20 });
+	const addImages = (files: FileList | null) => {
+		setData(
+			'images',
+			[...data.images, ...Array.from(files ?? [])].slice(0, 20),
+		);
+	};
 
 	const toggle = (amenityId: number) => {
 		const nextAmenities = data.amenity_ids.includes(amenityId)
@@ -150,7 +162,7 @@ export default function CreateLandlordListing() {
 
 	function submit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		post(store().url);
+		post(store().url, { forceFormData: true });
 	}
 
 	return (
@@ -417,7 +429,7 @@ export default function CreateLandlordListing() {
 												? 'available_from-error'
 												: undefined
 										}
-										className="min-h-12 border-[var(--gtg-border-strong)] bg-white pr-12 text-base [&::-webkit-calendar-picker-indicator]:pointer-events-none [&::-webkit-calendar-picker-indicator]:opacity-0"
+										className="min-h-12 border-[var(--gtg-border-strong)] bg-white pr-12 text-base [&::-webkit-calendar-picker-indicator]:opacity-0"
 									/>
 									<CalendarDays
 										className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-[var(--gtg-text)]"
@@ -465,20 +477,79 @@ export default function CreateLandlordListing() {
 							Yêu cầu chụp góc rộng, đủ sáng ban ngày, thấy rõ khu
 							vệ sinh và lối đi (tối thiểu 3 ảnh).
 						</p>
-						<div className="grid gap-3 sm:grid-cols-4">
-							<button
-								type="button"
-								className="flex aspect-[4/3] flex-col items-center justify-center rounded-xl border-2 border-dashed border-[var(--gtg-primary)] bg-[var(--gtg-primary-soft)]/40 text-[var(--gtg-primary)]"
-							>
-								<Upload className="size-7" aria-hidden="true" />
-								<span className="mt-3 font-semibold">
-									Tải ảnh phòng thực tế
-								</span>
-								<span className="mt-1 text-sm text-[var(--gtg-muted)]">
-									Tối thiểu 3 ảnh, ảnh sáng và rõ nét.
-								</span>
-							</button>
+						<input
+							id="listing-images"
+							className="sr-only"
+							name="images[]"
+							type="file"
+							multiple
+							accept="image/jpeg,image/png,image/webp"
+							onChange={(event) => addImages(event.target.files)}
+						/>
+						<div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+							{imageSlots.map((_, imageIndex) => {
+								const source = imagePreviews[imageIndex];
+
+								return source ? (
+									<div
+										key={source}
+										className="relative aspect-[4/3] overflow-hidden rounded-xl border bg-white"
+									>
+										<img
+											src={source}
+											alt={`Ảnh phòng ${imageIndex + 1}`}
+											className="h-full w-full object-cover"
+										/>
+										<button
+											type="button"
+											onClick={() =>
+												setData(
+													'images',
+													data.images.filter(
+														(_, index) =>
+															index !==
+															imageIndex,
+													),
+												)
+											}
+											aria-label={`Xóa ảnh ${imageIndex + 1}`}
+											className="absolute top-2 right-2 rounded bg-white px-2 py-1 text-xs font-semibold shadow"
+										>
+											Xóa
+										</button>
+										<span className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white">
+											Ảnh {imageIndex + 1}
+											{imageIndex === 0
+												? ' · Ảnh chính'
+												: ''}
+										</span>
+									</div>
+								) : (
+									<label
+										key={imageIndex}
+										htmlFor="listing-images"
+										className="flex aspect-[4/3] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[var(--gtg-border-strong)] bg-[var(--gtg-surface-low)] text-center text-[var(--gtg-muted)] hover:border-[var(--gtg-primary)] hover:text-[var(--gtg-primary)]"
+									>
+										<Upload
+											className="size-5"
+											aria-hidden="true"
+										/>
+										<span className="mt-2 text-xs font-semibold">
+											Ảnh {imageIndex + 1}
+										</span>
+									</label>
+								);
+							})}
 						</div>
+						<p className="mt-3 text-sm text-[var(--gtg-muted)]">
+							Đã chọn {data.images.length}/20 ảnh. Cần tối thiểu 3
+							ảnh để lưu bản nháp.
+						</p>
+						{errors.images && (
+							<p className="mt-2 text-sm text-red-600">
+								{errors.images}
+							</p>
+						)}
 					</Section>
 					<Section icon={Phone} title="Thông tin người liên hệ">
 						<div className="grid gap-4 md:grid-cols-3">

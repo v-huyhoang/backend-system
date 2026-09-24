@@ -1,9 +1,13 @@
+import type { Pagination } from '@/types/pagination';
+
 export type LandlordListingStatus =
-	| 'published'
-	| 'pending_review'
-	| 'rejected'
 	| 'draft'
-	| 'rented';
+	| 'pending_review'
+	| 'published'
+	| 'rejected'
+	| 'hidden'
+	| 'rented'
+	| 'expired';
 
 export interface LandlordListingCostForm {
 	type: string;
@@ -14,17 +18,29 @@ export interface LandlordListingCostForm {
 }
 
 export interface LandlordListing {
-	publicId: string;
+	public_id: string;
 	title: string;
 	address: string;
-	monthlyRent: string;
-	area: string;
-	image: string;
+	monthly_rent: number | string;
+	area_sqm: number | string;
+	primary_image: { path: string; alt_text: string | null } | null;
+	images: Array<{ path: string; alt_text: string | null }>;
 	status: LandlordListingStatus;
-	statusLabel: string;
-	meta: string;
-	expiresLabel?: string;
-	rejectionReason?: string;
+	status_label: string;
+	rejection_reason: string | null;
+	expires_at: string | null;
+}
+
+export interface PaginatedLandlordListings extends Pagination {
+	data: LandlordListing[];
+}
+
+export interface LandlordListingSummary {
+	published: number;
+	view_count: number;
+	contact_count: number;
+	rejected: number;
+	status_counts: Record<LandlordListingStatus, number>;
 }
 
 export interface LandlordListingStat {

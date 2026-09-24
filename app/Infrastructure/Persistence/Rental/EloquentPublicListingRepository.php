@@ -34,6 +34,16 @@ class EloquentPublicListingRepository implements PublicListingRepository
             ->get();
     }
 
+    public function incrementView(Listing $listing): void
+    {
+        $this->baseQuery()->whereKey($listing)->increment('view_count');
+    }
+
+    public function incrementContact(Listing $listing): void
+    {
+        $this->baseQuery()->whereKey($listing)->increment('contact_count');
+    }
+
     /** @return Builder<Listing> */
     private function query(array $filters): Builder
     {

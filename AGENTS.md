@@ -49,6 +49,29 @@ HTTP Request
   `php artisan make:ddd <Entity> --module=<Module>`, nhưng phải hoàn thiện migration,
   `$fillable`, casts, relationships, validation, resource, route và test sau đó.
 
+## Rental và master data
+
+- `Listing`, ảnh, tiện ích, chi phí và toàn bộ vòng đời tin đăng thuộc module
+  `Rental`. Không chuyển các use case này sang `LandlordManagement`; module đó chỉ
+  dành cho hồ sơ, xác minh, tổ chức và gói dịch vụ của chủ trọ.
+- Master data là dữ liệu do backend sở hữu: loại phòng (`property_types`), địa bàn
+  (`provinces`, `wards`), tiện ích (`amenities`) và loại chi phí
+  (`listing_cost_types`). Không hard-code ID, slug, đơn vị, label, giá trị select
+  hay danh sách mock trong page/form khi dữ liệu có thể lấy từ service/API hiện có.
+- Với chi phí listing, frontend chỉ gửi `type`, `amount`, `note`; Application
+  Service phải resolve lại label/unit/type hợp lệ từ `RentalMasterDataRepository`.
+  Không tin `label` hoặc `unit` do client gửi lên.
+- Mỗi use case listing mới phải đi đủ boundary DDD: FormRequest `validated()` ->
+  DTO -> `LandlordListingService`/use case -> repository contract -> Eloquent
+  implementation -> Resource/Collection. Controller không tự xử lý transaction,
+  Eloquent query, status transition hay metadata normalization.
+- Upload ảnh là application workflow: validate file ở FormRequest, lưu qua contract
+  storage/infrastructure, và cập nhật database qua repository transaction. Không
+  để page tự giả định URL/path storage hoặc bypass authorization.
+- Status transition phải được kiểm tra ở Application/Domain và policy/route; UI chỉ
+  hiển thị action hợp lệ. Mọi listing query landlord phải luôn scope theo
+  `landlord_id`, kể cả route binding đã dùng `public_id`.
+
 ## Frontend
 
 - Page Inertia nằm trong `resources/js/pages`; component dùng chung nằm trong
@@ -67,6 +90,12 @@ HTTP Request
   để plugin tự sắp import và class Tailwind.
 - Với giao diện thương hiệu Trọ Đây, tham khảo `design.md` và
   `design-system/tro-day/MASTER.md` trước khi đổi visual.
+- Form listing create/edit phải tái sử dụng master-data service, layout và component
+  của portal landlord trước khi tạo UI mới. Giữ dữ liệu draft đang có khi update;
+  không xóa amenities/costs/images chỉ vì page không render hoặc không submit chúng.
+- Form upload ảnh cần hiển thị ảnh hiện có/mới, validation lỗi từ server, loading
+  state và accessible label cho control icon-only. Dùng typed Wayfinder cho route
+  `create`, `edit`, `update`; regenerate thay vì sửa `resources/js/routes` tay.
 
 ## Lệnh thường dùng
 

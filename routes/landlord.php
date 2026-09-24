@@ -22,5 +22,12 @@ Route::prefix('landlord')
             Route::put('/{listing:public_id}', [LandlordListingController::class, 'update'])
                 ->can('update', 'listing')
                 ->name('update');
+            Route::post('/{listing:public_id}/submit', [LandlordListingController::class, 'submit'])
+                ->can('submit', 'listing')
+                ->name('submit');
+            Route::post('/{listing:public_id}/hide', [LandlordListingController::class, 'hide'])->can('hide', 'listing')->name('hide');
+            Route::post('/{listing:public_id}/rented', [LandlordListingController::class, 'markAsRented'])->can('markAsRented', 'listing')->name('rented');
+            Route::post('/{listing:public_id}/renew', [LandlordListingController::class, 'renew'])->can('renew', 'listing')->name('renew');
+            Route::post('/{listing:public_id}/duplicate', [LandlordListingController::class, 'duplicate'])->can('duplicate', 'listing')->name('duplicate');
         });
     });

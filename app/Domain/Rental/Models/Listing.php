@@ -90,6 +90,12 @@ class Listing extends Model
         return $this->hasMany(ListingImage::class)->orderBy('sort_order');
     }
 
+    /** @return HasMany<ListingModeration, $this> */
+    public function moderations(): HasMany
+    {
+        return $this->hasMany(ListingModeration::class)->latest('created_at');
+    }
+
     /** @return HasOne<ListingImage, $this> */
     public function primaryImage(): HasOne
     {

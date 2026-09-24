@@ -19,10 +19,10 @@ import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
 	{
-		title: 'Dashboard',
+		title: 'Kiểm duyệt tin',
 		href: dashboard(),
 		icon: LayoutGrid,
-		permission: SystemPermission.ViewDashboard,
+		permission: SystemPermission.ViewListingModeration,
 	},
 	{
 		title: 'Permissions',

@@ -8,6 +8,8 @@
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix",
+        "review:ocr": "ocr delegate preview --format json --background \"Laravel 12/Inertia rental platform. Focus on landlord listing lifecycle, expiration scheduler, moderation queue, audit logging, authorization, and feature-test coverage.\" > storage/logs/ocr-delegate-preview.json",
+        "review:preview": "ocr delegate preview --format json --background \"Laravel 12/Inertia rental platform. Focus on landlord listing lifecycle, expiration scheduler, moderation queue, audit logging, authorization, and feature-test coverage.\" > storage/logs/ocr-delegate-preview.json",
         "types": "php artisan wayfinder:generate --with-form --no-interaction && tsc --noEmit"
     },
     "devDependencies": {

@@ -17,4 +17,8 @@ interface PublicListingRepository
 
     /** @return Collection<int, Listing> */
     public function latest(int $limit = 6): Collection;
+
+    public function incrementView(Listing $listing): void;
+
+    public function incrementContact(Listing $listing): void;
 }
